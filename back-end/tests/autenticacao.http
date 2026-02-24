@@ -1,0 +1,26 @@
+
+
+###
+#teste sucesso
+GET  http://localhost:3000/auth
+Content-Type: application/json
+
+{
+    
+   "email": "CARLOSSSS@gmail.com",
+    "password": "12345"
+    
+  }
+
+###
+#teste falha  
+GET  http://localhost:3000/auth
+Content-Type: application/json
+
+{
+    
+   "email": "ana@gmail.com",
+    "senha": "12345"
+    
+  }
+

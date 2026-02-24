@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cardápio Personalizado</title>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #34d399;
+            --accent: #fbbf24;
+            --orange: #fb923c;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --glass: rgba(30, 41, 59, 0.7);
+        }
+
+    body { font-family: Arial, sans-serif; margin: 20px; background: #ECE9DA; color: #333; }
+    h1, h2, h3 { 
+    color:  var(--primary);
+     }
+    
+    span, li{
+      color: var(--text);
+    }
+    
+    strong, h4{
+      color: var(--primary);
+    }
+     
+    #info-pessoal, #refeicoes > section, #suplementos{ background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    position: relative;
+      border-radius: 6px; padding: 1%; margin-top: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+    ul { margin-left: 20px; }
+
+    #refeicoes h2{
+      margin-top: 1rem;
+    }
+
+    #livro-cardapio{
+      display: flex;
+      justify-content: center;
+    }
+
+    #livro-cardapio .livroTotal {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    perspective: 120rem;
+    padding: 1rem;
+    position: relative;
+       min-height: 50rem; /* 🔥 Adicionado */
+    max-width: 1200px; /* (Opcional) Limitar pra não estourar demais em telas gigantes */
+}
+
+    #livro-cardapio p {
+    font-size: 14px;
+    z-index: 1;
+    margin-top: 1rem;
+}
+
+    #livro-cardapio .livroTotal #p2 .frente {
+    background-color: var(--corLivro);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 15%;
+}
+
+    .destaqueTempero {
+    color: #d35400;
+    font-weight: bold;
+    background-color: #fef3e7;
+    padding: 2px 4px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 2px;
+  }
+
+  .cardResumo {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin-top: 20px;
+  max-width: 400px;
+}
+
+.cardResumo h3 {
+  margin-top: 0;
+  color: var(--primary);
+}
+
+.cardResumo ul {
+  padding-left: 20px;
+}
+
+.cardResumo li {
+  margin-bottom: 8px;
+}
+
+.cardResumo .titulo {
+  font-weight: bold;
+  margin-top: 10px;
+  color: #34495e;
+}
+
+.infoPacienteCard {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  position: relative;
+  border-radius: 8px;
+  padding: 15px 20px;
+  max-width: 360px;
+  font-family: Arial, sans-serif;
+  color: #333;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.infoPacienteCard h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: var(--primary);
+  font-size: 1.3rem;
+  border-bottom: 2px solid #f4a261;
+  padding-bottom: 6px;
+}
+
+.infoPacienteCard p {
+  margin: 6px 0;
+  font-size: 0.9rem;
+}
+
+.infoPacienteCard p strong {
+  display: inline-block;
+  width: 160px;
+  color: var(--primary);
+}
+
+.cardInformacoes{
+  display: flex;
+  justify-content: space-evenly;
+  gap: 2rem;
+}
+
+#toggleViewBtn{
+  background-color: #F4A261;
+    border: none;
+    padding: 5px 10px;
+    margin-top: 0.6rem;
+    border-radius: 10px;
+    color: #2A3D45;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .5s;
+}
+
+#toggleViewBtn:hover{
+  background-color: #df8a45;
+  
+}
+    
+
+  </style>
+  <link rel="icon" href="img/logos/logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="style.css">
+  
+</head>
+<body>
+
+  <div class="organic-bg-nutrivida">
+    <div class="blob-nutrivida blob-nutrivida-1"></div>
+    <div class="blob-nutrivida blob-nutrivida-2"></div>
+    <div class="blob-nutrivida blob-nutrivida-3"></div>
+    <div class="blob-nutrivida blob-nutrivida-4"></div>
+</div>
+
+<div class="floating-foods-nutrivida">
+        <div class="food-icon-nutrivida food-nutrivida-1">
+            <img src="img/abacate.png" alt="abacate-imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-2">
+            <img src="img/maca.png" alt="maça imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-3">
+            <img src="img/salada.png" alt="salada imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-4">
+            <img src="img/tangerina.png" alt="tangerina imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-5">
+            <img src="img/brocolis.png" alt="brocolis imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-6">
+            <img src="img/banana.png" alt="banana imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-7">
+            <img src="img/cenoura.png" alt="imagem cenoura">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-8">
+            <img src="img/kiwi.png" alt="imagem kiwi">
+        </div>
+    </div>
+
+  <h1>Seu Cardápio Personalizado</h1>
+  <button id="toggleViewBtn">Ver como Livro</button>
+
+  <section id="info-pessoal">
+    <h2>Informações Pessoais</h2>
+    <p><strong>Nome:</strong> <span id="nome"></span></p>
+    <p><strong>Sexo:</strong> <span id="sexo"></span></p>
+    <p><strong>Idade:</strong> <span id="idade"></span></p>
+    <p><strong>Altura:</strong> <span id="altura"></span> m</p>
+    <p><strong>Peso:</strong> <span id="peso"></span> kg</p>
+    <p><strong>Objetivo:</strong> <span id="objetivo"></span></p>
+    <p><strong>IMC:</strong> <span id="imc"></span></p>
+    <p><strong>Alergia:</strong> <span id="alergia"></span></p>
+    <p><strong>Trabalho:</strong> <span id="trabalho"></span></p>
+    <p><strong>Esporte:</strong> <span id="esporte"></span></p>
+    <p><strong>Dieta Atual:</strong> <span id="dietaAtual"></span></p>
+    <p><strong>Rotina diária:</strong> <span id="rotina"></span></p>
+    <p><strong>Tempo disponível para preparo:</strong> <span id="tempoPreparo"></span></p>
+    <p><strong>Alimentos Favoritos:</strong> <span id="alimentosFavoritos"></span></p>
+  </section>
+
+  <section id="refeicoes">
+    <h2>Refeições</h2>
+  </section>
+
+  <section id="suplementos">
+    <h2>Suplementos</h2>
+  </section>
+
+
+  <section class="livro" id="livro-cardapio"  >
+        <div class="livroTotal">
+          
+            <div class="pagina capa" id="p1">
+                <div class="frente" >
+                    <h2>Nutrivida</h2>
+                    <p>Aqui está seu cardapio personalizado</p>
+
+                    <img src="img/Livro/seta-direita.svg" class="setaDireita" alt="">
+                </div>
+
+                <div class="verso">
+                    <img src="img/logos/logo.png" class="logo-sobre" alt="">
+
+                    <div class="rets">
+                        <div class="retMeio1"></div>
+                        <div class="retMeio2"></div>
+                    </div>
+
+                    <div class="sombra"></div>
+
+                    <img src="img/Livro/seta-esquerda.svg" class="setaEsquerda" alt="">
+
+                </div>
+            </div>
+
+            <div class="pagina " id="p2">
+                <div class="frente">
+                    <div class="rets">
+                        <div class="retMeio1"></div>
+                        <div class="retMeio2"></div>
+                    </div>
+
+                    
+
+                    
+
+                    <div class="sombra"></div>
+
+                    <img src="img/Livro/seta-direita.svg" class="setaDireita" alt="">
+
+                </div>
+
+                <div class="verso">
+
+                    
+
+                  
+                    
+                    <div class="reflexo1">
+                        <div class="reflexo"></div>
+                    </div>
+                    <div class="reflexo2">
+                        <div class="reflexo"></div>
+                    </div>
+                    <img src="img/Livro/seta-esquerda.svg" class="setaEsquerda" alt="">
+                </div>
+            </div>
+
+            <div class="pagina" id="p3">
+                <div class="frente">
+
+                    
+
+                    <img src="img/Livro/seta-direita.svg" class="setaDireita" alt="">
+
+                </div>
+
+                <div class="verso">
+                    
+
+                    <div class="reflexo1">
+                        <div class="reflexo"></div>
+                    </div>
+                    <div class="reflexo2">
+                        <div class="reflexo"></div>
+                    </div>
+                    <img src="img/Livro/seta-esquerda.svg" class="setaEsquerda" alt="">
+
+                </div>
+            </div>
+
+            <div class="pagina" id="p4">
+                <div class="frente">
+                    
+
+                    
+
+                    <img src="img/Livro/seta-direita.svg" class="setaDireita" alt="">
+                </div>
+
+                <div class="verso">
+                    
+
+                    <div class="reflexo1">
+                        <div class="reflexo"></div>
+                    </div>
+                    <div class="reflexo2">
+                        <div class="reflexo"></div>
+                    </div>
+                    <img src="img/Livro/seta-esquerda.svg" class="setaEsquerda" alt="">
+
+
+                </div>
+            </div>
+
+            
+
+            <div class="pagina" id="p5">
+                <div class="frente">
+                    
+
+                    <img src="img/Livro/seta-direita.svg" class="setaDireita" alt="">
+                </div>
+
+                <div class="verso">
+                    <p>" Nutrivida"</p>
+                    <p>todos os direitos reservados</p>
+
+                    <img src="img/Livro/seta-esquerda.svg" class="setaEsquerda" alt="">
+                </div>
+            </div>
+
+        </div>
+        
+</section>
+
+
+<section class="cardInformacoes">
+
+<div class="cardResumo" >
+  <h3>Resumo: Suplementos e Treinos</h3>
+  <div id="resumoSuplementos"></div>
+</div>
+
+<div class="infoPacienteCard">
+  <h3>Suas informações</h3>
+  <p><strong>Nome:</strong> <span id="infoNome"></span></p>
+  <p><strong>Sexo:</strong> <span id="infoSexo"></span></p>
+  <p><strong>Idade:</strong> <span id="infoIdade"></span></p>
+  <p><strong>Peso:</strong> <span id="infoPeso"></span> kg</p>
+  <p><strong>Altura:</strong> <span id="infoAltura"></span> m</p>
+  <p><strong>Objetivo:</strong> <span id="infoObjetivo"></span></p>
+  <p><strong>IMC:</strong> <span id="infoImc"></span></p>
+  <p><strong>Alergia:</strong> <span id="infoAlergia"></span></p>
+  <p><strong>Trabalho:</strong> <span id="infoTrabalho"></span></p>
+  <p><strong>Esporte:</strong> <span id="infoEsporte"></span></p>
+  <p><strong>Dieta Atual:</strong> <span id="infoDietaAtual"></span></p>
+  <p><strong>Rotina:</strong> <span id="infoRotina"></span></p>
+  <p><strong>Tempo disponível para preparo:</strong> <span id="infoTempoPreparo"></span></p>
+  <p><strong>Alimentos Favoritos:</strong> <span id="infoAlimentosFavoritos"></span></p>
+</div>
+</section>
+
+<section id="area-grafico" style="max-width: 600px; margin: 50px auto; text-align: center;">
+      <h2 style="color: #2A3D45;">Distribuição Calórica Média por Refeição</h2>
+      <canvas id="graficoCalorias"></canvas>
+  </section>
+
+
+<script>
+(() => {
+  console.log(" Buscando cardápio no sessionStorage...");
+
+  const cardapioRaw = sessionStorage.getItem("cardapio");
+  if (!cardapioRaw) {
+    console.warn("⚠️ Nenhum cardápio encontrado no sessionStorage.");
+    document.body.innerHTML = "<p>Nenhum cardápio encontrado.</p>";
+    return;
+  }
+
+  let cardapio = null;
+  try {
+    cardapio = JSON.parse(cardapioRaw);
+    console.log(" Cardápio carregado:", cardapio);
+  } catch (error) {
+    console.error(" Erro ao fazer JSON.parse:", error);
+    document.body.innerHTML = "<p>Erro ao carregar o cardápio.</p>";
+    return;
+  }
+
+  function getCampo(obj, ...possibilidades) {
+    for (const campo of possibilidades) {
+      if (obj[campo] !== undefined) return obj[campo];
+    }
+    return "";
+  }
+
+  function formatarHorario(horario) {
+    if (!horario) return "Horário não informado";
+    if (/^\d{1,2}h$/.test(horario)) {
+      let hora = horario.replace("h", "").padStart(2, "0");
+      return `${hora}:00`;
+    }
+    return horario;
+  }
+
+  // ------ Preencher Dados Pessoais (spans gerais) ------
+  const campos = [
+    ["nome", "name", "nome"],
+    ["sexo", "gender", "sexo"],
+    ["idade", "age", "idade"],
+    ["altura", "height", "altura"],
+    ["peso", "weight", "peso"],
+    ["objetivo", "objective", "objetivo"],
+    ["imc", "imc"],
+    ["alergia", "alergia", "Alergia"],
+    ["trabalho", "trabalho", "job"],
+    ["esporte", "esporte", "sport"],
+    ["dietaAtual", "dietaAtual", "dieta_atual"],
+    ["rotina", "rotina"],
+    ["tempoPreparo", "tempoPreparo"]
+  ];
+
+  campos.forEach(([id, ...keys]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = getCampo(cardapio, ...keys) || "Não informado";
+  });
+
+  // ------ Preencher Dados Pessoais (card .infoPacienteCard) ------
+  const camposInfoPaciente = [
+    ["infoNome", "nome", "name"],
+    ["infoSexo", "sexo", "gender"],
+    ["infoIdade", "idade", "age"],
+    ["infoPeso", "peso", "weight"],
+    ["infoAltura", "altura", "height"],
+    ["infoObjetivo", "objetivo", "objective"],
+    ["infoImc", "imc"],
+    ["infoAlergia", "alergia", "Alergia"],
+    ["infoTrabalho", "trabalho", "job"],
+    ["infoEsporte", "esporte", "sport"],
+    ["infoDietaAtual", "dietaAtual", "dieta_atual"],
+    ["infoRotina", "rotina"],
+    ["infoTempoPreparo", "tempoPreparo"],
+    ["infoAlimentosFavoritos", "alimentosFavoritos", "alimentos_favoritos"]
+  ];
+
+  camposInfoPaciente.forEach(([id, ...keys]) => {
+    const el = document.getElementById(id);
+    if (el) {
+      let valor = getCampo(cardapio, ...keys);
+      if (Array.isArray(valor)) valor = valor.join(", ");
+      el.textContent = valor || "Não informado";
+    }
+  });
+
+  // ------ Alimentos Favoritos ------
+  const favoritos = getCampo(cardapio, "alimentosFavoritos", "alimentos_favoritos");
+  const favContainer = document.getElementById("alimentosFavoritos");
+  if (favContainer) {
+    favContainer.innerHTML = "";
+    if (Array.isArray(favoritos) && favoritos.length) {
+      favoritos.forEach(item => {
+        const span = document.createElement("span");
+        span.textContent = item;
+        span.style.marginRight = "10px";
+        favContainer.appendChild(span);
+      });
+    } else {
+      favContainer.textContent = "Nenhum";
+    }
+  }
+
+  // ------ Refeições Tradicionais ------
+  const secRefeicoes = document.getElementById("refeicoes");
+  if (secRefeicoes) {
+    secRefeicoes.innerHTML = "<h2>Refeições</h2>";
+
+    const diasDaSemana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
+
+    if (cardapio.refeicoes && cardapio.refeicoes[0]?.refeicoes) {
+      cardapio.refeicoes.forEach((dia, index) => {
+        const diaContainer = document.createElement("section");
+        const h3 = document.createElement("h3");
+        h3.textContent = diasDaSemana[index] || dia.nome || `Dia ${index + 1}`;
+        diaContainer.appendChild(h3);
+
+        dia.refeicoes.forEach(ref => {
+          const h4 = document.createElement("h4");
+          h4.textContent = `${ref.nome} (${formatarHorario(ref.horario)})`;
+          diaContainer.appendChild(h4);
+
+          const ul = document.createElement("ul");
+          if (Array.isArray(ref.alimentos) && ref.alimentos.length) {
+            ref.alimentos.forEach(alimento => {
+              const li = document.createElement("li");
+              if (alimento.toLowerCase().startsWith("tempero:")) {
+                li.innerHTML = `<span class="destaqueTempero">${alimento}</span>`;
+              } else {
+                li.textContent = alimento;
+              }
+              ul.appendChild(li);
+            });
+          }
+          diaContainer.appendChild(ul);
+        });
+
+        secRefeicoes.appendChild(diaContainer);
+      });
+    }
+  }
+
+  // ------ Suplementos ------
+const secSuplementos = document.getElementById("suplementos");
+const resumoSuplementos = document.getElementById("resumoSuplementos");
+
+if (secSuplementos) secSuplementos.innerHTML = "<h2>Suplementos</h2>";
+if (resumoSuplementos) resumoSuplementos.innerHTML = "<h3>Resumo Suplementos</h3>";
+
+const suplementos = cardapio.suplementos || {};
+
+function criarListaSuplementos(titulo, lista) {
+  if (!Array.isArray(lista) || lista.length === 0) return null;
+
+  const section = document.createElement("div");
+  const h4 = document.createElement("h4");
+  h4.textContent = titulo;
+  section.appendChild(h4);
+
+  const ul = document.createElement("ul");
+  lista.forEach(sup => {
+    const li = document.createElement("li");
+    li.textContent = sup;
+    ul.appendChild(li);
+  });
+  section.appendChild(ul);
+  return section;
+}
+
+const listaEsporte = criarListaSuplementos("Antes do treino - Esporte", suplementos.suplementos_antes_treino_esporte);
+const listaAcademia = criarListaSuplementos("Antes do treino - Academia", suplementos.suplementos_antes_treino_academia);
+const listaGerais = criarListaSuplementos("Suplementos Gerais", suplementos.suplementos_gerais);
+
+[listaEsporte, listaAcademia, listaGerais].forEach(lista => {
+  if (lista) {
+    if (secSuplementos) secSuplementos.appendChild(lista.cloneNode(true));
+    if (resumoSuplementos) resumoSuplementos.appendChild(lista.cloneNode(true));
+  }
+});
+
+  // ------ Livro (páginas animadas) ------
+  const containerLivro = document.querySelector(".livroTotal");
+  if (containerLivro) {
+    const paginasExistentes = document.querySelectorAll(".pagina");
+    const diasSemanaLivro = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"];
+    let diaIndex = 0;
+    let paginaIndex = 1;
+
+    function gerarHTMLDia(diaObj, nomeDia) {
+      let html = `<h4>${nomeDia}</h4>`;
+      diaObj.refeicoes.forEach(ref => {
+        html += `<p><strong>${ref.nome}</strong> (${ref.horario}):<br>`;
+        if (Array.isArray(ref.alimentos) && ref.alimentos.length) {
+          ref.alimentos.forEach(alimento => {
+            if (alimento.toLowerCase().startsWith("tempero:")) {
+              html += `<span class="destaqueTempero">${alimento}</span><br>`;
+            } else {
+              html += `${alimento}<br>`;
+            }
+          });
+        } else {
+          html += "Nenhum alimento listado.";
+        }
+        html += `</p>`;
+      });
+      return html;
+    }
+
+    function criarNovaPagina(idNum) {
+      const pagina = document.createElement("div");
+      pagina.classList.add("pagina");
+      pagina.id = `p${idNum}`;
+
+      const frente = document.createElement("div");
+      frente.classList.add("frente");
+      frente.innerHTML = `
+        <div class="rets"><div class="retMeio1"></div><div class="retMeio2"></div></div>
+        <div class="sombra"></div>
+        <img src="img/Livro/seta-direita.svg" class="setaDireita" alt="">
+      `;
+
+      const verso = document.createElement("div");
+      verso.classList.add("verso");
+      verso.innerHTML = `
+        <div class="reflexo1"><div class="reflexo"></div></div>
+        <div class="reflexo2"><div class="reflexo"></div></div>
+        <img src="img/Livro/seta-esquerda.svg" class="setaEsquerda" alt="">
+      `;
+
+      pagina.appendChild(frente);
+      pagina.appendChild(verso);
+      containerLivro.appendChild(pagina);
+      return pagina;
+    }
+
+    while (diaIndex < cardapio.refeicoes.length) {
+      let pagina = paginasExistentes[paginaIndex] || criarNovaPagina(paginaIndex + 1);
+      const frente = pagina.querySelector(".frente");
+      const verso = pagina.querySelector(".verso");
+
+      if (diaIndex < cardapio.refeicoes.length && frente) {
+        const dia = cardapio.refeicoes[diaIndex];
+        const nomeDia = diasSemanaLivro[diaIndex] || `Dia ${diaIndex + 1}`;
+        frente.innerHTML += gerarHTMLDia(dia, nomeDia);
+        diaIndex++;
+      }
+
+      if (diaIndex < cardapio.refeicoes.length && verso) {
+        const dia = cardapio.refeicoes[diaIndex];
+        const nomeDia = diasSemanaLivro[diaIndex] || `Dia ${diaIndex + 1}`;
+        verso.innerHTML += gerarHTMLDia(dia, nomeDia);
+        diaIndex++;
+      }
+
+      paginaIndex++;
+    }
+  }
+
+  console.log("Cardápio finalizado nas seções e no livro.");
+})();
+</script>
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("toggleViewBtn");
+  const secTrad = document.getElementById("refeicoes");
+  const secSuplementos = document.getElementById("suplementos");
+  const secLivro = document.querySelector(".livroTotal");
+  const resumoSup = document.querySelector(".cardResumo");
+  const infoPacienteCard = document.querySelector(".infoPacienteCard");
+  const infoPessoal = document.getElementById("info-pessoal");
+
+  // Estado inicial: mostrando lista tradicional + info pessoal, escondendo livro, resumo e cardPaciente
+  if (secTrad) secTrad.style.display = "block";
+  if (secSuplementos) secSuplementos.style.display = "block";
+  if (infoPessoal) infoPessoal.style.display = "block";
+  if (secLivro) secLivro.style.display = "none";
+  if (resumoSup) resumoSup.style.display = "none";
+  if (infoPacienteCard) infoPacienteCard.style.display = "none";
+
+  btn.addEventListener("click", () => {
+    if (!secTrad || !secLivro || !resumoSup || !secSuplementos || !infoPacienteCard || !infoPessoal) {
+      console.warn("Uma ou mais seções não encontradas!");
+      return;
+    }
+
+    if (secTrad.style.display === "none" || secTrad.style.display === "") {
+      // Mostrar modo lista tradicional
+      secTrad.style.display = "block";
+      secSuplementos.style.display = "block";
+      infoPessoal.style.display = "block";
+      secLivro.style.display = "none";
+      resumoSup.style.display = "none";
+      infoPacienteCard.style.display = "none";
+
+      btn.textContent = "Ver como Livro";
+    } else {
+      // Mostrar modo livro
+      secTrad.style.display = "none";
+      secSuplementos.style.display = "none";
+      infoPessoal.style.display = "none";
+      secLivro.style.display = "block";
+      resumoSup.style.display = "block";
+      infoPacienteCard.style.display = "block";
+
+      btn.textContent = "Ver como Lista";
+    }
+  });
+});
+</script>
+
+
+
+
+
+
+<script>
+            let livroTotal = document.querySelector(".livroTotal");
+    
+        if(livroTotal != null){
+    
+            let paginasLivro = document.querySelectorAll(".livroTotal .pagina"); 
+            
+            function resetIndex(){
+    
+                let reset = paginasLivro.length;
+    
+                for(g=0;g<paginasLivro.length;g++){  
+                    paginasLivro[g].style.zIndex = reset;
+                    reset--;
+                }
+            }
+    
+            function buscarIndex(){
+    
+                let grandeIndex = 0;
+    
+                for(g=0;g<paginasLivro.length;g++){
+                    let valorIndex = Number(paginasLivro[g].style.zIndex); 
+                    if(valorIndex > grandeIndex){
+                        grandeIndex = valorIndex;
+                    }
+                }
+    
+                return grandeIndex;
+            }
+    
+            resetIndex();
+    
+            paginasLivro[0].style.transform = "rotateY(-180deg)";
+    
+            for(g=0;g<paginasLivro.length;g++){
+                paginasLivro[g].addEventListener("click", virarPagina);
+            }
+    
+            function virarPagina(){
+                if(this.style.transform == "" || this.style.transform == "rotateY(0deg)"){
+                    let maiorIndex = buscarIndex();
+                    if(Number(this.style.zIndex) < maiorIndex){
+                        this.style.zIndex = maiorIndex+1;
+                    }
+                    this.style.transform = "rotateY(-180deg)";
+                    if(this.id == paginasLivro[0].id){
+                        resetIndex();
+                    }
+                }
+                else{
+                    let maiorIndex = buscarIndex();
+                    if(Number(this.style.zIndex) < maiorIndex){
+                        this.style.zIndex = maiorIndex+1;
+                    }
+                    this.style.transform = "rotateY(0deg)";                
+                }
+            }        
+        } 
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const ctx = document.getElementById('graficoCalorias');
+    if (!ctx) return;
+
+    const raw = sessionStorage.getItem("cardapio");
+    if (!raw) return;
+    const cardapio = JSON.parse(raw);
+
+    if (!cardapio.refeicoes) return;
+
+    const totais = {};
+    let diasCount = 0;
+
+    cardapio.refeicoes.forEach(dia => {
+        diasCount++;
+        if (dia.refeicoes) {
+            dia.refeicoes.forEach(ref => {
+                const nome = ref.nome.trim(); 
+                if (!totais[nome]) totais[nome] = 0;
+                totais[nome] += (ref.calorias || 0);
+            });
+        }
+    });
+
+    const labels = Object.keys(totais);
+    const data = labels.map(k => Math.round(totais[k] / (diasCount || 1)));
+
+    if (data.every(val => val === 0)) {
+        document.getElementById('area-grafico').style.display = 'none';
+        return;
+    }
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: [
+                    '#10b981', // Verde primário
+                    '#34d399', // Verde secundário  
+                    '#fbbf24', // Amarelo/dourado
+                    '#fb923c', // Laranja
+                    '#059669', // Verde escuro
+                    '#84cc16', // Verde limão
+                    '#f59e0b', // Âmbar
+                    '#14b8a6'  // Teal
+                ],
+                borderColor: '#0f172a',
+                borderWidth: 4,
+                hoverBorderColor: '#10b981',
+                hoverBorderWidth: 5,
+                hoverOffset: 20
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            cutout: '65%',
+            plugins: {
+                legend: { 
+                    position: 'bottom',
+                    labels: {
+                        color: '#e2e8f0',
+                        font: {
+                            family: 'Inter, sans-serif',
+                            size: 14,
+                            weight: '600'
+                        },
+                        padding: 20,
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        boxWidth: 10,
+                        boxHeight: 10
+                    }
+                },
+                title: {
+                    display: false // REMOVIDO O TÍTULO DUPLICADO
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                    titleColor: '#10b981',
+                    bodyColor: '#e2e8f0',
+                    borderColor: '#10b981',
+                    borderWidth: 2,
+                    padding: 16,
+                    cornerRadius: 14,
+                    displayColors: true,
+                    titleFont: {
+                        family: 'Inter, sans-serif',
+                        size: 15,
+                        weight: '700'
+                    },
+                    bodyFont: {
+                        family: 'Inter, sans-serif',
+                        size: 14,
+                        weight: '500'
+                    },
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((context.parsed / total) * 100).toFixed(1);
+                            return ` ${context.label}: ~${context.parsed} kcal (${percentage}%)`;
+                        }
+                    }
+                }
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true,
+                duration: 1500,
+                easing: 'easeInOutQuart'
+            }
+        }
+    });
+});
+</script>
+
+</body>
+</html>

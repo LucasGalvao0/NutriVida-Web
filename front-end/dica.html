@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="icon" href="img/logos/logo.png" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dicas Nutricionais</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="tela.js"></script>
+    <script src="script.js" defer></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a1f1a 0%, #0f172a 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 7rem 1rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-container h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+            text-align: center;
+            background: linear-gradient(135deg, #00E676 0%, #2ecc71 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #bafdbc;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            max-width: 600px;
+        }
+
+        #container-dicas {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1200px;
+            padding-bottom: 4rem;
+        }
+
+        .loading-text {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #bafdbc;
+            font-size: 1.1rem;
+            padding: 2rem;
+        }
+
+        .card-dica {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 1.8rem;
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.5s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-dica::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, #00E676 0%, #2ecc71 100%);
+        }
+
+        .card-dica:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 230, 118, 0.2);
+            border-color: rgba(0, 230, 118, 0.4);
+        }
+
+        .card-dica h3 {
+            margin: 0 0 1.2rem;
+            font-size: 1.6rem;
+            color: #00E676;
+            font-weight: 700;
+        }
+
+        .card-dica ul {
+            list-style: none;
+            padding-left: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .card-dica li {
+            display: block;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            color: #bafdbc;
+            padding: 0.6rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            transition: background 0.2s ease;
+        }
+
+        .card-dica li:hover {
+            background: rgba(0, 230, 118, 0.1);
+        }
+
+        .card-dica strong {
+            color: #00E676;
+            font-weight: 600;
+        }
+
+        .info-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(0, 230, 118, 0.15);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #00E676;
+            margin-top: 0.5rem;
+        }
+
+        .error-message {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #ff6b6b;
+            font-size: 1.1rem;
+            padding: 2rem;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #bafdbc;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Animação de loading */
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 230, 118, 0.2);
+            border-top-color: #00E676;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .login-container h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            #container-dicas {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+
+            .card-dica {
+                padding: 1.5rem;
+            }
+
+            .card-dica h3 {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 6rem 0.8rem 3rem;
+            }
+
+            .login-container h1 {
+                font-size: 1.8rem;
+            }
+
+            .card-dica {
+                padding: 1.2rem;
+            }
+        }
+    </style>
+
+</head>
+<body>
+   
+  <div class="organic-bg-nutrivida">
+        <div class="blob-nutrivida blob-nutrivida-1"></div>
+        <div class="blob-nutrivida blob-nutrivida-2"></div>
+        <div class="blob-nutrivida blob-nutrivida-3"></div>
+        <div class="blob-nutrivida blob-nutrivida-4"></div>
+    </div>
+
+    <div class="floating-foods-nutrivida">
+        <div class="food-icon-nutrivida food-nutrivida-1">
+            <img src="img/abacate.png" alt="abacate-imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-2">
+            <img src="img/maca.png" alt="maça imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-3">
+            <img src="img/salada.png" alt="salada imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-4">
+            <img src="img/tangerina.png" alt="tangerina imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-5">
+            <img src="img/brocolis.png" alt="brocolis imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-6">
+            <img src="img/banana.png" alt="banana imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-7">
+            <img src="img/cenoura.png" alt="imagem cenoura">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-8">
+            <img src="img/kiwi.png" alt="imagem kiwi">
+        </div>
+    </div>
+
+    <header >
+        <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+
+        <section class="direito">
+        <nav class="menu" >
+            <ul id="menu">
+                <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+                <li><a class="item" href="index.html" id="paginaAtual" data-translate="1">Início</a></li>    
+                <li class="dropdown"> <p class="setaNav" data-translate="2">Serviços</p>
+                <div class="drop-menu">
+                    <a class="item" id="dropdown__link" href="servico.html" data-translate="7">Nossos serviços</a>
+                    <a class="item" id="dropdown__link" href="imc.html" data-translate="8">Imc</a>
+                    <a class="item" id="dropdown__link" href="Cardapio.html" data-translate="9">Cardápio Personalizado</a>
+                    <a class="item" id="dropdown__link" href="agendamento.html" data-translate="9">Agendamento</a>
+                </div>
+            </li>
+                <li><a class="item" href="exames.html" data-translate="3">Exames</a>
+                <li><a class="item" href="sobre.html" data-translate="4">Sobre nós</a></li>
+                <li><a class="item" href="contatos.html" data-translate="5">Contatos</a></li>
+                <li class="dropdown"> <p class="setaNav" data-translate="6" id="usuarioLogado">Usuario</p>
+                <div class="drop-menu drop-m2">
+                    <a href="cadastro.html" id="link-cadastro" class="item">Cadastro</a>    
+                    <a href="entrar.html" id="link-login" class="item">Entrar</a>
+                    <a href="perfil.html" id="linkPerfil" class="item">Perfil</a>
+                  </div>
+            </li>
+            </ul>
+        </nav>
+    
+        <div class="hamburgue" id="hamburgue"></div>
+    </section>
+    </header>
+
+<main class="login-container">
+    <h1>Dicas Nutricionais Personalizadas</h1>
+    <p class="subtitle">Orientações especializadas para uma vida mais saudável e equilibrada</p>
+
+    <section id="container-dicas">
+        <div class="loading-text">
+            <div class="loading-spinner"></div>
+            <p>Carregando suas dicas personalizadas...</p>
+        </div>
+    </section>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('container-dicas');
+    
+    const urlApiJava = 'http://localhost:9000/api/dicas'; 
+
+    fetch(urlApiJava)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro na rede ou servidor: Status ' + response.status);
+            }
+            return response.json(); 
+        })
+        .then(data => {
+            container.innerHTML = ''; 
+            
+            console.log('Dados da API recebidos com sucesso:', data);
+            
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h2>Nenhuma dica disponível no momento</h2>
+                        <p>Volte em breve para conferir novas orientações nutricionais!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            data.forEach((dica, index) => {
+                const tituloDica = dica.nome;        
+                
+                if (!tituloDica) return; 
+
+                const dicaCard = document.createElement('article');
+                dicaCard.className = 'card-dica'; 
+                dicaCard.style.animationDelay = `${index * 0.1}s`;
+
+                const titulo = document.createElement('h3');
+                titulo.textContent = tituloDica; 
+                dicaCard.appendChild(titulo);
+                
+                const detalhes = document.createElement('ul');
+
+                const mensagem = document.createElement('li');
+                mensagem.innerHTML = `<strong>Mensagem:</strong> ${dica.mensagem || 'N/A'}`;
+                detalhes.appendChild(mensagem);
+
+                const categoria = document.createElement('li');
+                categoria.innerHTML = `<strong>Categoria:</strong> ${dica.categoria || 'N/A'}`;
+                detalhes.appendChild(categoria);
+
+                const idade = document.createElement('li');
+                idade.innerHTML = `<strong>Autor:</strong> ${dica.idade || 'N/A'}`;
+                detalhes.appendChild(idade);
+
+                const ano = document.createElement('li');
+                ano.innerHTML = `<strong>Publicada em:</strong> ${dica.ano || 'N/A'}`;
+                detalhes.appendChild(ano);
+                
+                dicaCard.appendChild(detalhes);
+                container.appendChild(dicaCard);
+            });
+        })
+        .catch(error => {
+            console.error('Falha ao buscar dicas. Verifique a URL e o CORS.', error);
+            container.innerHTML = `
+                <div class="error-message">
+                    <h3>Erro ao carregar as dicas</h3>
+                    <p>Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.</p>
+                    <small style="display: block; margin-top: 1rem; opacity: 0.7;">
+                        Detalhes técnicos: ${error.message}
+                    </small>
+                </div>
+            `;
+        });
+});
+</script>
+
+</body>
+</html>

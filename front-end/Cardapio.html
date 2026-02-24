@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+   <link rel="icon" href="img/logos/logo.png" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="tela.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="script.js" defer></script>
+    <title>NutriVida - Cardápio Personalizado</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #34d399;
+            --accent: #fbbf24;
+            --orange: #fb923c;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --glass: rgba(30, 41, 59, 0.7);
+        }
+        /* Banner Section */
+        .banner-section {
+            padding: 10rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .banner-section h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 40%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .banner-section p {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            animation: fadeInUp 1s ease 0.2s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Container */
+        .cardapio {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-cardapio {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 30px;
+            padding: 3rem;
+            animation: fadeInUp 1s ease 0.4s backwards;
+        }
+
+        .form-cardapio-conteudo {
+            margin-bottom: 2.5rem;
+        }
+
+        .form-cardapio-conteudo h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .linha-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .grupo-campo {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+       .cardapio label {
+            color: var(--text);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .cardapio input[type="text"],
+        .cardapio input[type="number"],
+        .cardapio select,
+        .cardapio textarea {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 0.9rem 1.2rem;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .cardapio input[type="text"]:focus,
+        .cardapio input[type="number"]:focus,
+        .cardapio select:focus,
+        .cardapio textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .cardapio textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Radio Buttons */
+        .radio-grupo {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+
+        .opcoes {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .cardapio input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* Body Type Slider */
+        .corpo-secao {
+            background: rgba(251, 191, 36, 0.05);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .corpo-visual {
+
+            margin: 2rem 0;
+            padding: 2rem;
+            background: rgba(251, 147, 60, 0.1);
+            border-radius: 15px;
+        }
+
+        .body-image {
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .peso-img{
+          width: 100%;
+          height: 100%;
+        }
+
+        .cardapio input[type="range"] {
+            width: 100%;
+            max-width: 500px;
+            height: 8px;
+            border-radius: 5px;
+            background: rgba(16, 185, 129, 0.2);
+            outline: none;
+            margin: 1.5rem auto;
+            display: block;
+            -webkit-appearance: none;
+        }
+
+        .cardapio input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .cardapio input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .weight-display {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 1rem;
+        }
+
+        /* Conditional Fields */
+        .condicoes {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(16, 185, 129, 0.05);
+            border-radius: 12px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .condicoes.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Submit Button */
+        .btn-container {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .btn-cardapio {
+            padding: 1.3rem 3rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-cardapio::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-cardapio:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .btn-cardapio:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.6);
+        }
+
+        /* Message */
+        .mensagem {
+            position: fixed;
+            top: 100px;
+            right: 2rem;
+            padding: 1.2rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            z-index: 10000;
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .mensagem.visivel {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .mensagem.sucesso {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .mensagem.erro {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-cardapio {
+                padding: 2rem 1.5rem;
+            }
+
+            .linha-form {
+                grid-template-columns: 1fr;
+            }
+
+            .banner-section {
+                padding: 8rem 1rem 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+  <div class="organic-bg-nutrivida">
+        <div class="blob-nutrivida blob-nutrivida-1"></div>
+        <div class="blob-nutrivida blob-nutrivida-2"></div>
+        <div class="blob-nutrivida blob-nutrivida-3"></div>
+        <div class="blob-nutrivida blob-nutrivida-4"></div>
+    </div>
+
+    <div class="floating-foods-nutrivida">
+        <div class="food-icon-nutrivida food-nutrivida-1">
+            <img src="img/abacate.png" alt="abacate-imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-2">
+            <img src="img/maca.png" alt="maça imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-3">
+            <img src="img/salada.png" alt="salada imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-4">
+            <img src="img/tangerina.png" alt="tangerina imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-5">
+            <img src="img/brocolis.png" alt="brocolis imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-6">
+            <img src="img/banana.png" alt="banana imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-7">
+            <img src="img/cenoura.png" alt="imagem cenoura">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-8">
+            <img src="img/kiwi.png" alt="imagem kiwi">
+        </div>
+    </div>
+
+  <script>
+  function mostrarMensagem(texto, tipo = "sucesso") {
+    const div = document.getElementById("mensagem-flutuante");
+    if (!div) return;
+
+    div.textContent = texto;
+    div.className = `mensagem visivel ${tipo}`;
+
+    setTimeout(() => {
+      div.classList.add("ocultar");
+    }, 2500);
+
+    setTimeout(() => {
+      div.className = "mensagem";
+    }, 3000);
+  }
+
+  window.onload = () => {
+    try {
+      const usuarioRaw = localStorage.getItem("dadosUsuario");
+      if (!usuarioRaw) {
+        mostrarMensagem('Você precisa estar logado para acessar esta página.', 'erro');
+        setTimeout(() => {
+          window.location.href = 'entrar.html';
+        }, 3000);
+        return;
+      }
+      // Se estiver logado, continua normalmente
+      mostrarMensagem("Usuário logado.", "sucesso");
+    } catch (error) {
+      console.error("Erro ao verificar autenticação:", error);
+      mostrarMensagem('Erro ao verificar login. Tente novamente.', 'erro');
+    }
+  };
+</script>
+
+
+    <header >
+        <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+
+           
+
+        <section class="direito">
+        <nav class="menu" >
+            <ul id="menu">
+                <li><a class="item" href="index.html"  data-translate="1">Início</a></li>    
+                <li class="dropdown"> <a href="#" class="seta" data-translate="2">Serviços</a>
+                <div class="drop-menu">
+                    <a class="item" href="servico.html" data-translate="7">Nossos serviços</a>
+                    <a class="item" href="imc.html" data-translate="8">Imc</a>
+                    <a class="item" href="Cardapio.html" id="paginaAtual" data-translate="9">Cardápio Personalizado</a>
+                    
+                </div>
+            </li>
+                <li><a class="item" href="exames.html" data-translate="3">Exames</a>
+                <li><a class="item" href="sobre.html" data-translate="4">Sobre nós</a></li>
+                <li><a class="item" href="contatos.html" data-translate="5">Contatos</a></li>
+                 <div class="login-cadastro">
+                <li><a href="entrar.html" class="login-btn">Login</a></li>
+    
+                </div>
+              
+
+            </ul>
+        </nav>
+    
+        <div class="hamburgue" id="hamburgue"></div>
+    </section>
+    
+           
+    
+    </header>
+
+    <!-- Banner Section -->
+    <section class="banner-section">
+        <h1>Cardápio Personalizado</h1>
+        <p>Preencha o formulário para receber um plano alimentar customizado para seus objetivos e necessidades</p>
+    </section>
+
+    <!-- Form -->
+    <div class="cardapio">
+        <div class="form-cardapio">
+            <form id="formCardapio">
+                <!-- Dados Pessoais -->
+                <div class="form-cardapio-conteudo">
+                    <h3>Dados Pessoais</h3>
+                    <div class="linha-form">
+                        <div class="grupo-campo">
+                            <label>Nome Completo</label>
+                            <input type="text" id="nomeInput" >
+                        </div>
+                        <div class="grupo-campo">
+                            <label>Idade</label>
+                            <input type="number" id="idadeInput" >
+                        </div>
+                        <div class="grupo-campo">
+                            <label>IMC</label>
+                            <input type="text" id="imcInput">
+                        </div>
+                        <div class="grupo-campo">
+                            <label>Altura (metros)</label>
+                            <input type="text" id="altura" placeholder="Ex: 1.75" >
+                        </div>
+                    </div>
+
+                    <label>Sexo</label>
+                    <div class="radio-grupo">
+                        <div class="opcoes">
+                            <input type="radio" name="sexo" id="masculino" value="masculino">
+                            <label for="masculino">Masculino</label>
+                        </div>
+                        <div class="opcoes">
+                            <input type="radio" name="sexo" id="feminino" value="feminino">
+                            <label for="feminino">Feminino</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estilo de Vida -->
+                <div class="form-cardapio-conteudo">
+                    <h3>Estilo de Vida</h3>
+                    <div class="grupo-campo">
+                        <label>Nível de Atividade Física</label>
+                        <select id="level">
+                            <option value="sedentario">Sedentário</option>
+                            <option value="leve">Leve</option>
+                            <option value="moderado">Moderado</option>
+                            <option value="intenso">Intenso</option>
+                        </select>
+                    </div>
+
+                    <div class="grupo-campo">
+                        <label>Tempo disponível para preparar refeições</label>
+                        <select id="tempoPreparo" >
+                            <option value="pouco">Pouco tempo (refeições rápidas)</option>
+                            <option value="medio">Tempo médio (preparo simples)</option>
+                            <option value="muito">Muito tempo (pratos elaborados)</option>
+                            <option value="usa_marmita">Uso marmita pronta</option>
+                        </select>
+                    </div>
+
+                    <div class="grupo-campo">
+                        <label>Com o que você trabalha?</label>
+                        <input type="text" id="trabalho_tipo" placeholder="Ex: vendedor, professor">
+                    </div>
+
+                    <div class="grupo-campo">
+                        <label>Descreva sua rotina diária</label>
+                        <textarea id="rotina" placeholder="Horários de trabalho, treino, sono..." ></textarea>
+                    </div>
+                </div>
+
+                <!-- Peso Corporal -->
+                <div class="form-cardapio-conteudo">
+                    <div class="corpo-secao">
+                        <h3>Seu Peso Atual</h3>
+                        <div class="corpo-visual">
+                          <img id="imagemPesoAtual" src="img/humanos-icons/ectomorfa extrema.png" alt="" class="body-image">
+                          <img class="peso-img" src="img/humanos-icons/magroPadrao.png" alt="" style="display: none;">
+                          <img class="peso-img" src="img/humanos-icons/medioMagro.png" alt="" style="display: none;">
+                          <img class="peso-img" src="img/humanos-icons/medioMagroMasculino.png" alt="" style="display: none;">
+                          <img class="peso-img" src="img/humanos-icons/obesoo.png" alt="" style="display: none;">
+
+                        </div>
+                        <input type="range" id="inputPesoAtual" min="40" max="120" value="70" oninput="atualizarPeso('inputPesoAtual', 'valorPesoAtual', 'imagemPesoAtual', 'peso-img')">
+                        <div class="weight-display" id="valorPesoAtual">70 kg</div>
+                    </div>
+                </div>
+
+                <!-- Restrições e Objetivos -->
+                <div class="form-cardapio-conteudo">
+                    <h3>Objetivos e Restrições</h3>
+                    
+                    <label>Você possui alguma alergia alimentar?</label>
+                    <div class="radio-grupo">
+                        <div class="opcoes">
+                            <input type="radio" name="alergia" value="sim" onchange="toggleConditional('campo-texto1', this.checked)">
+                            <label>Sim</label>
+                        </div>
+                        <div class="opcoes">
+                            <input type="radio" name="alergia" value="nao" onchange="toggleConditional('campo-texto1', false)">
+                            <label>Não</label>
+                        </div>
+                    </div>
+                    <div class="condicoes" id="campo-texto1-container">
+                        <input type="text" id="campo-texto1" placeholder="Descreva suas alergias...">
+                    </div>
+
+                    <label>Está seguindo alguma dieta específica?</label>
+                    <div class="radio-grupo">
+                        <div class="opcoes">
+                            <input type="radio" name="resposta2" value="sim" onchange="toggleConditional('campo-texto-dieta', this.checked)">
+                            <label>Sim</label>
+                        </div>
+                        <div class="opcoes">
+                            <input type="radio" name="resposta2" value="nao" onchange="toggleConditional('campo-texto-dieta', false)">
+                            <label>Não</label>
+                        </div>
+                    </div>
+                    <div class="condicoes" id="campo-texto-dieta-container">
+                        <input type="text" id="campo-texto-dieta" placeholder="Qual dieta você segue?">
+                    </div>
+
+                    <label>Qual seu objetivo principal?</label>
+                    <div class="radio-grupo">
+                        <div class="opcoes">
+                            <input type="radio" name="resposta" value="sim" onchange="toggleConditional('campo-texto2', false)">
+                            <label>Ganhar peso</label>
+                        </div>
+                        <div class="opcoes">
+                            <input type="radio" name="resposta" value="nao" onchange="toggleConditional('campo-texto2', false)">
+                            <label>Perder peso</label>
+                        </div>
+                        <div class="opcoes">
+                            <input type="radio" name="resposta" value="outros" onchange="toggleConditional('campo-texto2', this.checked)">
+                            <label>Outros</label>
+                        </div>
+                    </div>
+                    <div class="condicoes" id="campo-texto2-container">
+                        <input type="text" id="campo-texto2" placeholder="Descreva seu objetivo...">
+                    </div>
+
+                    <label>Você pratica algum esporte?</label>
+                    <div class="radio-grupo">
+                        <div class="opcoes">
+                            <input type="radio" name="resposta3" value="sim" onchange="toggleConditional('campo-texto-esporte', this.checked)">
+                            <label>Sim</label>
+                        </div>
+                        <div class="opcoes">
+                            <input type="radio" name="resposta3" value="nao" onchange="toggleConditional('campo-texto-esporte', false)">
+                            <label>Não</label>
+                        </div>
+                    </div>
+                    <div class="condicoes" id="campo-texto-esporte-container">
+                        <input type="text" id="campo-texto-esporte" placeholder="Qual esporte?">
+                    </div>
+
+                    <div class="grupo-campo">
+                        <label>Alimentos que você não tiraria da dieta (máx. 3)</label>
+                        <input type="text" id="alimentoFavorito" placeholder="Ex: chocolate, pizza, sorvete">
+                        <small id="alimentos-feedback" style="color: #ef4444; display: none;">Máximo 3 alimentos!</small>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="btn-container">
+                    <button type="submit" class="btn-cardapio">
+                        Gerar Meu Cardápio Personalizado
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+
+    </footer>
+    <!-- Message Toast -->
+    <div id="mensagem-flutuante" class="mensagem"></div>
+
+    <script>
+  // ========== FUNÇÕES DE LOADING ==========
+  function mostrarLoading() {
+    // Remove loading anterior se existir
+    const loadingExistente = document.getElementById('loading-overlay');
+    if (loadingExistente) {
+      loadingExistente.remove();
+    }
+
+    // Cria o overlay de loading
+    const loadingHTML = `
+      <div id="loading-overlay" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      ">
+        <div class="spinner" style="
+          border: 5px solid rgba(255, 255, 255, 0.2);
+          border-top: 5px solid #4CAF50;
+          border-radius: 50%;
+          width: 70px;
+          height: 70px;
+          animation: spin 0.8s linear infinite;
+        "></div>
+        <p style="
+          color: white;
+          margin-top: 25px;
+          font-size: 20px;
+          font-weight: 600;
+          text-align: center;
+        ">Gerando seu cardápio personalizado...</p>
+        <p style="
+          color: rgba(255, 255, 255, 0.7);
+          margin-top: 10px;
+          font-size: 14px;
+        ">Isso pode levar alguns segundos</p>
+      </div>
+      <style>
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      </style>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', loadingHTML);
+  }
+
+  function esconderLoading() {
+    const loading = document.getElementById('loading-overlay');
+    if (loading) {
+      loading.remove();
+    }
+  }
+
+  // ========== FORMULÁRIO ==========
+  document.querySelector("form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const user = JSON.parse(localStorage.getItem("dadosUsuario"));
+
+    if (!user || !user.id) {
+      alert("Usuário não encontrado no localStorage!");
+      return;
+    }
+
+    const usuario_id = user.id;
+    
+    // Nome
+    const nome = document.getElementById("nomeInput").value.trim();
+    if (!nome) {
+      mostrarMensagem("Por favor, preencha o Nome completo.", "erro");
+      return;
+    }
+
+    // Idade
+    const idade = parseInt(document.getElementById("idadeInput").value, 10);
+    if (isNaN(idade) || idade <= 0) {
+      mostrarMensagem("Por favor, insira uma idade válida.", "erro");
+      return;
+    }
+
+    // IMC
+    const imcRaw = document.getElementById("imcInput").value.trim().replace(",", ".");
+    const imc = parseFloat(imcRaw);
+    if (isNaN(imc) || imc <= 0) {
+      mostrarMensagem("Por favor, insira um IMC válido.", "erro");
+      return;
+    }
+
+    // Altura
+    let alturaRaw = document.getElementById("altura").value.trim();
+    alturaRaw = alturaRaw.replace(",", ".");
+    const altura = parseFloat(alturaRaw);
+    if (isNaN(altura) || altura < 0.5) {
+      mostrarMensagem("Por favor, insira uma altura válida (ex: 1.75).", "erro");
+      return;
+    }
+
+    // Peso
+    const peso = parseFloat(document.getElementById("inputPesoAtual").value);
+    if (isNaN(peso) || peso <= 0) {
+      mostrarMensagem("Por favor, insira um peso válido.", "erro");
+      return;
+    }
+
+    // Sexo
+    const sexo = document.querySelector('input[name="sexo"]:checked')?.value;
+    if (!sexo) {
+      mostrarMensagem("Por favor, selecione o Sexo.", "erro");
+      return;
+    }
+
+    // Objetivo
+    const objetivoRadio = document.querySelector('input[name="resposta"]:checked');
+    let objetivo = "";
+    if (!objetivoRadio) {
+      mostrarMensagem("Por favor, selecione um objetivo alimentar.", "erro");
+      return;
+    } else {
+      if (objetivoRadio.value === "outros") {
+        const outroObj = document.getElementById("campo-texto2").value.trim();
+        if (!outroObj) {
+          mostrarMensagem("Por favor, descreva seu objetivo em 'Outros'.", "erro");
+          return;
+        }
+        objetivo = outroObj;
+      } else if (objetivoRadio.value === "sim") {
+        objetivo = "Ganhar peso";
+      } else if (objetivoRadio.value === "nao") {
+        objetivo = "Perder peso";
+      }
+    }
+
+    // Nível de Atividade
+    const level = document.getElementById("level").value;
+    if (!level) {
+      mostrarMensagem("Por favor, selecione o nível de atividade física.", "erro");
+      return;
+    }
+
+    // Tempo de preparo
+    const tempoPreparo = document.getElementById("tempoPreparo").value;
+    if (!tempoPreparo) {
+      mostrarMensagem("Por favor, selecione o tempo de preparo.", "erro");
+      return;
+    }
+
+    // Trabalho
+    const trabalho = document.getElementById("trabalho_tipo").value.trim();
+    if (!trabalho) {
+      mostrarMensagem("Por favor, informe o tipo de trabalho.", "erro");
+      return;
+    }
+
+    // Rotina
+    const rotina = document.getElementById("rotina").value.trim();
+    if (!rotina) {
+      mostrarMensagem("Por favor, descreva sua rotina.", "erro");
+      return;
+    }
+
+    // Alergia
+    const alergiaRadio = document.querySelector('input[name="alergia"]:checked');
+    let alergia = "Nenhuma";
+    if (!alergiaRadio) {
+      mostrarMensagem("Por favor, informe se possui alergia alimentar.", "erro");
+      return;
+    } else if (alergiaRadio.value === "sim") {
+      const campoAlergia = document.getElementById("campo-texto1").value.trim();
+      if (!campoAlergia) {
+        mostrarMensagem("Por favor, preencha o campo de alergias.", "erro");
+        return;
+      }
+      alergia = campoAlergia;
+    }
+
+    // Dieta atual
+    const dietaRadio = document.querySelector('input[name="resposta2"]:checked');
+    let dietaAtual = "Nenhuma";
+    if (!dietaRadio) {
+      mostrarMensagem("Por favor, informe se segue alguma dieta atualmente.", "erro");
+      return;
+    } else if (dietaRadio.value === "sim") {
+      const campoDieta = document.getElementById("campo-texto-dieta").value.trim();
+      if (!campoDieta) {
+        mostrarMensagem("Por favor, preencha o campo sobre a dieta atual.", "erro");
+        return;
+      }
+      dietaAtual = campoDieta;
+    }
+
+    // Esporte
+    const esporteRadio = document.querySelector('input[name="resposta3"]:checked');
+    let esporte = "Nenhum";
+    if (!esporteRadio) {
+      mostrarMensagem("Por favor, informe se pratica algum esporte.", "erro");
+      return;
+    } else if (esporteRadio.value === "sim") {
+      const campoEsporte = document.getElementById("campo-texto-esporte").value.trim();
+      if (!campoEsporte) {
+        mostrarMensagem("Por favor, preencha o campo de esporte.", "erro");
+        return;
+      }
+      esporte = campoEsporte;
+    }
+
+    // Alimentos favoritos
+    const alimentosFavoritosRaw = document.getElementById("alimentoFavorito").value.trim();
+    const alimentosFavoritos = alimentosFavoritosRaw
+      ? alimentosFavoritosRaw.split(",").map(a => a.trim()).filter(a => a.length > 0)
+      : [];
+
+    if (alimentosFavoritos.length > 3) {
+      mostrarMensagem("Você pode listar no máximo 3 alimentos favoritos.", "erro");
+      document.getElementById("alimentos-feedback").style.display = "block";
+      return;
+    } else {
+      document.getElementById("alimentos-feedback").style.display = "none";
+    }
+
+    // JSON final
+    const dados = {
+      usuario_id,
+      name: nome,
+      age: idade,
+      imc: imc,
+      height: altura,
+      weight: peso,
+      gender: sexo,
+      objective: objetivo,
+      level: level,
+      alergia: alergia,
+      trabalho: trabalho,
+      alimentosFavoritos: alimentosFavoritos,
+      esporte: esporte,
+      dietaAtual: dietaAtual,
+      rotina: rotina,
+      tempoPreparo: tempoPreparo
+    };
+
+    console.log("JSON que o front-end está enviando:", JSON.stringify(dados, null, 2));
+
+    // ========== MOSTRAR LOADING AQUI ==========
+    mostrarLoading();
+
+    try {
+      // 1. Salvar respostas no banco
+      const salvarResp = await fetch("http://localhost:3000/respostas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dados),
+        
+      });
+
+      const respostaBackend = await salvarResp.json();
+
+      if (!respostaBackend.sucesso) {
+        esconderLoading(); // ESCONDER SE DER ERRO
+        mostrarMensagem("Erro ao salvar respostas!", "erro");
+        console.error("Erro salvarResposta:", respostaBackend);
+        return;
+      }
+
+      const respostas_id = respostaBackend.respostas_id;
+      console.log("ID das respostas salvas:", respostas_id);
+
+      // 2. Gerar o cardápio normalmente
+      const response = await fetch(
+        `http://localhost:3000/cardapio/CardapioCriado?timestamp=${Date.now()}`,
+        {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache"
+          },
+          body: JSON.stringify(dados),
+        }
+      );
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Cardápio gerado:", result);
+
+        // 3. SALVAR O CARDÁPIO NO BANCO
+        try {
+          // Verifica se CryptoJS está disponível
+          if (typeof CryptoJS === 'undefined') {
+            console.error('CryptoJS não está carregado!');
+            // Continua sem hash (o backend pode gerar)
+            var hash_respostas = '';
+          } else {
+            var hash_respostas = CryptoJS.SHA256(JSON.stringify(dados)).toString();
+          }
+
+          // ✅ Garante que o cardápio seja uma string JSON
+          const cardapioParaSalvar = typeof result.data === 'string' 
+            ? result.data 
+            : JSON.stringify(result.data);
+
+          console.log("Enviando para /salvarCardapio:", {
+            usuario_id: usuario_id,
+            respostas_id: respostas_id, // ✅ ADICIONA O ID DAS RESPOSTAS
+            cardapio_texto: cardapioParaSalvar,
+            tipo: typeof cardapioParaSalvar
+          });
+
+          const salvarCardapio = await fetch("http://localhost:3000/salvarCardapio", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              usuario_id: usuario_id,
+              respostas_id: respostas_id, // ✅ ENVIA O ID
+              hash_respostas: hash_respostas,
+              cardapio_texto: cardapioParaSalvar,
+              respostas_formulario: dados
+            })
+          });
+
+          const respostaCardapio = await salvarCardapio.json();
+
+          console.log("📌 Resposta salvarCardapio:", respostaCardapio);
+
+          if (!respostaCardapio.sucesso) {
+            console.error("Erro ao salvar cardápio:", respostaCardapio);
+          } else {
+            console.log("Cardápio salvo com sucesso no banco!");
+          }
+
+        } catch (err) {
+          console.error("Erro ao tentar salvar cardápio:", err);
+        }
+
+        // Salva no navegador
+        sessionStorage.clear();
+        sessionStorage.setItem("cardapio", JSON.stringify(result.data));
+        sessionStorage.setItem("respostas_id", respostas_id);
+
+        esconderLoading(); // ESCONDER QUANDO TERMINAR
+        mostrarMensagem("Cardápio gerado com sucesso!", "sucesso");
+
+        setTimeout(() => {
+          window.location.href = "cardapioGerado.html";
+        }, 2000);
+
+      } else {
+        esconderLoading(); // ESCONDER SE DER ERRO
+        mostrarMensagem("Erro ao gerar o cardápio. Tente novamente.", "erro");
+        console.error("Erro HTTP:", await response.text());
+      }
+
+    } catch (error) {
+      esconderLoading(); // ESCONDER SE DER ERRO
+      mostrarMensagem("Erro de conexão com o servidor.", "erro");
+      console.error("Erro geral:", error);
+    }
+  });
+
+  function toggleConditional(fieldId, show) {
+    const container = document.getElementById(fieldId + '-container');
+    if (container) {
+      if (show) container.classList.add('active');
+      else container.classList.remove('active');
+    }
+  }
+</script>
+
+
+ <script>
+            
+function atualizarPeso(inputId, valorId, imagemFemininaId, classeImagensMasculinas) {
+  const input = document.getElementById(inputId);
+  const output = document.getElementById(valorId);
+  const imgFeminina = document.getElementById(imagemFemininaId);
+  const imagensMasculinas = classeImagensMasculinas ? document.querySelectorAll('.' + classeImagensMasculinas) : [];
+
+  if (input && output && imgFeminina) {
+    output.innerText = input.value + " kg";
+    const peso = parseInt(input.value);
+
+    const masculinoSelecionado = document.getElementById('masculino')?.checked;
+    const femininoSelecionado = document.getElementById('feminino')?.checked;
+
+    let srcFeminino = "";
+    let nomeArquivoMasculino = "";
+
+    if (peso <= 35) {
+      srcFeminino = "img/humanos-icons/ectomorfa extrema.png";
+      nomeArquivoMasculino = "magroPadrao.png";
+    } else if (peso <= 56) {
+      srcFeminino = "img/humanos-icons/MagraPadrao.png";
+      nomeArquivoMasculino = "medioMagro.png";
+    } else if (peso <= 80) {
+      srcFeminino = "img/humanos-icons/Medio2magro.png";
+      nomeArquivoMasculino = "medioMagroMasculino.png";
+    } else if (peso <= 75) {
+      srcFeminino = "img/humanos-icons/medioMagro2.png";
+      
+    } else if (peso <= 80) {
+      srcFeminino = "img/humanos-icons/Acimadopeso.png";
+    } else if (peso <= 120) {
+      srcFeminino = "img/humanos-icons/acimadopeso2.png";
+      nomeArquivoMasculino = "obesoo.png";
+    }
+
+    if (femininoSelecionado) {
+      imgFeminina.src = srcFeminino;
+      imgFeminina.style.display = "block";
+
+      imagensMasculinas.forEach(img => img.style.display = "none");
+
+    } else if (masculinoSelecionado && imagensMasculinas.length > 0) {
+      imgFeminina.style.display = "none";
+
+      imagensMasculinas.forEach(img => img.style.display = "none");
+
+      if (nomeArquivoMasculino) {
+        imagensMasculinas.forEach(img => {
+          const nomeImagem = img.src.substring(img.src.lastIndexOf("/") + 1);
+          if (nomeImagem === nomeArquivoMasculino) {
+            img.style.display = "block";
+          }
+        });
+      }
+    }
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="icon" href="img/logos/logo.png" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="script.js" defer></script>
+    <script src="tela.js" defer></script>
+    <title>Nutrivida inicio</title>
+    
+</head>
+<body >
+
+    <div class="organic-bg-nutrivida">
+        <div class="blob-nutrivida blob-nutrivida-1"></div>
+        <div class="blob-nutrivida blob-nutrivida-2"></div>
+        <div class="blob-nutrivida blob-nutrivida-3"></div>
+        <div class="blob-nutrivida blob-nutrivida-4"></div>
+    </div>
+
+    <div class="floating-foods-nutrivida">
+        <div class="food-icon-nutrivida food-nutrivida-1">
+            <img src="img/abacate.png" alt="abacate-imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-2">
+            <img src="img/maca.png" alt="maça imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-3">
+            <img src="img/salada.png" alt="salada imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-4">
+            <img src="img/tangerina.png" alt="tangerina imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-5">
+            <img src="img/brocolis.png" alt="brocolis imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-6">
+            <img src="img/banana.png" alt="banana imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-7">
+            <img src="img/cenoura.png" alt="imagem cenoura">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-8">
+            <img src="img/kiwi.png" alt="imagem kiwi">
+        </div>
+    </div>
+
+    <header >
+        <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+
+           
+
+        <section class="direito">
+        <nav class="menu" >
+            <ul id="menu">
+
+                <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+                <li><a class="item" href="index.html" id="paginaAtual" data-translate="1">Início</a></li>    
+                <li class="dropdown"> <p class="setaNav" data-translate="2">Serviços
+                    
+                </p>
+                
+                <div class="drop-menu">
+                    <a class="item" id="dropdown__link" href="servico.html" data-translate="7">Nossos serviços</a>
+
+                    
+                    <a class="item" id="dropdown__link" href="imc.html" data-translate="8">Imc</a>
+                    <a class="item" id="dropdown__link" href="Cardapio.html" data-translate="9">Cardápio Personalizado</a>
+                    <a class="item" id="dropdown__link" href="agendamento.html" data-translate="9">Agendamento</a>
+                    
+                </div>
+            </li>
+                <li><a class="item" href="exames.html" data-translate="3">Exames</a>
+                <li><a class="item" href="sobre.html" data-translate="4">Sobre nós</a></li>
+                <li><a class="item" href="contatos.html" data-translate="5">Contatos</a></li>
+                <li class="dropdown"> <p class="setaNav" data-translate="6" id="usuarioLogado">Usuario
+                    
+                </p>
+
+
+                <div class="drop-menu drop-m2">
+                    <a href="cadastro.html" id="link-cadastro" class="item">Cadastro</a>    
+                    <a href="entrar.html" id="link-login" class="item">Entrar</a>
+                    <a href="perfil.html" id="linkPerfil" class="item">Perfil</a>
+                  </div>
+                  
+            </li>
+              
+
+            </ul>
+        </nav>
+    
+        <div class="hamburgue" id="hamburgue"></div>
+    </section>
+
+    
+    </header>
+     <section class="banner" id="inicio">
+        <div class="textos">
+            <h1 class="titulo-principal">Invista na Sua Saúde e Transforme Seu Corpo com a NutriVida!</h1>
+            <p class="subtitulo">Venha conhecer <a href="#planos" class="linkTitulo2">nossos serviços!</a></p>
+            
+        <a href="index.html#para-baixo" class="linkTitulo">
+                <img src="img/icons/seta-baixo.svg" alt="seta de descer para baixo">
+            </a>
+        </div>
+        
+        <div class="hero-visual">
+            <div class="organic-shape"></div>
+            <div class="floating-card card-1">
+                <div class="stat-number">2x</div>
+                <div class="stat-label">Mais Rápido</div>
+            </div>
+            <div class="floating-card card-2">
+                <div class="stat-number">95%</div>
+                <div class="stat-label">Satisfação</div>
+            </div>
+            <div class="floating-card card-3">
+                <div class="stat-number">10k+</div>
+                <div class="stat-label">Clientes</div>
+            </div>
+        </div>
+        
+        
+        </section>
+    <button class="Seta-subir" onclick="backTop();">
+        <img src="img/icons/subir.svg" alt="seta-subir">
+    </button>
+
+    <main class="card-planos">
+
+    <section class="planos" id="para-baixo">
+        
+        <h2 data-translate="10">Escolha o melhor plano para você</h2>
+
+        <div class="cards">
+
+            <div class="card-interno">
+
+                <div class="card card1">
+
+                    <h2 data-translate="11">Básico</h2>
+                    <h3 data-translate="12">R$70,00</h3>
+                    <p data-translate="13">Acesso a artigos e receitas de nutrição básica.</p>
+                    <p data-translate="14">Fórum de discussão online para interação com outros membros e nutricionistas.</p>
+                    <p data-translate="15">Boletim informativo mensal com dicas e atualizações de nutrição.</p>
+                    <p data-translate="16">Descontos em produtos ou serviços adicionais do site.</p>
+
+                    <button class="comprar-btn" onclick="criarPreferencia('Plano Básico', 70)">Plano Básico</button>
+
+
+
+
+
+                </div>
+
+                <div class="card card2">
+
+                    <h2 data-translate="18">Intermediário</h2>
+                    <h3 data-translate="19">R$140,00</h3>
+                    <p data-translate="20">Todos os benefícios do plano básico.</p>
+                    <p data-translate="21">Planos de refeições semanais personalizados com base nas preferências alimentares e metas de saúde do usuário.</p>
+                    <p data-translate="22">Acesso a vídeos exclusivos com tutoriais de culinária saudável e exercícios.</p>
+                    <p data-translate="23">Webinars mensais ao vivo com nutricionistas especializados em diferentes áreas.</p>
+                    <p data-translate="24">Suporte por e-mail ou chat para dúvidas nutricionais básicas.</p>
+
+                    <button class="comprar-btn" onclick="criarPreferencia('Plano Padrão', 140)">Plano Padrão</button>
+
+                </div>
+
+                <div class="card card3">
+
+                    <h2 data-translate="26">Premium</h2>
+                    <h3 data-translate="27">R$210,00</h3>
+                    <p data-translate="28">Todos os benefícios dos planos básico e intermediário.</p>
+                    <p data-translate="29">Consultas individuais mensais com um nutricionista certificado via videochamada.</p>
+                    <p data-translate="30">Programas de treinamento físico personalizado elaborados por um personal trainer certificado.</p>
+                    <p data-translate="31">Acesso ilimitado a uma biblioteca de recursos premium, como e-books, guias de receitas exclusivas e cursos online.</p>
+                    <p data-translate="32">Suporte prioritário ao cliente com tempos de resposta mais rápidos e atendimento personalizado.</p>
+
+                    <button class="comprar-btn" onclick="criarPreferencia('Plano Premium', 210)">Plano Premium</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        
+
+    </section>
+    </main>
+
+    <section class="barra-acessibilidade" id="idn-menu">
+            <div class="header-barra">
+                <img class="img-acessibilidade1" src="img/icons/forma acessibilidade10.svg" alt="Imagem da forma do cabeçalho de acessibilidade">
+                <img class="img-acessibilidade2" src="img/icons/forma acessibilidade 3.png" alt="Imagem da forma do cabeçalho de acessibilidade">
+                
+                <div class="organizar">
+                
+                    
+
+                    <select id="languageSelector" onchange="changeLanguage()">
+                        <option value="pt-br">Português</option>
+                        <option value="en">Inglês</option>
+                    </select>
+
+                
+                <button id="fechar-barra"><img src="img/icons/fechar.svg" alt="Ícone do botão de fechar a barra de acessibilidade"></button>
+            </div>
+
+            <h2 class="h2-acessibilidade" data-translate="34">Acessibilidade</h2>
+
+            </div>
+
+            <div class="corpo-barra">
+
+                    <div class="card-barra">
+
+                        <button id="alteraCorDark">
+
+                            <img src="img/icons/icone-lua.svg" alt="simbolo-dark">
+                            <img src="img/icons/icone-sol.svg" alt="simbolo-light">
+                           
+                           </button>
+
+                        <button id="ativarVlibras">
+                            <img src="img/icons/libras.png" alt="ícone do botão do VLibras">
+   
+                        </button>
+
+                        <button id="zoom" class="AumentarDiminuir-zoom">
+                            <img src="img/icons/aumentar-zoom.svg" alt="lupa para aumentar o zoom do site">
+                            <img src="img/icons/diminuir-zoom.svg" alt="lupa para diminuir o zoom do site">
+                        </button>
+
+                        <button id="imagem-alt" class="ler-imagemAlt">
+                            <img src="img/icons/imagem-alt.png"  alt="Simbolo de imagem ativada">
+                            <img src="img/icons/imagemAlt desativada.svg" alt="Simbolo de imagem desativada">
+
+                        </button>
+
+                        <button id="destacar-links">
+                            <img src="img/icons/marca-texto.svg" alt="Ícone do símbolo do marca texto">
+                            <img src="img/icons/marca-texto desativado.svg" alt="Ícone do símbolo do marca texto desativado">
+                        </button>
+                        
+                    </div>
+
+            </div>
+
+            <div class="footer-barra">
+
+                <div class="btnDesligar-barra">
+
+                    <button id="DesligarFuncao" data-translate="35">
+                        Desligar
+                    </button>
+
+                </div>
+
+                <div class="footer-barra2">
+                    <span data-translate="36">Desenvolvido por Nutrivida</span>
+                </div>
+                
+            </div>
+
+            
+    </section>
+  
+<!-- Adicione isso ao seu HTML para o modal de confirmação -->
+<div id="confirmacaoCompra">
+  <div class="modal-conteudo">
+    <p id="mensagemConfirmacao"></p>
+    <button id="btnSim">Sim</button>
+    <button id="btnCancelar">Cancelar</button>
+  </div>
+</div>
+
+
+    <div class="btn-acessibilidade" id="botao-acessibilidade">
+        <button>
+            <img src="img/icons/onu-logo.png" alt="Ícone do botão de acessibilidade">
+        </button>
+    </div>
+
+    <section class="programas">
+
+        <h2 data-translate="37">Para quem é esse programa?</h2>
+
+        <div class="card-programas-layout">
+            <div class="card-programas">
+                
+                <div class="card-cima">
+
+            <h5 data-translate="38">Perfil 01</h5>
+            <img src="img/file-medical.svg" alt="icone de nutrição">
+        </div>
+        
+                <div class="card-baixo">
+                    <h5 data-translate="39">Quer emagrecer de maneira natural com acompanhamento diário, para evitar voltar para o peso atual</h5>
+                </div>
+        </div>
+
+        <div class="card-programas">
+                
+            <div class="card-cima">
+
+        <h5  data-translate="40">Perfil 02</h5>
+        <img src="img/file-medical.svg" alt="icone de nutrição">
+    </div>
+    
+            <div class="card-baixo">
+                <h5 data-translate="41">Já está ou quer emagrecer com tratamentos dedicados e de um jeito duradouro com acompanhamento médico</h5>
+            </div>
+    </div>
+
+            <div class="card-programas">
+                
+                <div class="card-cima">
+
+            <h5 data-translate="42">Perfil 03</h5>
+            <img src="img/file-medical.svg" alt="icone de nutrição">
+        </div>
+        
+                <div class="card-baixo">
+                    <h5 data-translate="43">Tem uma rotina boa mas quer dar uma acelerada e chegar na melhor versão, com acompanhamento digno de um atleta</h5>
+                </div>
+        </div>
+
+        <div class="card-programas">
+                
+                <div class="card-cima">
+
+            <h5 data-translate="44">Perfil 04</h5>
+            <img src="img/file-medical.svg" alt="icone de nutrição">
+        </div>
+        
+                <div class="card-baixo">
+                    <h5 data-translate="45">Já fez dietas, entende como funcionam mas dessa vez quer se desafiar e aceitar uma ajuda pra fazer tudo de casa!</h5>
+                </div>
+        </div>
+        
+        </div>
+
+        
+
+
+    </section>
+    
+    
+
+
+   
+
+    <section class="timeline-transformacao" id="jornada">
+    <div class="timeline-container">
+        <h2 class="timeline-title">Sua Jornada de Transformação</h2>
+        <p class="timeline-subtitle">Acompanhe o processo completo em 6 meses</p>
+        
+        <div class="timeline-line"></div>
+        
+        <div class="timeline-items">
+            <!-- Fase 1 -->
+            <div class="timeline-item" data-fase="1">
+                <div class="timeline-dot">
+                    <span class="dot-number">1</span>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-header">
+                        <span class="timeline-periodo">Mês 1-2</span>
+                        <span class="timeline-icon"></span>
+                    </div>
+                    <h3>Avaliação e Início</h3>
+                    <p>Análise completa do seu perfil, exames e objetivos. Criação do plano alimentar personalizado e início dos novos hábitos.</p>
+                    <div class="timeline-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">100%</span>
+                            <span class="stat-label">Personalizado</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">2-4kg</span>
+                            <span class="stat-label">Perda Inicial</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fase 2 -->
+            <div class="timeline-item timeline-right" data-fase="2">
+                <div class="timeline-dot">
+                    <span class="dot-number">2</span>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-header">
+                        <span class="timeline-periodo">Mês 3-4</span>
+                        <span class="timeline-icon"></span>
+                    </div>
+                    <h3>Primeiros Resultados</h3>
+                    <p>Corpo começa a responder, energia aumenta e os resultados ficam visíveis. Ajustes no plano para acelerar ainda mais.</p>
+                    <div class="timeline-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">+40%</span>
+                            <span class="stat-label">Mais Energia</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">5-8kg</span>
+                            <span class="stat-label">Perda Total</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fase 3 -->
+            <div class="timeline-item" data-fase="3">
+                <div class="timeline-dot">
+                    <span class="dot-number">3</span>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-header">
+                        <span class="timeline-periodo">Mês 5-6</span>
+                        <span class="timeline-icon"></span>
+                    </div>
+                    <h3>Transformação Completa</h3>
+                    <p>Meta alcançada! Novos hábitos consolidados, corpo transformado e estilo de vida saudável para sempre.</p>
+                    <div class="timeline-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">95%</span>
+                            <span class="stat-label">Taxa Sucesso</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">10-15kg</span>
+                            <span class="stat-label">Perda Total</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item timeline-right final" data-fase="4">
+                <div class="timeline-dot timeline-dot-final">
+                    <span class="dot-number">✓</span>
+                </div>
+                <div class="timeline-card timeline-card-final">
+                    <div class="timeline-header">
+                        <span class="timeline-periodo">Para Sempre</span>
+                        <span class="timeline-icon"></span>
+                    </div>
+                    <h3>Manutenção & Suporte</h3>
+                    <p>Continue com nosso suporte contínuo para manter seus resultados e evoluir ainda mais. Você nunca estará sozinho!</p>
+                    <div class="timeline-depoimento">
+                        <p class="depo-texto">"Perdi 12kg e nunca me senti tão bem!"</p>
+                        <p class="depo-autor">- Maria S., Taquaritinga-SP</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-cta">
+            <h3>Pronto para Começar Sua Jornada?</h3>
+            <a href="#planos" class="btn btn-timeline">Escolher Meu Plano</a>
+        </div>
+    </div>
+</section>
+
+            <section class="programas-emagrecimento">
+
+                <h2 data-translate="51">Conheça o programa de emagrecimento da Nutrivida</h2>
+
+                <div class="emagrecimento">
+
+                
+
+                <div class="cardEgrafico">
+
+                    <div class="cards-grafico">
+
+                        <div class="card-grafico">
+
+                            <div class="card-graficoCima">
+                                <h6 data-translate="52">Resultado até 2x mais rápidos</h6>
+                                <img src="img/chevrons-down.svg" alt="Icone ods card programas">
+                                
+                            </div>
+                            <p data-translate="53">Por ser um programa exclusivamente dedicado para pessoas que querem emagrecer e ter uma vida saudável, possui mais profundidade e resultados acima da média.</p>
+                                                        
+                        </div>
+
+                        <div class="card-grafico">
+
+                            <div class="card-graficoCima">
+                                <h6 data-translate="54">Acompanhamento personalizado</h6>
+                                <img src="img/chevrons-down.svg" alt="Icone ods card programas">
+                                
+                            </div>
+                            <p data-translate="55">Você será acompanhado por especialistas da área, podendo obter e manter um resultado muito acima da média.</p>
+                                                        
+                        </div>
+
+                        <div class="card-grafico">
+
+                            <div class="card-graficoCima">
+                                <h6 data-translate="56">Mudança permanente nos hábitos em 6 meses</h6>
+                                <img src="img/chevrons-down.svg" alt="Icone ods card programas">
+                 
+                            </div>
+                            <p data-translate="57">Com ajuda do seu time, altere seus hábitos pouco a pouco para criar uma rotina mais saudável e sustentável.</p>
+                                                        
+                        </div>
+                </div>
+                
+                <div class="imagem-grafico">
+                    
+                    <img id="imageDisplay"  src="img/imgGraficosTranslate/imagem grafico dark.png" alt="imagem do grafico de como seria seus resultados com e sem o Nutrivida">
+                </div>
+
+                </div>
+
+                    
+
+            </div>
+
+            </section>
+
+
+
+            <section class="depoimentos-section">
+        <div class="depoimentos-container">
+        <div class="depoimentos-header">
+            <h2 class="depoimentos-title">O Que Nossos Clientes Dizem</h2>
+            <p class="depoimentos-subtitle">Feedbacks e opiniões de nossos clientes e parceiros</p>
+        </div>
+
+        <div class="depoimentos-grid">
+            <!-- Depoimento 1 -->
+            <div class="depoimento-card">
+                <span class="depoimento-quote">"</span>
+                <p class="depoimento-texto">
+                    Como atleta, encontrar os suplementos certos para ganho de massa muscular era essencial para mim. A Nutrivida não só oferece serviços de alta qualidade, mas também uma abordagem personalizada que atendeu às minhas necessidades específicas. Ganhei 7 quilos de massa muscular desde que comecei a usar os serviços da Nutrivida e estou extremamente satisfeito com os resultados.
+                </p>
+                <div class="depoimento-autor">
+                    <div class="depoimento-avatar">M</div>
+                    <div class="depoimento-info">
+                        <div class="depoimento-nome">Marcos Silva</div>
+                        <div class="depoimento-local">📍 Taquaritinga-SP</div>
+                        <div class="depoimento-rating">
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Depoimento 2 -->
+            <div class="depoimento-card">
+                <span class="depoimento-quote">"</span>
+                <p class="depoimento-texto">
+                    A Nutrivida é simplesmente fantástica! Desde o primeiro contato, fui tratada com muito profissionalismo e atenção. Os nutricionistas online são extremamente qualificados e sempre prontos para tirar dúvidas e ajustar meu plano alimentar conforme minhas necessidades mudavam. Graças à Nutrivida, consegui perder peso de maneira saudável e sustentável.
+                </p>
+                <div class="depoimento-autor">
+                    <div class="depoimento-avatar">A</div>
+                    <div class="depoimento-info">
+                        <div class="depoimento-nome">Ana Paula</div>
+                        <div class="depoimento-local">📍 Taquaritinga-SP</div>
+                        <div class="depoimento-rating">
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Depoimento 3 -->
+            <div class="depoimento-card">
+                <span class="depoimento-quote">"</span>
+                <p class="depoimento-texto">
+                    Minha experiência com a Nutrivida foi verdadeiramente inspiradora. Desde o primeiro dia, senti-me apoiado e capacitado para alcançar meus objetivos de saúde e bem-estar. A Nutrivida não só me ajudou a conquistar uma transformação física impressionante, mas também me deu as ferramentas necessárias para manter um estilo de vida saudável a longo prazo.
+                </p>
+                <div class="depoimento-autor">
+                    <div class="depoimento-avatar">J</div>
+                    <div class="depoimento-info">
+                        <div class="depoimento-nome">João Santos</div>
+                        <div class="depoimento-local">📍 Taquaritinga-SP</div>
+                        <div class="depoimento-rating">
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navegação opcional -->
+        <div class="depoimentos-nav">
+            <div class="nav-dot active"></div>
+            <div class="nav-dot"></div>
+            <div class="nav-dot"></div>
+        </div>
+    </div>
+</section>
+
+    <footer>
+    <section class="footer-content">
+        <!-- Brand -->
+        <div class="footer-brand">
+            <div class="footer-logo">
+                <span class="footer-logo-icon">
+                    <img src="img/logos/logo.png" alt="logo nutrivida">
+                </span>
+                <span class="footer-logo-text">NutriVida</span>
+            </div>
+            <p class="footer-description">
+                Transformando vidas através da nutrição inteligente. 
+                Planos personalizados e acompanhamento profissional para sua melhor versão.
+            </p>
+            <div class="footer-social">
+                <a href="#" class="social-link" aria-label="Instagram"></a>
+                <a href="#" class="social-link" aria-label="Facebook"></a>
+                <a href="#" class="social-link" aria-label="Twitter"></a>
+                <a href="#" class="social-link" aria-label="YouTube"></a>
+            </div>
+        </div>
+
+        <!-- Mapa do site -->
+        <div class="footer-section">
+            <h3>Mapa do site</h3>
+            <ul class="footer-links">
+                <li><a href="index.html">Início</a></li>
+                <li><a href="servico.html">Serviços</a></li>
+                <li><a href="Cardapio.html">Cardápio</a></li>
+                <li><a href="agendamento.html">Agendamentos</a></li>
+                <li><a href="sobre.html">Sobre nós</a></li>
+                <li><a href="contatos.html">Contatos</a></li>
+            </ul>
+        </div>
+
+        <!-- Planos -->
+        <div class="footer-section">
+            <h3>Planos</h3>
+            <ul class="footer-links">
+                <li><a href="#basico">Básicos</a></li>
+                <li><a href="#intermediario">Intermediários</a></li>
+                <li><a href="#premium">Premium</a></li>
+            </ul>
+        </div>
+
+        <!-- Fale Conosco -->
+        <div class="footer-section">
+            <h3>Fale Conosco</h3>
+            <div class="contact-item">
+                <span class="contact-icon"></span>
+                <span>@site.nutrivida</span>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon"></span>
+                <span>(11) 99999-9999</span>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon"></span>
+                <span>São Paulo, SP</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="footer-bottom">
+        <div class="footer-copyright">
+            <span>© 2025 NutriVida</span>
+            <span>•</span>
+            <span>Todos os direitos reservados</span>
+        </div>
+        <ul class="footer-links-bottom">
+            <li><a href="#privacidade">Privacidade</a></li>
+            <li><a href="#termos">Termos de Uso</a></li>
+            <li><a href="#cookies">Cookies</a></li>
+        </ul>
+    </div>
+</footer>
+
+
+     <!-- Conteúdo da página -->
+
+     <div class="vLibras-barra">
+
+    <div vw class="enabled">
+      <div vw-access-button class="active"></div>
+      <div vw-plugin-wrapper id="vLibras-escondido">
+        <div class="vw-plugin-top-wrapper"></div>
+      </div>
+    </div>
+</div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+      new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+
+        <script>
+              window.addEventListener('scroll', function() {
+            let scroll = document.querySelector('.Seta-subir')
+            scroll.classList.toggle('active', window.scrollY > 450)
+        })
+
+        function backTop() {
+            window.scrollTo({
+                top:0,
+                behavior: 'smooth'
+            })
+        }
+        </script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          const cadastroLink = document.getElementById("link-cadastro");
+          const loginLink = document.getElementById("link-login");
+          const sairLink = document.getElementById("link-sair");
+      
+          const logado = localStorage.getItem("usuarioLogado") === "true";
+      
+          if (logado) {
+            // Esconde links de login e cadastro
+            cadastroLink.style.display = "none";
+            loginLink.style.display = "none";
+            // Mostra o botão de sair
+            sairLink.style.display = "inline";
+          } else {
+            cadastroLink.style.display = "inline";
+            loginLink.style.display = "inline";
+            sairLink.style.display = "none";
+          }
+      
+          // Evento de logout
+          sairLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            localStorage.removeItem("usuarioLogado");
+            location.reload(); // recarrega a página
+          });
+          
+        });
+
+//         function criarPreferencia(title, price) {
+//   fetch("http://localhost:3000/criar-preferencia", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json"
+//     },
+//     body: JSON.stringify({ title, price })
+//   })
+//   .then(res => res.json())
+//   .then(data => {
+//     if (data.id) {
+//       // Redireciona para o checkout do Mercado Pago
+//       window.location.href = `https://www.mercadopago.com.br/checkout/v1/redirect?preference_id=${data.id}`;
+//     } else {
+//       alert("Erro ao criar preferência.");
+//     }
+//   })
+//   .catch(err => {
+//     console.error("Erro ao chamar a API:", err);
+//     alert("Falha na criação da preferência.");
+//   });
+// }
+
+
+      </script>
+    
+    
+    
+
+<div id="mensagem-flutuante" class="mensagem"></div>
+
+                  
+</body>
+</html>

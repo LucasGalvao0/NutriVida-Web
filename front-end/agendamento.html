@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="icon" href="img/logos/logo.png" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>Nutrivida Agendamento</title>
+    <script src="tela.js" defer></script>
+    <script src="script.js" defer></script>
+    <style>
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+
+      :root {
+          --primary: #10b981;
+          --primary-dark: #059669;
+          --secondary: #34d399;
+          --accent: #fbbf24;
+          --dark: #0f172a;
+          --dark-light: #1e293b;
+          --text: #e2e8f0;
+          --text-dim: #94a3b8;
+          --border: rgba(16, 185, 129, 0.15);
+      }
+
+      body {
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+          background: #0a0f1a;
+          color: var(--text);
+          line-height: 1.6;
+          min-height: 100vh;
+      }
+
+      /* Background sutil */
+      body::before {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: -1;
+          background: 
+              radial-gradient(circle at 20% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(251, 191, 36, 0.06) 0%, transparent 50%),
+              linear-gradient(180deg, #0a0f1a 0%, #0f172a 100%);
+      }
+
+      body::after {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: -1;
+          background-image: 
+              linear-gradient(rgba(16, 185, 129, 0.02) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(16, 185, 129, 0.02) 1px, transparent 1px);
+          background-size: 60px 60px;
+      }
+
+      /* Banner Agendamento */
+      .Banner-Agendamento {
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 3rem 2rem;
+      }
+
+      .img-agendamento {
+          display: none;
+      }
+
+      .agendamento h1 {
+          font-size: clamp(2rem, 5vw, 3rem);
+          font-weight: 800;
+          margin-bottom: 0.5rem;
+          color: #fff;
+      }
+
+      #dataHoje {
+          color: var(--text-dim);
+          font-size: 1.1rem;
+          margin-bottom: 2rem;
+      }
+
+      /* Search */
+      .pesquisa {
+          display: flex;
+          gap: 1rem;
+          max-width: 600px;
+          margin-bottom: 3rem;
+      }
+
+      .pesquisa input {
+          flex: 1;
+          padding: 1rem 1.5rem;
+          background: rgba(30, 41, 59, 0.4);
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          color: var(--text);
+          font-size: 1rem;
+          transition: all 0.3s;
+      }
+
+      .pesquisa input:focus {
+          outline: none;
+          border-color: var(--primary);
+          background: rgba(30, 41, 59, 0.6);
+      }
+
+      .pesquisa input::placeholder {
+          color: var(--text-dim);
+      }
+
+      #btn-pesquisa {
+          padding: 1rem 1.5rem;
+          background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+          border: none;
+          border-radius: 12px;
+          color: white;
+          font-size: 1.2rem;
+          cursor: pointer;
+          transition: all 0.3s;
+      }
+
+      #btn-pesquisa:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+      }
+
+      /* Teste e Card Agendamento */
+      .teste {
+          margin-bottom: 3rem;
+      }
+
+      .teste h2 {
+          font-size: 1.8rem;
+          font-weight: 800;
+          color: #fff;
+          margin-bottom: 1.5rem;
+      }
+
+      .cardAgendamento {
+          background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+          border: 2px solid var(--primary);
+          border-radius: 20px;
+          padding: 2.5rem;
+          margin-bottom: 4rem;
+          position: relative;
+          overflow: hidden;
+          cursor: pointer;
+          transition: all 0.3s;
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 3rem;
+          align-items: center;
+      }
+
+      .cardAgendamento::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 4px;
+          background: linear-gradient(90deg, var(--primary), var(--accent));
+      }
+
+      .cardAgendamento:hover {
+          transform: translateX(5px);
+      }
+
+      .cardEsquerdo {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+      }
+
+      .cardEsquerdo span {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 1rem;
+          background: rgba(16, 185, 129, 0.2);
+          border: 1px solid var(--primary);
+          border-radius: 50px;
+          color: var(--primary);
+          font-size: 0.85rem;
+          font-weight: 600;
+          width: fit-content;
+          margin-bottom: 0.5rem;
+      }
+
+      .cardEsquerdo span::before {
+          content: '●';
+          font-size: 1.2rem;
+      }
+
+      .cardEsquerdo h3 {
+          font-size: 1.8rem;
+          font-weight: 700;
+          color: #fff;
+          margin-bottom: 0.3rem;
+      }
+
+      .cardEsquerdo p {
+          color: var(--text-dim);
+          font-size: 1rem;
+      }
+
+      .cardDireito {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 1.5rem 2rem;
+          background: rgba(15, 23, 42, 0.5);
+          border-radius: 16px;
+          border: 1px solid var(--border);
+          min-width: 140px;
+      }
+
+      .cardDireito p:first-child {
+          font-size: 0.85rem;
+          text-transform: uppercase;
+          color: var(--primary);
+          font-weight: 600;
+          letter-spacing: 1px;
+      }
+
+      .cardDireito p:nth-child(2) {
+          font-size: 3rem;
+          font-weight: 900;
+          color: #fff;
+          line-height: 1;
+          margin: 0.3rem 0;
+      }
+
+      .cardDireito p:last-child {
+          font-size: 1.1rem;
+          color: var(--text-dim);
+          font-weight: 500;
+      }
+
+      /* Recomendados */
+      .Recomendados, .MaisVisitados {
+          margin-bottom: 4rem;
+          position: relative;
+      }
+
+      .Recomendados h2, .MaisVisitados h2 {
+          font-size: 1.8rem;
+          font-weight: 800;
+          color: #fff;
+          margin-bottom: 2rem;
+      }
+
+      .CardsCarrossel, .CardMaisvisitados {
+          display: flex;
+          gap: 1.5rem;
+          overflow-x: auto;
+          padding: 1rem 0;
+          scroll-behavior: smooth;
+          scrollbar-width: thin;
+          scrollbar-color: var(--primary) transparent;
+      }
+
+      .CardsCarrossel::-webkit-scrollbar {
+          height: 6px;
+      }
+
+      .CardsCarrossel::-webkit-scrollbar-track {
+          background: rgba(30, 41, 59, 0.3);
+          border-radius: 10px;
+      }
+
+      .CardsCarrossel::-webkit-scrollbar-thumb {
+          background: var(--primary);
+          border-radius: 10px;
+      }
+
+      .cardCarrossel, .cardVisitado {
+          min-width: 300px;
+          max-width: 300px;
+          background: rgba(30, 41, 59, 0.3);
+          border: 1px solid var(--border);
+          border-radius: 16px;
+          overflow: hidden;
+          transition: all 0.3s;
+          cursor: pointer;
+      }
+
+      .cardCarrossel:hover, .cardVisitado:hover {
+          transform: translateY(-5px);
+          border-color: var(--primary);
+          box-shadow: 0 12px 30px rgba(16, 185, 129, 0.2);
+          background: rgba(30, 41, 59, 0.5);
+      }
+
+      .consultorio-img {
+          width: 100%;
+          height: 180px;
+          object-fit: cover;
+          background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(52, 211, 153, 0.1));
+      }
+
+      .cardCarrossel h3, .cardVisitado h3 {
+          font-size: 1.2rem;
+          font-weight: 700;
+          color: #fff;
+          margin: 1.5rem 1.5rem 0.5rem;
+      }
+
+      .cardCarrossel p, .cardVisitado p {
+          color: var(--text-dim);
+          font-size: 0.9rem;
+          margin: 0 1.5rem 1.5rem;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+      }
+
+      .paiBtn {
+          padding: 0 1.5rem 1.5rem;
+      }
+
+      .Reserva {
+          width: 100%;
+          padding: 0.9rem;
+          background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+          border: none;
+          border-radius: 10px;
+          color: white;
+          font-weight: 600;
+          font-size: 0.95rem;
+          cursor: pointer;
+          transition: all 0.3s;
+      }
+
+      .Reserva:hover {
+          transform: scale(1.02);
+          box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+      }
+
+      .setaCarrossel, .setaCarrossel2 {
+          position: absolute;
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 48px;
+          height: 48px;
+          background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: all 0.3s;
+          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+          z-index: 10;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+
+      .setaCarrossel:hover, .setaCarrossel2:hover {
+          transform: translateY(-50%) scale(1.1);
+          box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+      }
+
+      .setaCarrossel img, .setaCarrossel2 img {
+          width: 24px;
+          height: 24px;
+          filter: brightness(0) invert(1);
+      }
+
+      /* VeriReserva Sidebar */
+      .VeriReserva {
+          position: fixed;
+          right: -1000rem;
+          top: 0;
+          width: 100%;
+          max-width: 500px;
+          height: 100vh;
+          background: rgba(15, 23, 42, 0.98);
+          backdrop-filter: blur(20px);
+          border-left: 1px solid var(--border);
+          overflow-y: auto;
+          z-index: 200;
+          transition: right 0.4s ease;
+          box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+      }
+
+      .VerificarReserva {
+          padding: 2rem;
+      }
+
+      .VerReserva {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 2rem;
+          padding-bottom: 1.5rem;
+          border-bottom: 1px solid var(--border);
+      }
+
+      .VerReserva h2 {
+          font-size: 1.8rem;
+          font-weight: 800;
+          color: #fff;
+      }
+
+      #FecharConsulta {
+          width: 40px;
+          height: 40px;
+          background: rgba(239, 68, 68, 0.1);
+          border: 1px solid rgba(239, 68, 68, 0.3);
+          border-radius: 50%;
+          color: #ef4444;
+          font-size: 1.5rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s;
+      }
+
+      #FecharConsulta:hover {
+          background: rgba(239, 68, 68, 0.2);
+          transform: rotate(90deg);
+      }
+
+      .SobreReserva {
+          margin-bottom: 1.5rem;
+      }
+
+      .SobreReserva img {
+          width: 100%;
+          height: 200px;
+          object-fit: cover;
+          border-radius: 12px;
+          background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(52, 211, 153, 0.1));
+      }
+
+      .VeriReserva #Agendamento {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 1rem;
+          background: rgba(16, 185, 129, 0.2);
+          border: 1px solid var(--primary);
+          border-radius: 50px;
+          color: var(--primary);
+          font-size: 0.85rem;
+          font-weight: 600;
+          margin-bottom: 1rem;
+      }
+
+      .DadosDaConsulta {
+          padding: 0 2rem 2rem;
+      }
+
+      .DadosReserva {
+          margin-bottom: 2rem;
+      }
+
+      .informacoes,
+      .informacoesLadoD {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+      }
+
+      .informacoes p,
+      .informacoesLadoD p {
+          padding: 1rem 0;
+          border-bottom: 1px solid var(--border);
+      }
+
+      .informacoes p {
+          color: var(--text-dim);
+          font-weight: 500;
+      }
+
+      .informacoesLadoD p {
+          color: #fff;
+          font-weight: 600;
+      }
+
+      #btnCancelarReserva {
+          width: 100%;
+          padding: 1.2rem;
+          background: linear-gradient(135deg, #ef4444, #dc2626);
+          border: none;
+          border-radius: 12px;
+          color: white;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.3s;
+      }
+
+      #btnCancelarReserva:hover {
+          transform: scale(1.02);
+          box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+      }
+
+      /* Toast Message */
+      .mensagem {
+          position: fixed;
+          top: 2rem;
+          right: 2rem;
+          padding: 1.2rem 1.8rem;
+          border-radius: 12px;
+          font-weight: 600;
+          opacity: 0;
+          transform: translateX(100%);
+          transition: all 0.3s;
+          z-index: 9999;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+          border: 1px solid;
+      }
+
+      .mensagem.visivel {
+          opacity: 1;
+          transform: translateX(0);
+      }
+
+      .mensagem.sucesso {
+          background: rgba(16, 185, 129, 0.95);
+          color: white;
+          border-color: var(--primary);
+      }
+
+      .mensagem.erro {
+          background: rgba(239, 68, 68, 0.95);
+          color: white;
+          border-color: #ef4444;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+          .Banner-Agendamento { padding: 2rem 1rem; }
+          .cardAgendamento { 
+              padding: 1.5rem;
+              grid-template-columns: 1fr; 
+              gap: 1.5rem; 
+          }
+          .cardDireito { width: 100%; }
+          .pesquisa { flex-direction: column; }
+          .cardCarrossel { 
+              min-width: 260px; 
+              max-width: 260px; 
+          }
+          .VeriReserva { max-width: 100%; }
+          .Recomendados h2 { 
+              font-size: 1.5rem; 
+          }
+      }
+  </style>
+</head>
+<body>
+
+  <div class="organic-bg-nutrivida">
+        <div class="blob-nutrivida blob-nutrivida-1"></div>
+        <div class="blob-nutrivida blob-nutrivida-2"></div>
+        <div class="blob-nutrivida blob-nutrivida-3"></div>
+        <div class="blob-nutrivida blob-nutrivida-4"></div>
+    </div>
+
+    <div class="floating-foods-nutrivida">
+        <div class="food-icon-nutrivida food-nutrivida-1">
+            <img src="img/abacate.png" alt="abacate-imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-2">
+            <img src="img/maca.png" alt="maça imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-3">
+            <img src="img/salada.png" alt="salada imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-4">
+            <img src="img/tangerina.png" alt="tangerina imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-5">
+            <img src="img/brocolis.png" alt="brocolis imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-6">
+            <img src="img/banana.png" alt="banana imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-7">
+            <img src="img/cenoura.png" alt="imagem cenoura">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-8">
+            <img src="img/kiwi.png" alt="imagem kiwi">
+        </div>
+    </div>
+
+      <header>
+        <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+
+           
+
+        <section class="direito">
+        <nav class="menu" >
+            <ul id="menu">
+
+                <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+                <li><a class="item" href="index.html" id="paginaAtual" data-translate="1">Início</a></li>    
+                <li class="dropdown"> <p class="setaNav" data-translate="2">Serviços
+                    
+                </p>
+                
+                <div class="drop-menu">
+                    <a class="item" id="dropdown__link" href="servico.html" data-translate="7">Nossos serviços</a>
+
+                    
+                    <a class="item" id="dropdown__link" href="imc.html" data-translate="8">Imc</a>
+                    <a class="item" id="dropdown__link" href="Cardapio.html" data-translate="9">Cardápio Personalizado</a>
+                    
+                </div>
+            </li>
+                <li><a class="item" href="exames.html" data-translate="3">Exames</a>
+                <li><a class="item" href="sobre.html" data-translate="4">Sobre nós</a></li>
+                <li><a class="item" href="contatos.html" data-translate="5">Contatos</a></li>
+                <li class="dropdown"> <p class="setaNav" data-translate="6" id="usuarioLogado">Usuario
+                    
+                </p>
+
+
+                <div class="drop-menu drop-m2">
+                    <a href="cadastro.html" id="link-cadastro" class="item">Cadastro</a>    
+                    <a href="entrar.html" id="link-login" class="item">Entrar</a>
+                    <a href="perfil.html" id="linkPerfil" class="item">Perfil</a>
+                  </div>
+                  
+            </li>
+              
+
+            </ul>
+        </nav>
+    
+        <div class="hamburgue" id="hamburgue"></div>
+    </section>
+
+    
+    </header>
+    <section class="Banner-Agendamento">
+      <img class="img-agendamento" src="img/banners/Banner-Agendamento.png" alt="banner principal da tela de Agendamento">
+
+      <div class="agendamento">
+          <h1 id="tituloUsuario"></h1>
+          <p id="dataHoje"></p>
+
+          <form action="" class="pesquisa">
+              <input type="text" id="pesquisa" placeholder="Buscar consultorios">
+              <button id="btn-pesquisa">&#128269;</button>
+          </form>
+
+          <div class="teste">
+              <h2>Seu Próximo Agendamento</h2>
+
+              <section class="cardAgendamento">
+                  <div class="cardEsquerdo">
+                      <span id="Agendamento">Confirmado</span>
+                      <h3>Checkup total</h3>
+                      <p>Consultorio tal</p>
+                  </div>
+                  <div class="cardDireito">
+                      <p>Junho</p>
+                      <p>10</p>
+                      <p>09:50</p>
+                  </div>
+              </section>
+          </div>
+      </div>
+
+      <section class="Recomendados">
+          <h2>Consultórios Disponíveis</h2>
+          <div class="CardsCarrossel">
+            <div class="cardCarrossel">
+              <img class="consultorio-img" src="img/consultorio.jpg" alt="imgagem do consultorio">
+
+           
+              <h3 >Serviçcso</h3>
+              <p>Avenida São Sebastião, 357, São Paulo</p>
+
+              <div class="paiBtn">
+              <button class="Reserva" onclick="reservar(51)">Reservar</button>
+          </div>
+      </div>
+          </div>
+          <button class="setaCarrossel" id="btnCarrossel">
+              <img src="img/setaCarrossel.svg" alt="seta de mover para direita">
+          </button>
+      </section>
+
+      <section class="MaisVisitados">
+        <h2>Mais visitados</h2>
+        <div class="recomendados2">
+        <section class="CardMaisvisitados">
+
+          <div class="cardVisitado">
+            <img class="consultorio-img" src="img/consultorio.jpg" alt="imgagem do consultorio">
+
+     
+        <h3>Serviço</h3>
+        <p>Avenida São Sebastião, 357, São Paulo</p>
+        <div class="paiBtn">
+            <button class="Reserva">Reservar</button>
+        </div>
+        </div>
+
+        <div class="cardVisitado QuartoAsumir">
+          <img class="consultorio-img" src="img/consultorio.jpg" alt="imgagem do consultorio">
+
+   
+      <h3>Servireewewdço</h3>
+      <p>Avenida São Sebastião, 357, São Paulo</p>
+      <div class="paiBtn">
+          <button class="Reserva">Reservar</button>
+      </div>
+      </div>
+
+      <div class="cardVisitado TerceiroAsumir">
+        <img class="consultorio-img" src="img/consultorio.jpg" alt="imgagem do consultorio">
+
+ 
+    <h3>Servireewewdço</h3>
+    <p>Avenida São Sebastião, 357, São Paulo</p>
+    <div class="paiBtn">
+        <button class="Reserva">Reservar</button>
+    </div>
+    </div>
+
+    <div class="cardVisitado SegundoAsumir">
+      <img class="consultorio-img" src="img/consultorio.jpg" alt="imgagem do consultorio">
+
+
+  <h3>Servireewewdço</h3>
+  <p>Avenida São Sebastião, 357, São Paulo</p>
+  <div class="paiBtn">
+      <button class="Reserva">Reservar</button>
+  </div>
+  </div>
+
+  <div class="cardVisitado PrimeiroAsumir">
+    <img class="consultorio-img" src="img/consultorio.jpg" alt="imgagem do consultorio">
+
+
+<h3>Servireewewdço</h3>
+<p>Avenida São Sebastião, 357, São Paulo</p>
+<div class="paiBtn">
+    <button class="Reserva">Reservar</button>
+</div>
+</div>
+
+        </section>
+        <button class="setaCarrossel2" id="btnCarrosselVisitados"><img src="img/setaCarrossel.svg" alt="seta de mover para direita" ></button>
+      </div>
+      
+      </section>
+  </section>
+
+  <section class="VeriReserva">
+      <div class="VerificarReserva">
+          <div class="VerReserva">
+              <h2>Verificar Reserva</h2>
+              <button id="FecharConsulta">✕</button>
+          </div>
+
+          <div class="SobreReserva">
+              <img src="img/Lugar que fica consultorio.jpg" alt="imagem ilustrativa da localização dos consultorios">
+              <div class="acima">
+                  <div class="cardAcima">
+                      <h2>Consultorio 1</h2>
+                      <span>Avenida São Sebastião, 357, São Pa...</span>
+                  </div>
+              </div>
+          </div>
+          <span id="Agendamento">Confirmado</span>
+      </div>
+      
+      <section class="DadosDaConsulta">
+          <div class="DadosReserva">
+              <div class="informacoes">
+                  <h2 id="tituloConsultaCompleta">Consulta completa</h2>
+                  <p>Data</p>
+                  <p>Horario</p>
+                  <p id="">Nome do consultorio</p>
+              </div>
+
+              <div class="informacoesLadoD">
+                  <p>Valor</p>
+                  <p>06 de fevereiro</p>
+                  <p>09:45</p>
+                  <p>Nutrivida</p>
+              </div>
+          </div>
+          <div class="paiBtn">
+              <button id="btnCancelarReserva">Cancelar Reserva</button>
+          </div>
+      </section>
+  </section>
+       
+
+
+            <section class="VeriReserva">
+        <div class="VerificarReserva">
+          <div class="VerReserva">
+        <h2>Verificar Reserva</h2>
+
+        <button id="FecharConsulta">✕</button>
+        </div>
+
+        <div class="SobreReserva">
+          <img src="img/Lugar que fica consultorio.jpg" alt="imagem ilustrativa da localização dos consultorios">
+                
+                <div class="acima">
+                <div class="cardAcima">
+                <h2>Consultorio 1</h2>
+                <span>Avenida São Sebastião, 357, São Pa...</span>
+                </div>
+                </div>
+        </div>
+        <span id="Agendamento">Confirmado</span>
+        </div>
+         <section class="DadosDaConsulta">
+            <div class="DadosReserva">
+        <div class="informacoes">
+            <h2 id="tituloConsultaCompleta">Consulta completa</h2>
+            <p>Data</p>
+            <p>Horario</p>
+            <p id="" >Nome do consultorio</p>
+        </div>
+
+        <div class="informacoesLadoD">
+            <p>Valor</p>
+            <p>06 de fevereiro</p>
+            <p>09:45</p>
+            <p>Nutrivida</p>
+        </div>
+        </div>
+        <div class="paiBtn">
+          
+        <button id="btnCancelarReserva">Cancelar Reserva</button>
+        </div>
+    </section>
+
+    </section>
+
+    <section class="barra-acessibilidade" id="idn-menu">
+       
+  </section>
+  
+  <div class="btn-acessibilidade" id="botao-acessibilidade">
+    <button>
+        <img src="img/icons/onu-logo.png" alt="Ícone do botão de acessibilidade">
+    </button>
+  </div>
+
+  <div class="vLibras-barra">
+
+        <div vw class="enabled">
+          <div vw-access-button class="active"></div>
+          <div vw-plugin-wrapper id="vLibras-escondido">
+            <div class="vw-plugin-top-wrapper"></div>
+          </div>
+        </div>
+      </div>
+        <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+        <script>
+          new window.VLibras.Widget('https://vlibras.gov.br/app');
+        </script>
+
+
+
+
+
+
+<script>
+    // Array com os dias e meses em português
+  const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+  const meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 
+                 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+
+  const hoje = new Date();
+
+  const diaSemana = diasSemana[hoje.getDay()];
+  const dia = hoje.getDate();
+  const mes = meses[hoje.getMonth()];
+
+  document.getElementById('dataHoje').innerText = `${diaSemana} ${dia} de ${mes}`;
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const tituloUsuario = document.getElementById("tituloUsuario");
+    const usuarioLocal = JSON.parse(localStorage.getItem("dadosUsuario"));
+
+    if (
+      usuarioLocal &&
+      typeof usuarioLocal.nome_usuario === "string" &&
+      usuarioLocal.nome_usuario.trim() !== ""
+    ) {
+      tituloUsuario.textContent = ` Olá ${usuarioLocal.nome_usuario}`;
+    } else {
+      tituloUsuario.textContent = "Usuário não cadastrado";
+    }
+  });
+</script>
+
+<script>
+window.onload = async () => {
+  try {
+    // Verifica se o usuário está logado
+    const usuarioRaw = localStorage.getItem("dadosUsuario");
+    if (!usuarioRaw) {
+      mostrarMensagem('Você precisa estar logado para acessar esta página.', 'erro');
+      setTimeout(() => {
+      window.location.href = 'entrar.html';
+      }, 3000);
+        return;
+      }
+          
+
+    const usuario = JSON.parse(usuarioRaw);
+
+    // Busca os agendamentos
+    const response = await fetch('http://localhost:3000/agendamentos');
+    const agendamentos = await response.json();
+
+    let agendamentoUsuario = null;
+
+    if (Array.isArray(agendamentos)) {
+      agendamentoUsuario = agendamentos.find(a => a.usuario_id === usuario.id);
+
+      if (agendamentoUsuario) {
+        const card = document.querySelector('.cardAgendamento');
+        const spanStatus = card.querySelector('span');
+        const h3Servico = card.querySelector('h3');
+        const pConsultorio = card.querySelector('p');
+        const pData = card.querySelectorAll('.cardDireito p');
+
+        const dataObj = new Date(agendamentoUsuario.data);
+        const nomeMes = dataObj.toLocaleString('pt-BR', { month: 'long' });
+
+        spanStatus.textContent = "Confirmado";
+        h3Servico.textContent = agendamentoUsuario.nome_servico || "Serviço";
+        pConsultorio.textContent = agendamentoUsuario.consultorio_nome || "Consultório";
+
+        pData[0].textContent = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
+        pData[1].textContent = dataObj.getDate();
+        pData[2].textContent = agendamentoUsuario.hora;
+
+        // Painel lateral .DadosReserva
+        const dadosReserva = document.querySelector('.DadosReserva');
+        if (dadosReserva) {
+          const infoLadoD = dadosReserva.querySelector('.informacoesLadoD');
+          const valorConsulta = infoLadoD.children[0];
+          const pDataReserva = infoLadoD.children[1];
+          const pHora = infoLadoD.children[2];
+          const pConsultorioReserva = infoLadoD.children[3];
+
+          const dia = String(dataObj.getDate()).padStart(2, '0');
+
+          valorConsulta.textContent = agendamentoUsuario.preco
+            ? `Valor: R$ ${Number(agendamentoUsuario.preco).toFixed(2)}`
+            : 'Valor não informado';
+
+          pDataReserva.textContent = `${dia} de ${nomeMes}`;
+          pHora.textContent = agendamentoUsuario.hora || "Horário não definido";
+          pConsultorioReserva.textContent = agendamentoUsuario.consultorio_nome || "Consultório não identificado";
+        }
+      }
+    }
+
+    // Consultórios
+    const res = await fetch('http://localhost:3000/consultorios');
+    if (!res.ok) {
+      const textoErro = await res.text();
+      throw new Error(`Erro na requisição: ${res.status} - ${textoErro}`);
+    }
+
+    const consultorios = await res.json();
+    consultorios.sort((a, b) => a.id - b.id);
+
+    // Containers das seções
+    const containerRecomendados = document.querySelector('.Banner-Agendamento .Recomendados .CardsCarrossel');
+    const containerMaisVisitados = document.querySelector('.MaisVisitados .CardMaisvisitados');
+    // const containerPopulares = document.querySelector('.CardPopular .cardsPopulares');
+
+    containerRecomendados.innerHTML = '';
+    containerMaisVisitados.innerHTML = '';
+    // containerPopulares.innerHTML = '';
+
+    // Distribui todos os consultórios nos 3 containers
+    consultorios.forEach((c, index) => {
+      if (index % 3 === 0) {
+        containerRecomendados.appendChild(criarCard(c, 'recomendados'));
+      } else if (index % 3 === 1) {
+        containerMaisVisitados.appendChild(criarCard(c, 'maisvisitados'));
+      } //else {
+       // containerPopulares.appendChild(criarCard(c, 'populares'));
+     // }
+    });
+
+    // Configura carrossel para cada seção com quantidade visível conforme desejado
+    configurarCarrossel('.Banner-Agendamento .Recomendados .CardsCarrossel', '.cardCarrossel', 'btnCarrossel', 3);
+    configurarCarrossel('.MaisVisitados .CardMaisvisitados', '.cardVisitado', 'btnCarrosselVisitados', 5);
+   // configurarCarrossel('.CardPopular .cardsPopulares', '.cardPopular', 'btnCarrosselPopulares', 5);
+
+    // Controle de abertura/fechamento do painel lateral do agendamento
+    const painelReserva = document.querySelector('.VeriReserva');
+    const botaoFechar = document.getElementById('FecharConsulta');
+    const cardAgendamento = document.querySelector('.cardAgendamento');
+
+    if (painelReserva && botaoFechar && cardAgendamento) {
+      cardAgendamento.addEventListener('click', () => {
+        if (!agendamentoUsuario) {
+          mostrarMensagem('Você ainda não tem uma reserva feita.', 'erro');
+          return;
+        }
+        painelReserva.style.transition = 'right 0.5s ease';
+        painelReserva.style.right = '0';
+      });
+
+      botaoFechar.addEventListener('click', () => {
+        painelReserva.style.transition = 'right 0.5s ease';
+        painelReserva.style.right = '-1000rem';
+      });
+    }
+
+    // Cancelar reserva
+    const btnCancelar = document.getElementById('btnCancelarReserva');
+    if (btnCancelar) {
+      btnCancelar.addEventListener('click', async () => {
+        try {
+          if (!usuario) {
+            mostrarMensagem('Você precisa estar logado para cancelar a reserva.', 'erro');
+            return;
+          }
+
+          if (!agendamentoUsuario) {
+            mostrarMensagem('Nenhum agendamento encontrado para cancelar.', 'erro');
+            return;
+          }
+
+          const deleteResponse = await fetch(`http://localhost:3000/agendamentos/${agendamentoUsuario.id}`, {
+            method: 'DELETE'
+          });
+
+          if (!deleteResponse.ok) {
+            throw new Error('Falha ao cancelar a reserva. Tente novamente.');
+          }
+
+          mostrarMensagem('Reserva cancelada com sucesso!');
+
+          // Limpa visualização do agendamento
+          const card = document.querySelector('.cardAgendamento');
+          if (card) {
+            card.querySelector('span').textContent = '';
+            card.querySelector('h3').textContent = 'Nenhuma reserva';
+            card.querySelector('p').textContent = '';
+            const pData = card.querySelectorAll('.cardDireito p');
+            pData.forEach(p => p.textContent = '');
+          }
+
+          const dadosReserva = document.querySelector('.DadosReserva');
+          if (dadosReserva) {
+            const infoLadoD = dadosReserva.querySelector('.informacoesLadoD');
+            Array.from(infoLadoD.children).forEach(p => p.textContent = '');
+          }
+
+          painelReserva.style.right = '-1000rem';
+
+        } catch (error) {
+          mostrarMensagem(error.message);
+          console.error(error);
+        }
+      });
+    }
+
+  } catch (error) {
+    console.error('Erro ao inicializar página:', error);
+  }
+};
+
+// Função para abrir a página de reserva com consultório selecionado
+function reservar(id) {
+  fetch(`http://localhost:3000/consultorios/${id}`)
+    .then(res => {
+      if (!res.ok) throw new Error(`Erro ao buscar consultório: ${res.statusText}`);
+      return res.json();
+    })
+    .then(data => {
+      localStorage.setItem('consultorioSelecionado', JSON.stringify(data.consultorio));
+      localStorage.setItem('servicosDoConsultorio', JSON.stringify(data.servicos));
+      window.location.href = 'reserva.html';
+    })
+    .catch(err => {
+      console.error('Erro ao buscar consultório e serviços:', err);
+      mostrarMensagem('Erro ao carregar dados do consultório', 'erro');
+    });
+}
+
+// Cria um card para o consultório, com classes específicas para cada tipo
+function criarCard(c, tipo) {
+  const card = document.createElement('div');
+  if (tipo === 'recomendados') card.classList.add('cardCarrossel');
+  else if (tipo === 'maisvisitados') card.classList.add('cardVisitado');
+  else if (tipo === 'populares') card.classList.add('cardPopular');
+
+  card.innerHTML = `
+    <img class="consultorio-img" src="${c.imagem || 'img/consultorio.jpg'}" alt="Imagem do consultório ${c.nome}">
+    <h3>${c.nome}</h3>
+    <p>${c.endereco}</p>
+    <div class="paiBtn">
+      <button class="Reserva" onclick="reservar(${c.id})">Reservar</button>
+    </div>
+  `;
+  return card;
+}
+
+// Configura carrossel simples com botão para girar cards visíveis
+function configurarCarrossel(containerSelector, cardSelector, btnId, qtdVisiveis) {
+  const container = document.querySelector(containerSelector);
+  if (!container) return;
+
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+
+  function inicializarCards() {
+    const cards = container.querySelectorAll(cardSelector);
+    cards.forEach((card, i) => {
+      if (i < qtdVisiveis) {
+        card.style.opacity = '1';
+        card.style.position = 'relative';
+        card.style.pointerEvents = 'auto';
+      } else {
+        card.style.opacity = '0';
+        card.style.position = 'absolute';
+        card.style.pointerEvents = 'none';
+      }
+    });
+
+    cards.forEach(card => card.classList.remove('PrimeiroAsumir', 'SegundoAsumir'));
+
+    if (cards.length >= qtdVisiveis - 1) {
+      cards[qtdVisiveis - 2].classList.add('SegundoAsumir');
+    }
+    if (cards.length >= qtdVisiveis) {
+      cards[qtdVisiveis - 1].classList.add('PrimeiroAsumir');
+    }
+  }
+
+  function girarCarrossel() {
+    const cards = container.querySelectorAll(cardSelector);
+    if (cards.length === 0) return;
+
+    const primeiroCard = cards[0];
+    primeiroCard.style.transition = 'opacity 0.4s ease';
+    primeiroCard.style.opacity = '0';
+
+    setTimeout(() => {
+      primeiroCard.remove();
+      primeiroCard.style.opacity = '1';
+      primeiroCard.style.position = 'relative';
+      primeiroCard.style.pointerEvents = 'auto';
+      container.appendChild(primeiroCard);
+
+      const atualizados = container.querySelectorAll(cardSelector);
+      atualizados.forEach((card, i) => {
+        if (i < qtdVisiveis) {
+          card.style.opacity = '1';
+          card.style.position = 'relative';
+          card.style.pointerEvents = 'auto';
+        } else {
+          card.style.opacity = '0';
+          card.style.position = 'absolute';
+          card.style.pointerEvents = 'none';
+        }
+      });
+
+      atualizados.forEach(card => card.classList.remove('PrimeiroAsumir', 'SegundoAsumir'));
+      if (atualizados.length >= qtdVisiveis - 2) {
+        atualizados[qtdVisiveis - 2].classList.add('SegundoAsumir');
+      }
+      if (atualizados.length >= qtdVisiveis) {
+        atualizados[qtdVisiveis - 1].classList.add('PrimeiroAsumir');
+      }
+    }, 400);
+  }
+
+  inicializarCards();
+  btn.addEventListener('click', girarCarrossel);
+}
+</script>
+
+
+<script>
+  function mostrarMensagem(texto, tipo = "sucesso") {
+  const div = document.getElementById("mensagem-flutuante");
+  if (!div) return;
+
+  div.textContent = texto;
+  div.className = `mensagem visivel ${tipo}`;
+
+  setTimeout(() => {
+    div.classList.add("ocultar");
+  }, 2500);
+
+  setTimeout(() => {
+    div.className = "mensagem";
+  }, 3000);
+}
+
+</script>
+
+<div id="mensagem-flutuante" class="mensagem"></div>
+
+<footer></footer>
+
+
+</body>
+
+</html>

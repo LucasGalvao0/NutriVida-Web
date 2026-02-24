@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="icon" href="img/logos/logo.png" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="tela.js" defer></script>
+    <script src="script.js" defer></script>
+    <title>Nutrivida Imc</title>
+
+    <style>
+        /* Calculator Container */
+        .calculadora {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 700px;
+            padding: 4rem;
+            margin: auto;
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glass Card Effect */
+        .calculadora-form {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 30px;
+            padding: 3rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 70px rgba(16, 185, 129, 0.2);
+            margin-top: 4rem;
+        }
+
+        .calculadora-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            transition: left 0.6s;
+        }
+
+        .calculadora-form:hover::before {
+            left: 0;
+        }
+
+        .calculadora-form:hover {
+            border-color: var(--primary);
+            box-shadow: 0 30px 80px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Card Header */
+        .header-calculadora {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-icone {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: leafSway 3s ease-in-out infinite;
+        }
+
+        @keyframes leafSway {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        .header-calculadora h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradientFlow 3s ease infinite;
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Form Styles */
+        .form-inputs {
+            margin-bottom: 2rem;
+        }
+
+        .calculadora label {
+            display: block;
+            color: var(--text);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .calculadora input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 15px;
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--text);
+            font-size: 1.1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .calculadora input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .calculadora input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(16, 185, 129, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .btn-back {
+            background: linear-gradient(135deg, var(--accent), var(--orange));
+            color: var(--dark);
+            box-shadow: 0 10px 30px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-back:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(251, 191, 36, 0.6);
+        }
+
+        /* Result Section */
+        .resultado-section {
+            text-align: center;
+        }
+
+        .imc-resultado {
+            font-size: 1.5rem;
+            color: var(--text);
+            margin: 2rem 0 1rem;
+            font-weight: 600;
+        }
+
+        .imc-numero {
+            font-size: 4.5rem;
+            font-weight: 900;
+            display: block;
+            margin: 1rem 0;
+            line-height: 1;
+        }
+
+        .imc-classificacao {
+            font-size: 1.3rem;
+            color: var(--text);
+            margin: 1.5rem 0 3rem;
+            padding: 1.5rem;
+            border-radius: 20px;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .imc-info {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        /* Classification Colors */
+        .low { 
+            color: var(--accent) !important;
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+        }
+        .good { 
+            color: var(--primary) !important;
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+        }
+        .medium { 
+            color: var(--orange) !important;
+            text-shadow: 0 0 20px rgba(251, 146, 60, 0.5);
+        }
+        .high { 
+            color: #ef4444 !important;
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+        }
+
+        /* Classification Table */
+        .classificacao-titulo {
+            color: var(--text);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 3rem 0 1.5rem;
+        }
+
+        .table-container {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .table-header h4 {
+            color: var(--primary);
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .table-row:hover {
+            background: rgba(16, 185, 129, 0.1);
+            transform: translateX(5px);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .table-row p {
+            color: var(--text-dim);
+            text-align: center;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        /* CTA Link */
+        .cta-link2 {
+            display: inline-block;
+            padding: 1.2rem 2.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--orange));
+            color: var(--dark);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            margin: 2rem 0 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(251, 191, 36, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.95rem;
+        }
+
+        .cta-link2:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(251, 191, 36, 0.6);
+        }
+
+        /* Hide/Show */
+        .hide {
+            display: none;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 999;
+            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4);
+            text-decoration: none;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.6);
+        }
+
+        .back-to-top svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .logo-icone{
+            height: 12rem;
+        }
+
+        .logo-icone img{
+            height: 100%;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .calculadora-form {
+                padding: 2rem 1.5rem;
+            }
+
+            .header-calculadora h2 {
+                font-size: 2rem;
+            }
+
+            .logo-icone {
+                font-size: 3rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .imc-numero {
+                font-size: 3.5rem;
+            }
+
+            .table-header h4,
+            .table-row p {
+                font-size: 0.85rem;
+            }
+
+            .food-icon {
+                font-size: 2rem;
+            }
+
+            .food-3, .food-5 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="organic-bg-nutrivida">
+        <div class="blob-nutrivida blob-nutrivida-1"></div>
+        <div class="blob-nutrivida blob-nutrivida-2"></div>
+        <div class="blob-nutrivida blob-nutrivida-3"></div>
+        <div class="blob-nutrivida blob-nutrivida-4"></div>
+    </div>
+
+    <div class="floating-foods-nutrivida">
+        <div class="food-icon-nutrivida food-nutrivida-1">
+            <img src="img/abacate.png" alt="abacate-imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-2">
+            <img src="img/maca.png" alt="maça imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-3">
+            <img src="img/salada.png" alt="salada imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-4">
+            <img src="img/tangerina.png" alt="tangerina imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-5">
+            <img src="img/brocolis.png" alt="brocolis imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-6">
+            <img src="img/banana.png" alt="banana imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-7">
+            <img src="img/cenoura.png" alt="imagem cenoura">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-8">
+            <img src="img/kiwi.png" alt="imagem kiwi">
+        </div>
+    </div>
+    
+    <header >
+        <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+
+           
+
+        <section class="direito">
+        <nav class="menu" >
+            <ul id="menu">
+                <li><a class="item" href="index.html"  data-translate="1">Início</a></li>    
+                <li class="dropdown"> <a href="#" class="seta" data-translate="2">Serviços</a>
+                <div class="drop-menu">
+                    <a class="item" href="servico.html" data-translate="7">Nossos serviços</a>
+                    <a class="item" href="imc.html" data-translate="8">Imc</a>
+                    <a class="item" href="Cardapio.html" id="paginaAtual" data-translate="9">Cardápio Personalizado</a>
+                    
+                </div>
+            </li>
+                <li><a class="item" href="exames.html" data-translate="3">Exames</a>
+                <li><a class="item" href="sobre.html" data-translate="4">Sobre nós</a></li>
+                <li><a class="item" href="contatos.html" data-translate="5">Contatos</a></li>
+                 <div class="login-cadastro">
+                <li><a href="entrar.html" class="login-btn">Login</a></li>
+    
+                </div>
+              
+
+            </ul>
+        </nav>
+    
+        <div class="hamburgue" id="hamburgue"></div>
+    </section>
+    
+           
+    
+    </header>
+    
+  
+
+
+    <!-- Calculator Container -->
+    <div class="calculadora">
+        <!-- Input Form -->
+        <div id="form-calculadora" class="calculadora-form">
+            <div class="header-calculadora">
+                <div class="logo-icone">
+                    <img src="img/logos/logo.png" alt="">
+                </div>
+                <h2>Calculadora IMC</h2>
+            </div>
+
+            <form id="imc-form">
+                <div class="form-inputs">
+                    <label for="height">Altura (metros)</label>
+                    <input 
+                        type="text" 
+                        id="height" 
+                        placeholder="Exemplo: 1,80"
+                        required
+                    />
+                </div>
+
+                <div class="form-inputs">
+                    <label for="weight">Peso (kg)</label>
+                    <input 
+                        type="text" 
+                        id="weight" 
+                        placeholder="Exemplo: 70,5"
+                        required
+                    />
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">Calcular</button>
+                    <button type="button" id="clear-btn" class="btn btn-secondary">Limpar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Result Display -->
+        <div id="resultado-container" class="calculadora-form hide">
+            <div class="resultado-section">
+                <p class="imc-resultado">
+                    Seu IMC: 
+                    <span id="imc-numero" class="imc-numero"></span>
+                </p>
+                <div class="imc-classificacao">
+                    Situação atual: <span id="imc-info" class="imc-info"></span>
+                </div>
+
+                <h3 class="classificacao-titulo">Confira as Classificações:</h3>
+                
+                <div class="table-container">
+                    <div class="table-header">
+                        <h4>IMC</h4>
+                        <h4>Classificação</h4>
+                        <h4>Obesidade</h4>
+                    </div>
+                    <div id="table-body"></div>
+                </div>
+
+                <a href="Cardapio.html" class="cta-link2">Cardápio Personalizado</a>
+                
+                <div class="button-group">
+                    <button id="back-btn" class="btn btn-back">Nova Consulta</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <section class="barra-acessibilidade" id="idn-menu">
+       
+  </section>
+  
+  <div class="btn-acessibilidade" id="botao-acessibilidade">
+    <button>
+        <img src="img/icons/onu-logo.png" alt="Ícone do botão de acessibilidade">
+    </button>
+  </div>
+
+  <div class="vLibras-barra">
+
+        <div vw class="enabled">
+          <div vw-access-button class="active"></div>
+          <div vw-plugin-wrapper id="vLibras-escondido">
+            <div class="vw-plugin-top-wrapper"></div>
+          </div>
+        </div>
+      </div>
+        <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+        <script>
+          new window.VLibras.Widget('https://vlibras.gov.br/app');
+        </script>
+    <footer>
+    </footer>
+
+    <script>
+        // IMC Data Table
+        const imcData = [
+            { min: 0, max: 18.4, classification: "Menor que 18,5", info: "Magreza", obesity: "0" },
+            { min: 18.5, max: 24.9, classification: "Entre 18,5 e 24,9", info: "Normal", obesity: "0" },
+            { min: 25, max: 29.9, classification: "Entre 25 e 29,9", info: "Sobrepeso", obesity: "I" },
+            { min: 30, max: 39.9, classification: "Entre 30 e 39,9", info: "Obesidade", obesity: "II" },
+            { min: 40, max: 131, classification: "Maior que 40", info: "Obesidade grave", obesity: "III" }
+        ];
+
+        // DOM Elements
+        const calcForm = document.getElementById('form-calculadora');
+        const resultContainer = document.getElementById('resultado-container');
+        const imcForm = document.getElementById('imc-form');
+        const heightInput = document.getElementById('height');
+        const weightInput = document.getElementById('weight');
+        const clearBtn = document.getElementById('clear-btn');
+        const backBtn = document.getElementById('back-btn');
+        const imcNumber = document.getElementById('imc-numero');
+        const imcInfo = document.getElementById('imc-info');
+        const tableBody = document.getElementById('table-body');
+
+        // Create Classification Table
+        function createTable() {
+            tableBody.innerHTML = '';
+            imcData.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'table-row';
+                row.innerHTML = `
+                    <p>${item.classification}</p>
+                    <p>${item.info}</p>
+                    <p>${item.obesity}</p>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Validate Input (only numbers and comma)
+        function validDigits(text) {
+            return text.replace(/[^0-9,]/g, '');
+        }
+
+        // Calculate IMC
+        function calcIMC(weight, height) {
+            return (weight / (height * height)).toFixed(1);
+        }
+
+        // Clear Inputs
+        function clearInputs() {
+            heightInput.value = '';
+            weightInput.value = '';
+            imcNumber.className = 'imc-numero';
+            imcInfo.className = 'imc-info';
+        }
+
+        // Toggle Views
+        function toggleViews() {
+            calcForm.classList.toggle('hide');
+            resultContainer.classList.toggle('hide');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Real-time Input Validation
+        [heightInput, weightInput].forEach(input => {
+            input.addEventListener('input', (e) => {
+                e.target.value = validDigits(e.target.value);
+            });
+        });
+
+        // Calculate IMC on Submit
+        imcForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const weight = parseFloat(weightInput.value.replace(',', '.'));
+            const height = parseFloat(heightInput.value.replace(',', '.'));
+
+            if (!weight || !height || height <= 0 || weight <= 0) {
+                alert('Por favor, insira valores válidos!');
+                return;
+            }
+
+            const imc = calcIMC(weight, height);
+            let classification = '';
+
+            // Find Classification
+            imcData.forEach(item => {
+                if (imc >= item.min && imc <= item.max) {
+                    classification = item.info;
+                }
+            });
+
+            if (!classification) return;
+
+            // Display Result
+            imcNumber.textContent = imc;
+            imcInfo.textContent = classification;
+
+            // Apply Color Based on Classification
+            const colorClass = {
+                'Magreza': 'low',
+                'Normal': 'good',
+                'Sobrepeso': 'low',
+                'Obesidade': 'medium',
+                'Obesidade grave': 'high'
+            }[classification];
+
+            imcNumber.classList.add(colorClass);
+            imcInfo.classList.add(colorClass);
+
+            toggleViews();
+        });
+
+        // Clear Form
+        clearBtn.addEventListener('click', clearInputs);
+
+        // Back to Form
+        backBtn.addEventListener('click', () => {
+            clearInputs();
+            toggleViews();
+        });
+
+        // Initialize Table
+        createTable();
+    </script>
+
+</body>
+
+</html>

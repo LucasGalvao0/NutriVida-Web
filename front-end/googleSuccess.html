@@ -1,0 +1,37 @@
+<!-- public/googleSuccess.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Autenticando...</title>
+</head>
+<body>
+  <p>Autenticando com Google...</p>
+  <script>
+    // Recebe os dados do back-end enviados via query string
+    const params = new URLSearchParams(window.location.search);
+
+    const id = Number(params.get("id"));
+    const nome = params.get("nome_usuario");
+    const email = params.get("email");
+
+    if (id && nome && email) {
+      const dadosGoogle = {
+        id,
+        nome_usuario: nome,
+        email,
+        senha: "", // senha vazia para login via Google
+        viaGoogle: true
+      };
+
+      localStorage.setItem("dadosUsuario", JSON.stringify(dadosGoogle));
+      localStorage.setItem("usuarioLogado", "true");
+
+      // Redireciona para o perfil
+      window.location.href = "index.html";
+    } else {
+      document.body.innerHTML = "<p>Erro ao autenticar com Google.</p>";
+    }
+  </script>
+</body>
+</html>

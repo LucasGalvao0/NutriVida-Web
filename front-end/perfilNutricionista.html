@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perfil Nutricionista</title>
+    <link rel="stylesheet" href="perfilNutricionista.css">
+</head>
+<body>
+
+  <div id="avisoNaoLogado" style="display: none; text-align: center; margin-top: 100px;">
+  <h2>Você ainda não está cadastrado.</h2>
+  <p>Por favor, faça o cadastro ou login antes de acessar o perfil.</p>
+  <div style="margin-top: 20px;">
+    <button onclick="location.href='index.html'" style="padding: 10px 20px; margin-right: 10px;">Voltar</button>
+    <button onclick="location.href='cadastro.html'" style="padding: 10px 20px;">Cadastre-se</button>
+    <button onclick="location.href='entrar.html'" style="padding: 10px 20px;">Faça login</button>
+  </div>
+</div>
+
+<div id="containerPerfil" class="perfil-container" style="display: none;">
+  <h2>Meu Perfil Nutricionista</h2>
+
+  <div class="info">
+    <label>Nome:</label>
+    <span id="labelNome"></span>
+    <input type="text" id="inputNome" class="hidden" />
+  </div>
+
+  <div class="info">
+    <label>Email:</label>
+    <span id="labelEmail"></span>
+    <input type="email" id="inputEmail" class="hidden" />
+    <small id="emailErroPerfil" style="color: red; display: none;"></small>
+  </div>
+
+  <div class="info">
+    <label>CRN:</label>
+    <span id="labelCrn"></span>
+    <input type="text" id="inputCrn" class="hidden" />
+  </div>
+
+  <div class="info">
+    <label>Especialidade:</label>
+    <span id="labelEspecialidade"></span>
+    <input type="text" id="inputEspecialidade" class="hidden" />
+  </div>
+
+  <div class="info">
+    <label>Telefone:</label>
+    <span id="labelTelefone"></span>
+    <input type="text" id="inputTelefone" class="hidden" />
+  </div>
+
+  <div class="info">
+    <label>Senha:</label>
+    <span id="labelSenha">••••••••</span>
+    <input type="password" id="inputSenha" class="hidden" disabled />
+    <p id="senhaAviso" class="aviso hidden">A senha só pode ser alterada na tela de login.</p>
+  </div>
+
+  
+
+  <div class="botoes">
+    <button id="btnEditar">Editar</button>
+    <button id="btnSalvar" class="hidden">Salvar</button>
+    <button id="btnVoltar">Voltar</button>
+    <button id="btnSair">Sair</button>
+  </div>
+
+  <div id="mensagemPerfil"></div>
+</div>
+
+<div id="toast"></div>
+
+ <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+  const labelNome = document.getElementById("labelNome");
+  const inputNome = document.getElementById("inputNome");
+
+  const labelCrn = document.getElementById("labelCrn");
+  const inputCrn = document.getElementById("inputCrn");
+
+  const labelEspecialidade = document.getElementById("labelEspecialidade");
+  const inputEspecialidade = document.getElementById("inputEspecialidade");
+
+  const labelTelefone = document.getElementById("labelTelefone");
+  const inputTelefone = document.getElementById("inputTelefone");
+
+  const labelEmail = document.getElementById("labelEmail");
+  const inputEmail = document.getElementById("inputEmail");
+  const emailErro = document.getElementById("emailErroPerfil");
+
+  const labelSenha = document.getElementById("labelSenha");
+  const senhaAviso = document.getElementById("senhaAviso");
+
+  const btnEditar = document.getElementById("btnEditar");
+  const btnSalvar = document.getElementById("btnSalvar");
+  const btnVoltar = document.getElementById("btnVoltar");
+  const btnSair = document.getElementById("btnSair");
+
+  const mensagemPerfil = document.getElementById("mensagemPerfil");
+
+  const containerPerfil = document.getElementById("containerPerfil");
+  const avisoNaoLogado = document.getElementById("avisoNaoLogado");
+
+  const toast = document.getElementById("toast");
+
+  // Função para decodificar payload JWT sem validação
+  function parseJwt(token) {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Pega dados do usuário do localStorage
+  const usuarioLocal = JSON.parse(localStorage.getItem("dadosUsuario"));
+
+  // Verifica se dados e token existem
+  if (!usuarioLocal || !usuarioLocal.token) {
+    avisoNaoLogado.style.display = "block";
+    containerPerfil.style.display = "none";
+    return;
+  }
+
+  // Extrai id do token
+  const payload = parseJwt(usuarioLocal.token);
+  const userId = payload?.id;
+
+  if (!userId) {
+    avisoNaoLogado.style.display = "block";
+    containerPerfil.style.display = "none";
+    return;
+  }
+
+  try {
+    // Define endpoint conforme tipo
+    const endpoint = usuarioLocal.tipo === "nutricionista"
+      ? `http://localhost:3000/nutricionistas/${userId}`
+      : `http://localhost:3000/usuarios/${userId}`;
+
+    const res = await fetch(endpoint);
+
+    if (!res.ok) throw new Error("Erro na requisição");
+
+    const usuarioDB = await res.json();
+
+    if (!usuarioDB) {
+      avisoNaoLogado.style.display = "block";
+      containerPerfil.style.display = "none";
+      return;
+    }
+
+    // Preenche campos com dados do nutricionista
+    labelNome.textContent = usuarioDB.nome || "Nome não disponível";
+    inputNome.value = usuarioDB.nome || "";
+
+    labelCrn.textContent = usuarioDB.crn || "";
+    inputCrn.value = usuarioDB.crn || "";
+
+    labelEspecialidade.textContent = usuarioDB.especialidade || "";
+    inputEspecialidade.value = usuarioDB.especialidade || "";
+
+    labelTelefone.textContent = usuarioDB.telefone || "";
+    inputTelefone.value = usuarioDB.telefone || "";
+
+    labelEmail.textContent = usuarioDB.email || "";
+    inputEmail.value = usuarioDB.email || "";
+
+    // Se usuário logou via Google, bloqueia edição do email e senha
+    if (usuarioLocal.viaGoogle) {
+      inputEmail.disabled = true;
+
+      const avisoGoogleEmail = document.createElement("p");
+      avisoGoogleEmail.textContent = "Este e-mail é vinculado ao Google e não pode ser alterado.";
+      avisoGoogleEmail.style.color = "gray";
+      avisoGoogleEmail.style.fontSize = "14px";
+      avisoGoogleEmail.style.marginTop = "4px";
+      inputEmail.parentNode.appendChild(avisoGoogleEmail);
+
+      senhaAviso.textContent = "Este usuário é vinculado ao Google. A senha não pode ser alterada.";
+      senhaAviso.style.display = "block";
+      senhaAviso.style.color = "gray";
+      senhaAviso.style.fontSize = "14px";
+      senhaAviso.style.marginTop = "4px";
+    }
+
+    containerPerfil.style.display = "block";
+    avisoNaoLogado.style.display = "none";
+
+  } catch (err) {
+    console.error("Erro ao buscar dados do perfil:", err);
+    avisoNaoLogado.style.display = "block";
+    containerPerfil.style.display = "none";
+    return;
+  }
+
+  // Função para mostrar toast
+  function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add("show");
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 4000);
+  }
+
+  // Botão editar habilita edição dos campos
+  btnEditar.addEventListener("click", () => {
+    toggleEdicao(true);
+  });
+
+  // Botão salvar envia PUT para atualizar dados no backend
+  btnSalvar.addEventListener("click", async () => {
+    const nome = inputNome.value.trim();
+    const crn = inputCrn.value.trim();
+    const especialidade = inputEspecialidade.value.trim();
+    const telefone = inputTelefone.value.trim();
+    const email = inputEmail.value.trim();
+
+    const emailParaEnviar = usuarioLocal.viaGoogle ? usuarioLocal.email : email;
+
+    const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailParaEnviar);
+    if (!emailValido) {
+      emailErro.textContent = "O formato do e-mail está incorreto.";
+      emailErro.style.display = "block";
+      return;
+    } else {
+      emailErro.textContent = "";
+      emailErro.style.display = "none";
+    }
+
+    const novosDados = {
+      nome,
+      crn,
+      especialidade,
+      telefone,
+      email: emailParaEnviar,
+    };
+
+    try {
+      // Ajusta endpoint para PUT conforme tipo
+      const endpointPut = usuarioLocal.tipo === "nutricionista"
+        ? `http://localhost:3000/nutricionistas/${userId}`
+        : `http://localhost:3000/usuarios/${userId}`;
+
+      const resposta = await fetch(endpointPut, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(novosDados)
+      });
+
+      if (resposta.ok) {
+        labelNome.textContent = nome;
+        labelCrn.textContent = crn;
+        labelEspecialidade.textContent = especialidade;
+        labelTelefone.textContent = telefone;
+        labelEmail.textContent = emailParaEnviar;
+
+        // Atualiza localStorage com novos dados
+        localStorage.setItem("dadosUsuario", JSON.stringify({
+          ...usuarioLocal,
+          ...novosDados
+        }));
+
+        mensagemPerfil.textContent = "Perfil atualizado com sucesso!";
+        mensagemPerfil.style.color = "green";
+        toggleEdicao(false);
+        showToast("Seus dados foram editados com sucesso.");
+      } else {
+        mensagemPerfil.textContent = "Erro ao atualizar perfil.";
+        mensagemPerfil.style.color = "red";
+      }
+    } catch (err) {
+      mensagemPerfil.textContent = "Erro de conexão.";
+      mensagemPerfil.style.color = "red";
+    }
+  });
+
+  // Aviso de senha só se não for login via Google
+  if (!usuarioLocal.viaGoogle) {
+    labelSenha.addEventListener("click", () => {
+      senhaAviso.classList.remove("hidden");
+    });
+  }
+
+  // Função para alternar modo edição
+  function toggleEdicao(editar) {
+    labelNome.classList.toggle("hidden", editar);
+    inputNome.classList.toggle("hidden", !editar);
+
+    labelCrn.classList.toggle("hidden", editar);
+    inputCrn.classList.toggle("hidden", !editar);
+
+    labelEspecialidade.classList.toggle("hidden", editar);
+    inputEspecialidade.classList.toggle("hidden", !editar);
+
+    labelTelefone.classList.toggle("hidden", editar);
+    inputTelefone.classList.toggle("hidden", !editar);
+
+    labelEmail.classList.toggle("hidden", editar);
+    inputEmail.classList.toggle("hidden", !editar);
+
+    btnEditar.classList.toggle("hidden", editar);
+    btnSalvar.classList.toggle("hidden", !editar);
+  }
+
+  // Botão voltar para página inicial
+  btnVoltar.addEventListener("click", () => {
+    window.location.href = "cadastrarConsultorio.html";
+  });
+
+  // Botão sair remove dados e redireciona
+  btnSair.addEventListener("click", () => {
+    localStorage.removeItem("dadosUsuario");
+    localStorage.removeItem("usuarioLogado");
+    window.location.href = "index.html";
+  });
+});
+
+ </script>
+
+</body>
+</html>

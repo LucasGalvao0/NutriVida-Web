@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Mensagens - Nutrivida</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    
+     <header>
+      <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+
+         
+
+      <section class="direito">
+      <nav class="menu" >
+          <ul id="menu">
+
+              <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+              <li><a class="item" href="index.html"  data-translate="1">Início</a></li>    
+              
+              
+              
+          </li>
+              <li><a class="item" href="cadastrarConsultorio.html" data-translate="3" >Cadastrar Consultorios</a>
+              <li><a class="item" href="Exibircontato.html" data-translate="5" id="paginaAtual">Suas mensagens</a></li>
+              <li class="dropdown"> <p class="setaNav" data-translate="6" id="usuarioLogado">Usuario
+                  
+              </p>
+
+
+              <div class="drop-menu drop-m2">
+                  <a href="cadastro.html" id="link-cadastro" class="item">Cadastro</a>    
+                  <a href="entrar.html" id="link-login" class="item">Entrar</a>
+                  <a href="perfil.html" id="linkPerfil" class="item">Perfil</a>
+                </div>
+                
+          </li>
+            
+
+          </ul>
+      </nav>
+  
+      <div class="hamburgue" id="hamburgue"></div>
+  </section>
+
+  
+  </header>
+
+ 
+    <section class="banner">
+        <img src="img/banners/bcontato.jpg" alt="Banner de contatos" class="img2">
+    </section>
+
+    <button class="Seta-subir" onclick="backTop();">
+        <img src="img/icons/subir.svg" alt="seta-subir">
+    </button>
+
+    <main class="Contatos" id="para-baixo">
+        <h2 data-translate="80">Mensagens Recebidas</h2>
+        
+    
+        <p class="txtContato" data-translate="81">Visualize e responda as mensagens de seus clientes:</p>
+
+
+    <div class="containerC">
+        <div class="button-group">
+            <div class="button-group-left">
+                <button id="btn-nao-respondidas" class="btnC visualizar-btn2" onclick="alternarExibicao('naoRespondidas')">Exibir Mensagens Não Respondidas</button>
+                <button id="btn-respondidas" class="btnC visualizar-btn2" onclick="alternarExibicao('respondidas')">Exibir Mensagens Respondidas</button>
+                <button id="btn-arquivadas" class="btnC visualizar-btn2" onclick="alternarExibicao('arquivadas')">Exibir Mensagens Arquivadas</button>
+            </div>
+            <div class="button-group-right">
+                <button id="btn-excluir-todas" class="btnC excluir-btn" onclick="confirmarAcao('Tem certeza que deseja EXCLUIR TODAS as mensagens da visualização atual? Esta ação é irreversível!', excluirTodasMensagens)">Excluir Tudo</button>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="lista-contatos"></tbody>
+        </table>
+    </div>
+
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modal-title">Confirmação</h3>
+            <p id="modal-message"></p>
+            <div class="modal-buttons">
+                <button id="modal-confirm-btn" class="btnC excluir-btn">Confirmar</button>
+                <button id="modal-cancel-btn" class="btnC cancelar-btn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="mensagem-status"></div>
+
+    <button id="btn-carregar-novas" class="btnC carregar-btn" onclick="carregarContatos(true)" title="Recarregar Mensagens">
+        <i class="fas fa-sync-alt"></i> 
+    </button>
+
+    <script>
+        let tipoExibicaoAtual = 'naoRespondidas';
+        let contatosCache = []; 
+        let confirmActionCallback = null; 
+
+        function mostrarMensagem(texto, tipo = 'sucesso') {
+            const div = document.getElementById('mensagem-status');
+            div.textContent = texto;
+            div.className = `mensagem-${tipo}`;
+            div.style.display = 'block';
+            div.style.animation = 'none'; 
+            void div.offsetWidth; 
+            div.style.animation = 'fadeInOut 4s forwards';
+            setTimeout(() => div.style.display = 'none', 4000);
+        }
+
+        function confirmarAcao(mensagem, callback) {
+            const modalOverlay = document.getElementById('confirm-modal');
+            const modalMessage = document.getElementById('modal-message');
+            const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+            const modalCancelBtn = document.getElementById('modal-cancel-btn');
+
+            modalMessage.textContent = mensagem;
+            confirmActionCallback = callback; 
+
+            modalConfirmBtn.onclick = () => {
+                modalOverlay.classList.remove('active');
+                if (confirmActionCallback) {
+                    confirmActionCallback(); 
+                    confirmActionCallback = null; 
+                }
+            };
+
+            modalCancelBtn.onclick = () => {
+                modalOverlay.classList.remove('active');
+                confirmActionCallback = null; 
+            };
+
+            modalOverlay.classList.add('active');
+        }
+
+
+        function abrirFormularioResposta(id, email) {
+            const detalhes = document.getElementById("detalhes-" + id);
+            if (detalhes.querySelector(".resposta-form")) return;
+
+            const formDiv = document.createElement("div");
+            formDiv.className = "resposta-form";
+            formDiv.innerHTML = `
+                <textarea placeholder="Digite sua resposta aqui..."></textarea><br>
+                <button class="btnC responder-btn">Enviar</button>
+                <button class="btnC cancelar-btn">Cancelar</button>
+            `;
+
+            detalhes.querySelector(".detalhes-celula").appendChild(formDiv);
+
+            const textarea = formDiv.querySelector("textarea");
+            const btnEnviar = formDiv.querySelector(".responder-btn");
+            const btnCancelar = formDiv.querySelector(".cancelar-btn");
+
+            btnEnviar.onclick = async () => {
+                const resposta = textarea.value.trim();
+                if (resposta === "") {
+                    mostrarMensagem("A resposta não pode estar vazia.", "erro");
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`http://localhost:3000/contatos/${id}/responder`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ resposta })
+                    });
+
+                    const resultado = await res.json();
+                    if (!res.ok) throw new Error(resultado.message || "Erro ao responder.");
+
+                    mostrarMensagem("Resposta enviada com sucesso!");
+                    formDiv.remove();
+
+                    contatosCache = contatosCache.map(c => c.id === id ? { ...c, respondido: true, resposta: resposta } : c);
+                    
+                    renderizarTabela(); 
+                } catch (err) {
+                    console.error(err);
+                    mostrarMensagem("Erro ao enviar a resposta: " + err.message, "erro");
+                }
+            };
+
+            btnCancelar.onclick = () => {
+                formDiv.remove();
+            };
+        }
+
+
+        async function alternarStatusArquivado(id, arquivar) {
+            try {
+                const endpoint = arquivar ? `/arquivar` : `/desarquivar`;
+                const res = await fetch(`http://localhost:3000/contatos/${id}${endpoint}`, {
+                    method: 'PUT'
+                });
+
+                if (!res.ok) {
+                    const resultado = await res.json();
+                    throw new Error(resultado.message || `Erro ao ${arquivar ? 'arquivar' : 'desarquivar'} mensagem.`);
+                }
+
+                mostrarMensagem(`Mensagem ${arquivar ? 'arquivada' : 'desarquivada'} com sucesso!`);
+               
+                contatosCache = contatosCache.map(c => c.id === id ? { ...c, arquivado: arquivar } : c);
+                
+                renderizarTabela(); 
+            } catch (err) {
+                console.error(`Erro ao ${arquivar ? 'arquivar' : 'desarquivar'} contato:`, err);
+                mostrarMensagem(`Erro ao ${arquivar ? 'arquivar' : 'desarquivar'} mensagem: ` + err.message, "erro");
+            }
+        }
+
+        async function excluirContato(id) {
+            try {
+                const res = await fetch(`http://localhost:3000/contatos/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (!res.ok) {
+                    const resultado = await res.json();
+                    throw new Error(resultado.message || "Erro ao excluir contato.");
+                }
+
+                mostrarMensagem("Mensagem excluída com sucesso!");
+                contatosCache = contatosCache.filter(c => c.id !== id);
+                renderizarTabela(); 
+
+            } catch (err) {
+                console.error("Erro ao excluir contato:", err);
+                mostrarMensagem("Erro ao excluir mensagem: " + err.message, "erro");
+            }
+        }
+
+        async function excluirTodasMensagens() {
+            let mensagensParaExcluir = [];
+            if (tipoExibicaoAtual === 'naoRespondidas') {
+                mensagensParaExcluir = contatosCache.filter(c => !c.respondido && !c.arquivado);
+            } else if (tipoExibicaoAtual === 'respondidas') {
+                mensagensParaExcluir = contatosCache.filter(c => c.respondido && !c.arquivado);
+            } else if (tipoExibicaoAtual === 'arquivadas') {
+                mensagensParaExcluir = contatosCache.filter(c => c.arquivado);
+            }
+
+            if (mensagensParaExcluir.length === 0) {
+                mostrarMensagem("Não há mensagens para excluir na visualização atual.", "erro");
+                return;
+            }
+
+            try {
+                const idsParaExcluir = mensagensParaExcluir.map(m => m.id);
+                for (const id of idsParaExcluir) {
+                    await fetch(`http://localhost:3000/contatos/${id}`, { method: 'DELETE' });
+                }
+
+                mostrarMensagem("Mensagens da visualização atual excluídas com sucesso!");
+                
+                carregarContatos(); 
+
+            } catch (err) {
+                console.error("Erro ao excluir todas as mensagens da visualização atual:", err);
+                mostrarMensagem("Erro ao excluir mensagens: " + err.message, "erro");
+            }
+        }
+
+        function toggleDetalhes(id) {
+            const detalhes = document.getElementById("detalhes-" + id);
+            detalhes.style.display = detalhes.style.display === "none" ? "table-row" : "none";
+        }
+
+        async function carregarContatos(forceReload = false) {
+    try {
+        const nutricionistaId = sessionStorage.getItem('nutricionistaId');
+         console.log("ID salvo no sessionStorage:", nutricionistaId);
+        const res = await fetch(`http://localhost:3000/contatos?nutricionista=${encodeURIComponent(nutricionistaId)}`);
+        const contatos = await res.json();
+
+         console.log("Contatos retornados:", contatos);
+        contatosCache = contatos;
+        renderizarTabela();
+
+        if (forceReload) {
+            mostrarMensagem("Mensagens atualizadas com sucesso!", "sucesso");
+        }
+
+        const btnCarregarNovas = document.getElementById("btn-carregar-novas");
+        btnCarregarNovas.style.display = tipoExibicaoAtual === 'naoRespondidas' ? 'flex' : 'none';
+
+    } catch (error) {
+        console.error("Erro ao carregar contatos:", error);
+        mostrarMensagem("Falha ao carregar contatos: " + error.message, "erro");
+    }
+}
+
+
+        function renderizarTabela() {
+            const tbody = document.getElementById("lista-contatos");
+            tbody.innerHTML = '';
+
+            let filtrados = [];
+            if (tipoExibicaoAtual === 'naoRespondidas') {
+                filtrados = contatosCache.filter(c => !c.respondido && !c.arquivado);
+            } else if (tipoExibicaoAtual === 'respondidas') {
+                filtrados = contatosCache.filter(c => c.respondido && !c.arquivado);
+            } else if (tipoExibicaoAtual === 'arquivadas') {
+                filtrados = contatosCache.filter(c => c.arquivado);
+            }
+
+            if (filtrados.length === 0) {
+                let mensagemVazia = "";
+                if (tipoExibicaoAtual === 'naoRespondidas') {
+                    mensagemVazia = "Nenhuma mensagem nova.";
+                } else if (tipoExibicaoAtual === 'respondidas') {
+                    mensagemVazia = "Nenhuma mensagem respondida (não arquivada).";
+                } else if (tipoExibicaoAtual === 'arquivadas') {
+                    mensagemVazia = "Nenhuma mensagem arquivada.";
+                }
+                tbody.innerHTML = `<tr><td colspan="2" style="text-align: center; padding: 20px; color: #757575;">${mensagemVazia}</td></tr>`;
+                return;
+            }
+
+            filtrados.forEach(contato => {
+                const linhaPrincipal = document.createElement("tr");
+                linhaPrincipal.id = "linha-principal-" + contato.id;
+                linhaPrincipal.innerHTML = `
+                    <td>${contato.nome}</td>
+                    <td>
+                        <div class="acoes-tabela">
+                            <button class="btnC visualizar-btn" onclick="toggleDetalhes(${contato.id})">Visualizar</button>
+                            ${tipoExibicaoAtual === 'respondidas' && !contato.arquivado ? `
+                                <button class="btnC arquivar-btn" onclick="confirmarAcao('Tem certeza que deseja arquivar esta mensagem?', () => alternarStatusArquivado(${contato.id}, true))">Arquivar</button>
+                            ` : ''}
+                            ${tipoExibicaoAtual === 'arquivadas' ? `
+                                <button class="btnC desarquivar-btn" onclick="confirmarAcao('Tem certeza que deseja desarquivar esta mensagem?', () => alternarStatusArquivado(${contato.id}, false))">Desarquivar</button>
+                            ` : ''}
+                            <button class="btnC excluir-btn" onclick="confirmarAcao('Tem certeza que deseja excluir esta mensagem? Esta ação é irreversível.', () => excluirContato(${contato.id}))">Excluir</button>
+                        </div>
+                    </td>
+                `;
+            
+                const linhaDetalhes = document.createElement("tr");
+                linhaDetalhes.id = "detalhes-" + contato.id;
+                linhaDetalhes.style.display = "none";
+                linhaDetalhes.innerHTML = `
+                    <td colspan="2" class="detalhes-celula">
+                        <p><strong>Email:</strong> ${contato.email}</p>
+                        <p><strong>Telefone:</strong> ${contato.telefone}</p>
+                        <p><strong>Remetente:</strong> ${contato.remetente}</p>
+                        <p><strong>Mensagem:</strong> ${contato.mensagem}</p>
+                        ${contato.respondido ? `
+                            <div class="resposta-enviada"><strong>Resposta:</strong> ${contato.resposta}</div>
+                        ` : `
+                            <button class="btnC responder-btn responder-btn-original" onclick="abrirFormularioResposta(${contato.id}, '${contato.email}')">Responder</button>
+                        `}
+                    </td>
+                `;
+
+                tbody.appendChild(linhaPrincipal);
+                tbody.appendChild(linhaDetalhes);
+            });
+        }
+
+        function alternarExibicao(novoTipo) {
+    tipoExibicaoAtual = novoTipo;
+    
+    document.getElementById("btn-nao-respondidas").classList.remove('active');
+    document.getElementById("btn-respondidas").classList.remove('active');
+    document.getElementById("btn-arquivadas").classList.remove('active');
+    
+    if (novoTipo === 'naoRespondidas') {
+        document.getElementById("btn-nao-respondidas").classList.add('active');
+    } else if (novoTipo === 'respondidas') {
+        document.getElementById("btn-respondidas").classList.add('active');
+    } else if (novoTipo === 'arquivadas') {
+        document.getElementById("btn-arquivadas").classList.add('active');
+    }
+
+    const btnExcluirTodas = document.getElementById("btn-excluir-todas");
+    const btnCarregarNovas = document.getElementById("btn-carregar-novas");
+
+    if (tipoExibicaoAtual === 'naoRespondidas') {
+        btnExcluirTodas.style.display = 'none'; 
+        btnCarregarNovas.style.display = 'flex'; 
+    } else {
+        btnExcluirTodas.style.display = 'inline-block'; 
+        btnCarregarNovas.style.display = 'none';
+    }
+
+    renderizarTabela();
+}
+        carregarContatos(); 
+        document.getElementById("btn-nao-respondidas").classList.add('active');
+        document.getElementById("btn-excluir-todas").style.display = 'none';
+    </script>
+</body>
+</html>

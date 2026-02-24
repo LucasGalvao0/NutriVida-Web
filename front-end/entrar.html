@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="icon" href="img/logos/logo.png" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<style>
+
+
+        .login-container{
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 2rem;
+        }
+
+
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 1000;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--primary);
+            transform: translateX(-5px);
+        }
+
+        .back-button svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--primary);
+        }
+
+        /* Main Container */
+        .Login {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 1200px;
+            width: 100%;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Side */
+        .form-login {
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo-login {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-login h1{
+          background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-login img {
+            width: 5rem;
+            height: auto;
+            filter: drop-shadow(0 4px 12px rgba(16, 185, 129, 0.3));
+        }
+
+        .form-login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .form-login-titulo {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-login-subtitulo {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        /* Form Elements */
+        .grupo-login {
+            margin-bottom: 1.5rem;
+        }
+
+        .label-login {
+            display: block;
+            color: var(--text);
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.3rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(16, 185, 129, 0.2);
+            border-radius: 14px;
+            color: var(--text);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .form-input::placeholder {
+            color: var(--text-dim);
+            opacity: 0.6;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        .esqueceu-senha {
+            text-align: right;
+            margin-top: 0.5rem;
+        }
+
+        .forgot-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .forgot-link:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            padding: 1.2rem;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-primary:hover::before {
+            width: 500px;
+            height: 500px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.5);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: rgba(16, 185, 129, 0.2);
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .login-google {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 14px;
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--text);
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            text-decoration: none;
+        }
+
+        .login-google:hover {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .cadastro-texto {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        .cadastro-texto a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .cadastro-texto a:hover {
+            color: var(--secondary);
+        }
+
+        /* Image Side */
+        .cadeado {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(52, 211, 153, 0.05));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cadeado::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .iamegm-conteudo {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Lock Container */
+        .cadeado-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 500px;
+            margin: 0 auto;
+        }
+
+        .lock-illustration {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 20px 50px rgba(16, 185, 129, 0.4));
+        }
+
+        /* Lock Glow */
+        .fundo-cadeado {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.5;
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.8;
+            }
+        }
+
+        /* Floating Leaves */
+        .floating-leaf {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.6;
+            animation: leafFloat 4s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(16, 185, 129, 0.3));
+        }
+
+        @keyframes leafFloat {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.6;
+            }
+            50% { 
+                transform: translateY(-20px) rotate(10deg);
+                opacity: 0.9;
+            }
+        }
+
+        /* Sparkles */
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 15px currentColor;
+            animation: sparkleAnim 2s ease-in-out infinite;
+        }
+
+        @keyframes sparkleAnim {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1) rotate(180deg);
+            }
+        }
+
+        /* Particles */
+        .security-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--secondary);
+            border-radius: 50%;
+            box-shadow: 0 0 8px currentColor;
+            animation: particleOrbit 6s linear infinite;
+        }
+
+        @keyframes particleOrbit {
+            0% {
+                transform: rotate(0deg) translateX(150px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: rotate(360deg) translateX(150px) rotate(-360deg);
+                opacity: 0;
+            }
+        }
+
+        .cadeado-texto {
+            margin-top: 2rem;
+        }
+
+        .cadeado-texto h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .cadeado-texto p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 0.9rem;
+            border: 2px solid rgba(148, 163, 184, 0.3);
+            border-radius: 12px;
+            background: transparent;
+            color: var(--text-dim);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(148, 163, 184, 0.1);
+            border-color: var(--text-dim);
+        }
+
+        .btn-submit {
+            flex: 1;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Toast Message */
+        .toast {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 1.2rem 2rem;
+            border-radius: 14px;
+            font-weight: 600;
+            z-index: 10001;
+            opacity: 0;
+            transform: translateX(500px);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .Login {
+                grid-template-columns: 1fr;
+            }
+
+            .cadeado {
+                display: none;
+            }
+
+            .form-login {
+                padding: 3rem 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-login {
+                padding: 2rem 1.5rem;
+            }
+
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+            }
+        }
+    </style>
+
+<body>
+   
+  <div class="organic-bg-nutrivida">
+        <div class="blob-nutrivida blob-nutrivida-1"></div>
+        <div class="blob-nutrivida blob-nutrivida-2"></div>
+        <div class="blob-nutrivida blob-nutrivida-3"></div>
+        <div class="blob-nutrivida blob-nutrivida-4"></div>
+    </div>
+
+    <div class="floating-foods-nutrivida">
+        <div class="food-icon-nutrivida food-nutrivida-1">
+            <img src="img/abacate.png" alt="abacate-imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-2">
+            <img src="img/maca.png" alt="maça imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-3">
+            <img src="img/salada.png" alt="salada imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-4">
+            <img src="img/tangerina.png" alt="tangerina imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-5">
+            <img src="img/brocolis.png" alt="brocolis imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-6">
+            <img src="img/banana.png" alt="banana imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-7">
+            <img src="img/cenoura.png" alt="imagem cenoura">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-8">
+            <img src="img/kiwi.png" alt="imagem kiwi">
+        </div>
+    </div>
+
+    <main class="login-container">
+   <div class="Login">
+        <!-- Form Side -->
+        <div class="form-login">
+            <div class="logo-login">
+                <img src="img/logos/logo.png" alt="logo-Nutrivida">
+                <h1>Nutrivida</h1>
+            </div>
+
+            <div class="form-login-header">
+                <h1 class="form-login-titulo">Bem-vindo de volta!</h1>
+                <p class="form-login-subtitulo">Entre com suas credenciais para continuar</p>
+            </div>
+
+            <form id="formLogin">
+                <div class="grupo-login">
+                    <label class="label-login">E-mail</label>
+                    <div class="input-wrapper">
+                        <input type="email" class="form-input" id="usuario" placeholder="Digite seu e-mail">
+                    </div>
+                </div>
+
+                <div class="grupo-login">
+                    <label class="label-login">Senha</label>
+                    <div class="input-wrapper">
+                        <input type="password" class="form-input" id="senha" placeholder="Digite sua senha">
+                    </div>
+                    <div class="esqueceu-senha">
+                        <a href="#" class="forgot-link" id="esqueceusenha">Esqueceu a senha?</a>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="btnLogar">Entrar</button>
+
+                <div class="divider">ou</div>
+
+                <a href="http://localhost:3000/auth/google?prompt=login" class="login-google">
+                    <svg width="20" height="20" viewBox="0 0 20 20">
+                        <path fill="#4285F4" d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z"/>
+                        <path fill="#34A853" d="M13.46 15.13c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45z"/>
+                        <path fill="#FBBC05" d="M3.99 10c0-.69.12-1.35.32-1.97V5.51H1.07A9.973 9.973 0 000 10c0 1.61.39 3.14 1.07 4.49l3.24-2.52c-.2-.62-.32-1.28-.32-1.97z"/>
+                        <path fill="#EA4335" d="M10 3.88c1.88 0 3.13.81 3.85 1.48l2.84-2.76C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.51l3.24 2.52C5.12 5.62 7.36 3.88 10 3.88z"/>
+                    </svg>
+                    Entrar com Google
+                </a>
+            </form>
+
+            <div class="cadastro-texto">
+                Não possui uma conta? <a href="cadastro.html">Cadastre-se</a>
+            </div>
+        </div>
+
+        <!-- Image Side -->
+        <div class="cadeado">
+            <div class="fundo-cadeado"></div>
+            <div class="iamegm-conteudo">
+                <div class="cadeado-container">
+                    <!-- SVG Lock with Leaves -->
+                    <svg class="lock-illustration" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <!-- Gradients -->
+                            <linearGradient id="lockGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+                            </linearGradient>
+                            
+                            <linearGradient id="leafGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#34d399;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#10b981;stop-opacity:1" />
+                            </linearGradient>
+                            
+                            <linearGradient id="leafGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+                            </linearGradient>
+                            
+                            <radialGradient id="shackleGradient">
+                                <stop offset="0%" style="stop-color:#34d399;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#10b981;stop-opacity:1" />
+                            </radialGradient>
+
+                            <!-- Filter for glow -->
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+
+                        <!-- Background Circle Glow -->
+                        <circle cx="150" cy="200" r="100" fill="url(#lockGradient)" opacity="0.1">
+                            <animate attributeName="r" values="100;110;100" dur="3s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.1;0.2;0.1" dur="3s" repeatCount="indefinite"/>
+                        </circle>
+
+                        <!-- Large Decorative Leaves (Background) -->
+                        <!-- Left Leaf -->
+                        <path d="M 60 180 Q 40 200 60 220 Q 70 210 70 200 Q 70 190 60 180 Z" 
+                              fill="url(#leafGradient1)" opacity="0.3" filter="url(#glow)">
+                            <animateTransform attributeName="transform" type="rotate" 
+                                from="-5 65 200" to="5 65 200" dur="4s" repeatCount="indefinite" 
+                                values="-5 65 200; 5 65 200; -5 65 200"/>
+                        </path>
+
+                        <!-- Right Leaf -->
+                        <path d="M 240 180 Q 260 200 240 220 Q 230 210 230 200 Q 230 190 240 180 Z" 
+                              fill="url(#leafGradient1)" opacity="0.3" filter="url(#glow)">
+                            <animateTransform attributeName="transform" type="rotate" 
+                                from="5 235 200" to="-5 235 200" dur="4s" repeatCount="indefinite" 
+                                values="5 235 200; -5 235 200; 5 235 200"/>
+                        </path>
+
+                        <!-- Lock Shackle (Top curved part) -->
+                        <g id="shackle">
+                            <path d="M 120 160 L 120 120 Q 120 80 150 80 Q 180 80 180 120 L 180 160" 
+                                  fill="none" 
+                                  stroke="url(#shackleGradient)" 
+                                  stroke-width="18" 
+                                  stroke-linecap="round"
+                                  filter="url(#glow)"/>
+                            
+                            <!-- Inner shine -->
+                            <path d="M 125 160 L 125 120 Q 125 90 150 90 Q 175 90 175 120 L 175 160" 
+                                  fill="none" 
+                                  stroke="rgba(255,255,255,0.3)" 
+                                  stroke-width="3" 
+                                  stroke-linecap="round"/>
+                            
+                            <!-- Animated glow pulse -->
+                            <path d="M 120 160 L 120 120 Q 120 80 150 80 Q 180 80 180 120 L 180 160" 
+                                  fill="none" 
+                                  stroke="#34d399" 
+                                  stroke-width="20" 
+                                  stroke-linecap="round"
+                                  opacity="0">
+                                <animate attributeName="opacity" values="0;0.4;0" dur="2s" repeatCount="indefinite"/>
+                            </path>
+                        </g>
+
+                        <!-- Lock Body -->
+                        <rect x="100" y="150" width="100" height="120" rx="15" 
+                              fill="url(#lockGradient)" 
+                              filter="url(#glow)"/>
+                        
+                        <!-- Lock body shine -->
+                        <rect x="105" y="155" width="40" height="110" rx="10" 
+                              fill="rgba(255,255,255,0.15)"/>
+                        
+                        <!-- Lock body border -->
+                        <rect x="100" y="150" width="100" height="120" rx="15" 
+                              fill="none" 
+                              stroke="rgba(255,255,255,0.3)" 
+                              stroke-width="2"/>
+
+                        <!-- Keyhole -->
+                        <g id="keyhole">
+                            <circle cx="150" cy="200" r="15" fill="rgba(0,0,0,0.3)"/>
+                            <rect x="143" y="200" width="14" height="30" rx="3" fill="rgba(0,0,0,0.3)"/>
+                            
+                            <!-- Keyhole glow -->
+                            <circle cx="150" cy="200" r="18" fill="none" stroke="#fbbf24" stroke-width="2" opacity="0.5">
+                                <animate attributeName="opacity" values="0.3;0.7;0.3" dur="2s" repeatCount="indefinite"/>
+                            </circle>
+                        </g>
+
+                        <!-- Small Leaves Around Lock -->
+                        <!-- Top Left Leaf -->
+                        <path d="M 90 140 Q 70 145 75 160 Q 85 155 90 150 Z" 
+                              fill="url(#leafGradient2)" opacity="0.8">
+                            <animateTransform attributeName="transform" type="translate" 
+                                values="0,0; -2,2; 0,0" dur="3s" repeatCount="indefinite"/>
+                        </path>
+                        <path d="M 80 145 L 90 150" stroke="#059669" stroke-width="1.5" opacity="0.6"/>
+
+                        <!-- Top Right Leaf -->
+                        <path d="M 210 140 Q 230 145 225 160 Q 215 155 210 150 Z" 
+                              fill="url(#leafGradient2)" opacity="0.8">
+                            <animateTransform attributeName="transform" type="translate" 
+                                values="0,0; 2,2; 0,0" dur="3s" repeatCount="indefinite"/>
+                        </path>
+                        <path d="M 220 145 L 210 150" stroke="#059669" stroke-width="1.5" opacity="0.6"/>
+
+                        <!-- Bottom Left Leaf -->
+                        <path d="M 85 280 Q 65 290 70 305 Q 80 297 85 290 Z" 
+                              fill="url(#leafGradient1)" opacity="0.8">
+                            <animateTransform attributeName="transform" type="translate" 
+                                values="0,0; -3,-2; 0,0" dur="3.5s" repeatCount="indefinite"/>
+                        </path>
+                        <path d="M 72 295 L 85 290" stroke="#34d399" stroke-width="1.5" opacity="0.6"/>
+
+                        <!-- Bottom Right Leaf -->
+                        <path d="M 215 280 Q 235 290 230 305 Q 220 297 215 290 Z" 
+                              fill="url(#leafGradient1)" opacity="0.8">
+                            <animateTransform attributeName="transform" type="translate" 
+                                values="0,0; 3,-2; 0,0" dur="3.5s" repeatCount="indefinite"/>
+                        </path>
+                        <path d="M 228 295 L 215 290" stroke="#34d399" stroke-width="1.5" opacity="0.6"/>
+
+                        <!-- Vines/Stems -->
+                        <path d="M 90 150 Q 85 180 90 210" stroke="#059669" stroke-width="2" 
+                              fill="none" opacity="0.5" stroke-linecap="round"/>
+                        <path d="M 210 150 Q 215 180 210 210" stroke="#059669" stroke-width="2" 
+                              fill="none" opacity="0.5" stroke-linecap="round"/>
+
+                        <!-- Large Leaves Growing from Lock -->
+                        <!-- Left Large Leaf -->
+                        <g opacity="0.9">
+                            <ellipse cx="70" cy="200" rx="25" ry="35" fill="url(#leafGradient1)" 
+                                     transform="rotate(-30 70 200)" filter="url(#glow)">
+                                <animateTransform attributeName="transform" type="rotate" 
+                                    values="-30 70 200; -25 70 200; -30 70 200" dur="4s" repeatCount="indefinite"/>
+                            </ellipse>
+                            <path d="M 70 165 L 70 235" stroke="#059669" stroke-width="2" opacity="0.6"
+                                  transform="rotate(-30 70 200)">
+                                <animateTransform attributeName="transform" type="rotate" 
+                                    values="-30 70 200; -25 70 200; -30 70 200" dur="4s" repeatCount="indefinite"/>
+                            </path>
+                        </g>
+
+                        <!-- Right Large Leaf -->
+                        <g opacity="0.9">
+                            <ellipse cx="230" cy="200" rx="25" ry="35" fill="url(#leafGradient1)" 
+                                     transform="rotate(30 230 200)" filter="url(#glow)">
+                                <animateTransform attributeName="transform" type="rotate" 
+                                    values="30 230 200; 25 230 200; 30 230 200" dur="4s" repeatCount="indefinite"/>
+                            </ellipse>
+                            <path d="M 230 165 L 230 235" stroke="#059669" stroke-width="2" opacity="0.6"
+                                  transform="rotate(30 230 200)">
+                                <animateTransform attributeName="transform" type="rotate" 
+                                    values="30 230 200; 25 230 200; 30 230 200" dur="4s" repeatCount="indefinite"/>
+                            </path>
+                        </g>
+
+                        <!-- Top Leaves -->
+                        <g opacity="0.8">
+                            <ellipse cx="150" cy="60" rx="20" ry="30" fill="url(#leafGradient2)" 
+                                     transform="rotate(0 150 60)">
+                                <animateTransform attributeName="transform" type="rotate" 
+                                    values="0 150 60; 10 150 60; 0 150 60" dur="5s" repeatCount="indefinite"/>
+                            </ellipse>
+                            <path d="M 150 30 L 150 90" stroke="#10b981" stroke-width="2" opacity="0.6"/>
+                        </g>
+
+                        <!-- Bottom Leaves -->
+                        <g opacity="0.8">
+                            <ellipse cx="150" cy="320" rx="22" ry="32" fill="url(#leafGradient2)" 
+                                     transform="rotate(180 150 320)">
+                                <animateTransform attributeName="transform" type="rotate" 
+                                    values="180 150 320; 170 150 320; 180 150 320" dur="5s" repeatCount="indefinite"/>
+                            </ellipse>
+                            <path d="M 150 288 L 150 352" stroke="#10b981" stroke-width="2" opacity="0.6"/>
+                        </g>
+
+                        <!-- Sparkle Effects -->
+                        <circle cx="130" cy="190" r="3" fill="#fbbf24">
+                            <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="170" cy="210" r="2.5" fill="#34d399">
+                            <animate attributeName="opacity" values="0;1;0" dur="2.5s" begin="0.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="150" cy="180" r="2" fill="#fbbf24">
+                            <animate attributeName="opacity" values="0;1;0" dur="1.8s" begin="1s" repeatCount="indefinite"/>
+                        </circle>
+                    </svg>
+
+                    <!-- Additional Floating Leaves -->
+                    <div class="floating-leaf" style="top: 5%; left: 10%; animation-delay: 0s;">🍃</div>
+                    <div class="floating-leaf" style="bottom: 15%; right: 10%; animation-delay: 1s;">🍃</div>
+
+                    <!-- Sparkles -->
+                    <div class="sparkle" style="top: 30%; left: 20%; animation-delay: 0s;"></div>
+                    <div class="sparkle" style="top: 40%; right: 25%; animation-delay: 0.7s;"></div>
+                    <div class="sparkle" style="bottom: 35%; left: 22%; animation-delay: 1.4s;"></div>
+                    <div class="sparkle" style="bottom: 40%; right: 20%; animation-delay: 2.1s;"></div>
+
+                    <!-- Orbiting Particles -->
+                    <div class="security-particle" style="animation-delay: 0s;"></div>
+                    <div class="security-particle" style="animation-delay: 1s;"></div>
+                    <div class="security-particle" style="animation-delay: 2s;"></div>
+                    <div class="security-particle" style="animation-delay: 3s;"></div>
+                    <div class="security-particle" style="animation-delay: 4s;"></div>
+                    <div class="security-particle" style="animation-delay: 5s;"></div>
+                </div>
+
+                <div class="cadeado-texto">
+                    <h2>Segurança Natural</h2>
+                    <p>Seus dados protegidos com a segurança da natureza. Acesse com confiança sua jornada de saúde</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+        <div id="modal-recuperacao" class="modal-recuperacao">
+  <p class="tituloRecuperarSenha">Recuperar senha</p>
+  <form id="form-recuperacao">
+    <label for="email">Digite seu e-mail:</label>
+    <input type="email" id="email" name="email" required>
+    <button type="submit" class="btn-enviar">Enviar token</button>
+    <button type="button" class="btn-cancelar" onclick="fecharModal()"> Cancelar </button>
+  </form>
+  <p id="msg-resultado"></p>
+</div>
+
+
+
+
+
+
+
+<!-- Modal de redefinição de senha -->
+<div id="modal-redefinir" class="modal-redefinir">
+  <p class="tituloRecuperarSenha">Redefinir senha</p>
+  <form id="form-redefinir">
+    <label for="token">Token recebido:</label>
+    <input type="text" id="token" name="token" required><br>
+
+    <label for="novaSenha">Nova senha:</label>
+    <input type="password" id="novaSenha" name="novaSenha" required><br><br>
+
+    <button type="submit" class="btn-enviar">Redefinir</button>
+    <button type="button" class="btn-cancelar" onclick="fecharModalRedefinir()">Cancelar</button>
+  </form>
+  <p id="msg-redefinir"></p>
+</div>
+
+    
+
+  <div id="mensagem-flutuante" class="mensagem"></div>
+  
+<script src=".src/server.js"></script>
+
+<script>
+  function fecharModal() {
+    // Esconde o modal
+    document.getElementById("modal-recuperacao").style.display = "none";
+
+    // Limpa o formulário
+    document.getElementById("form-recuperacao").reset();
+
+    // (Opcional) Limpa mensagens de resultado
+    document.getElementById("msg-resultado").innerText = "";
+  }
+
+   function fecharModalRedefinir() {
+    document.getElementById("modal-redefinir").style.display = "none";
+    document.getElementById("form-redefinir").reset();
+    document.getElementById("msg-redefinir").innerText = "";
+  }
+
+    function fecharModalRecuperacao() {
+  document.getElementById("modal-recuperacao").style.display = "none";
+}
+
+function fecharModalRedefinir() {
+  document.getElementById("modal-redefinir").style.display = "none";
+}
+</script>
+  
+
+</body>
+</html>

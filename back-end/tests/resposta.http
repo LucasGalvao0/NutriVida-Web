@@ -1,0 +1,21 @@
+POST http://localhost:3000/respostas
+Content-Type: application/json
+
+{
+  "usuario_id": 1,
+  "name": "bhghjb",
+  "age": 19,
+  "imc": 22.2,
+  "height": 1.6,
+  "weight": 79,
+  "gender": "masculino",
+  "objective": "Ganhar peso",
+  "level": "leve",
+  "alergia": "lactose",
+  "trabalho": "professora",
+  "alimentosFavoritos": ["carne"],
+  "esporte": "Nenhum",
+  "dietaAtual": "low carb",
+  "rotina": "acordo as 9",
+  "tempoPreparo": "medio"
+}

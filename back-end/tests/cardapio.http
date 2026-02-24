@@ -1,0 +1,97 @@
+
+###
+GET http://localhost:3000/cardapio/CardapioTeste
+
+###
+POST http://localhost:3000/cardapio/CardapioCriado
+Content-Type: application/json
+
+{
+  "name": "Lucas",
+  "weight": 48,
+  "height": 1,
+  "age": 19,
+  "gender": "masculino",
+  "objective": "ganhar massa",
+  "imc": "22.2",
+  "alergia": "diabete, nozes",
+  "alimentosFavoritos": "coca cola",
+  "trabalho": "jogador",
+  "esporte": "boxe",
+  "dietaAtual": "low carb",
+  "rotina": "Acordo às 5h30, faço cardio em jejum, treino musculação às 15h, trabalho como personal trainer das 7h às 12h e das 16h às 20h. Durmo às 22h.",
+  "tempoPreparo": "pouco" ,
+  "level": "intermediário"
+}
+
+###
+POST http://localhost:3000/salvarCardapio
+Content-Type: application/json
+
+{
+  "usuario_id": 1,
+  "hash_respostas": "aana1111bbbb2222cccc3333dddd4444",
+  "cardapio_texto": {
+    "refeicoes": [
+      {
+        "horario": "08:00",
+        "nome": "Cafe da Manha",
+        "alimentos": [
+          "1 fatia de pao integral",
+          "1 ovo cozido",
+          "1 banana",
+          "200ml de leite desnatado"
+        ]
+      },
+      {
+        "horario": "10:00",
+        "nome": "Lanche da Manha",
+        "alimentos": [
+          "1 iogurte desnatado",
+          "1 maça"
+        ]
+      },
+      {
+        "horario": "12:00",
+        "nome": "Almoco",
+        "alimentos": [
+          "100g de carne grelhada (frango ou peixe)",
+          "1 concha de arroz integral",
+          "Salada de folhas verdes com tomate e cenoura",
+          "1 colher de sopa de azeite de oliva"
+        ]
+      },
+      {
+        "horario": "15:00",
+        "nome": "Lanche da Tarde",
+        "alimentos": [
+          "1 iogurte grego",
+          "1 punhado de castanhas"
+        ]
+      },
+      {
+        "horario": "19:00",
+        "nome": "Jantar",
+        "alimentos": [
+          "150g de carne magra grelhada ou peixe",
+          "1 xícara de brócolis cozido",
+          "1 batata doce cozida"
+        ]
+      },
+      {
+        "horario": "21:00",
+        "nome": "Lanche da Noite",
+        "alimentos": [
+          "1 xícara de chá de camomila"
+        ]
+      }
+    ],
+    "suplementos": [
+      "Proteína do soro do leite",
+      "Ômega 3"
+    ]
+  }
+}
+
+
+

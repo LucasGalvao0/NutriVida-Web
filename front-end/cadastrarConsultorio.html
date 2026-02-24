@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Adicionar Consultório</title>
+  <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    
+
+    <header>
+      <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+
+         
+
+      <section class="direito">
+      <nav class="menu" >
+          <ul id="menu">
+
+              <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+              <li><a class="item" href="index.html"  data-translate="1">Início</a></li>    
+              
+              
+              
+          </li>
+              <li><a class="item" href="cadastrarConsultorio.html" data-translate="3" id="paginaAtual">Cadastrar Consultorios</a>
+              <li><a class="item" href="Exibircontato.html" data-translate="5">Suas mensagens</a></li>
+              <li class="dropdown"> <p class="setaNav" data-translate="6" id="usuarioLogado">Usuario
+                  
+              </p>
+
+
+              <div class="drop-menu drop-m2">
+                  <a href="cadastro.html" id="link-cadastro" class="item">Cadastro</a>    
+                  <a href="entrar.html" id="link-login" class="item">Entrar</a>
+                  <a href="perfilNutricionista.html" id="linkPerfil" class="item">Perfil</a>
+                </div>
+                
+          </li>
+            
+
+          </ul>
+      </nav>
+  
+      <div class="hamburgue" id="hamburgue"></div>
+  </section>
+
+  
+  </header>
+
+    <main class="CadastroDoConsultorio">
+  <div class="container">
+    <h1>Adicionar Consultório</h1>
+    <form id="formConsultorio">
+      <label>Nome do Consultório</label>
+      <input type="text" name="nome" placeholder="Escreva o nome do seu consultorio" />
+
+
+      <label>Endereço</label>
+      <input type="text" name="endereco" placeholder="Escreva o seu cep" />
+
+      <label>Telefone/Whatsapp</label>
+      <input type="tel" name="telefone" id="telefone" placeholder="Escreva o seu Telefone/Whatsapp" />
+
+      <div id="servicos">
+        <h3>Serviços (máx. 6)</h3>
+        <div class="servico">
+          <input type="text" placeholder="Nome do serviço" class="nomeServico"/>
+          <input type="number" placeholder="Preço (R$)" class="precoServico"/>
+          <input type="text" placeholder="Descrição do serviço" class="descricaoServico"/>
+        </div>
+      </div>
+      <button type="button" id="adicionarServico">+ Adicionar Serviço</button>
+      <button type="button" id="removerServico">- Remover Serviço</button>
+      
+      <label>Horário de Funcionamento</label>
+      <label><input type="checkbox" id="fechadoSegunda" /> Fechar segunda</label>
+      <input id="horarioSegunda" name="segunda" type="text" placeholder="Segunda: 08:00 - 18:00" />
+       
+      <label><input type="checkbox" id="fechadoTerca" /> Fechar terça</label>
+      <input id="horarioTerca" name="terca" type="text" placeholder="Terça: 08:00 - 18:00" />
+       
+      <label><input type="checkbox" id="fechadoQuarta" /> Fechar quarta</label>
+      <input id="horarioQuarta" name="quarta" type="text" placeholder="Quarta: 08:00 - 18:00" />
+       
+      <label><input type="checkbox" id="fechadoQuinta" /> Fechar quinta</label>
+      <input id="horarioQuinta" name="quinta" type="text" placeholder="Quinta: 08:00 - 18:00" />
+       
+      <label><input type="checkbox" id="fechadoSexta" /> Fechar sexta</label>
+      <input id="horarioSexta" name="sexta" type="text" placeholder="Sexta: 08:00 - 18:00" />
+       
+      <label><input type="checkbox" id="fechadoSabado" /> Fechar sabado</label>
+      <input id="horarioSabado" name="sabado" type="text" placeholder="Sábado: 08:00 - 12:00" />
+       
+      <label><input type="checkbox" id="fechadoDomingo" checked /> Fechar domingo</label>
+      <input id="horarioDomingo" name="domingo" type="text" placeholder="Domingo: Fechado" />
+       
+
+
+      <button type="submit" class="btnSalvar">Salvar Consultório</button>
+    </form>
+  </div>
+</main>
+
+<script>
+  const form = document.getElementById("formConsultorio");
+  const btnAdicionarServico = document.getElementById("adicionarServico");
+  const btnRemoverServico = document.getElementById("removerServico");
+  const servicosContainer = document.getElementById("servicos");
+  const MAX_SERVICOS = 6;
+
+  const telefoneInput = document.getElementById("telefone");
+  telefoneInput.addEventListener("input", () => {
+    let input = telefoneInput.value.replace(/\D/g, "").slice(0, 11);
+    if (input.length <= 10) {
+      telefoneInput.value = input.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
+    } else {
+      telefoneInput.value = input.replace(/^(\d{2})(\d{5})(\d{0,4})$/, "($1) $2-$3");
+    }
+  });
+
+  const enderecoInput = document.querySelector('input[name="endereco"]');
+  enderecoInput.addEventListener("input", () => {
+    let cep = enderecoInput.value.replace(/\D/g, "").slice(0, 8);
+    if (cep.length > 5) {
+      enderecoInput.value = cep.replace(/^(\d{5})(\d{0,3})$/, "$1-$2");
+    } else {
+      enderecoInput.value = cep;
+    }
+  });
+
+  const diasSemana = ["Segunda", "Terca", "Quarta", "Quinta", "Sexta", "Sabado", "Domingo"];
+
+  diasSemana.forEach(dia => {
+    const input = document.getElementById(`horario${dia}`);
+    const checkbox = document.getElementById(`fechado${dia}`);
+
+    if (input) {
+      input.addEventListener("input", () => {
+        let value = input.value.replace(/\D/g, "").slice(0, 8);
+
+        function validarHora(h, m) {
+          const horaNum = parseInt(h, 10);
+          const minNum = parseInt(m, 10);
+          return (
+            !isNaN(horaNum) &&
+            !isNaN(minNum) &&
+            horaNum >= 0 && horaNum <= 23 &&
+            minNum >= 0 && minNum <= 59
+          );
+        }
+
+        if (value.length <= 4) {
+          const h = value.slice(0, 2);
+          const m = value.slice(2, 4);
+
+          if (validarHora(h, m) || value.length < 4) {
+            value = value.replace(/^(\d{0,2})(\d{0,2})$/, (_, h, m) => {
+              return `${h}${m ? ":" + m : ""}`;
+            });
+          } else {
+            value = input.value.slice(0, -1);
+          }
+        } else {
+          const h1 = value.slice(0, 2);
+          const m1 = value.slice(2, 4);
+          const h2 = value.slice(4, 6);
+          const m2 = value.slice(6, 8);
+
+          if (
+            (validarHora(h1, m1) && (h2 === "" && m2 === "" || validarHora(h2, m2))) ||
+            value.length < 8
+          ) {
+            value = value.replace(/^(\d{2})(\d{2})(\d{0,2})(\d{0,2})$/, (_, hh1, mm1, hh2, mm2) => {
+              let parte1 = `${hh1}:${mm1}`;
+              let parte2 = hh2 ? ` - ${hh2}${mm2 ? ":" + mm2 : ""}` : "";
+              return parte1 + parte2;
+            });
+          } else {
+            value = input.value.slice(0, -1);
+          }
+        }
+        input.value = value;
+      });
+    }
+
+    if (checkbox && input) {
+      checkbox.addEventListener("change", () => {
+        if (checkbox.checked) {
+          input.value = "";
+          input.disabled = true;
+        } else {
+          input.disabled = false;
+        }
+      });
+    }
+  });
+
+  btnAdicionarServico.addEventListener("click", () => {
+    const servicosAtuais = servicosContainer.querySelectorAll(".servico");
+    if (servicosAtuais.length >= MAX_SERVICOS) {
+      alert("Limite de 6 serviços atingido.");
+      return;
+    }
+
+    const div = document.createElement("div");
+    div.classList.add("servico");
+    div.innerHTML = `
+      <input type="text" placeholder="Nome do serviço" class="nomeServico" required />
+      <input type="number" placeholder="Preço (R$)" class="precoServico" required min="0" step="0.01" />
+      <input type="text" placeholder="Descrição do serviço" class="descricaoServico" required />
+    `;
+    servicosContainer.appendChild(div);
+  });
+
+  btnRemoverServico.addEventListener("click", () => {
+    const servicosAtuais = servicosContainer.querySelectorAll(".servico");
+    if (servicosAtuais.length > 1) {
+      servicosAtuais[servicosAtuais.length - 1].remove();
+    } else {
+      alert("Você deve manter pelo menos um serviço.");
+    }
+  });
+
+  // Função auxiliar para validar horário no formato "HH:MM - HH:MM" ou "HH:MM"
+  function validarHorarioCompleto(str) {
+    if (!str || str.toLowerCase() === "fechado") return true; // Considera fechado como válido
+    const regex = /^(\d{2}):(\d{2})(\s*-\s*(\d{2}):(\d{2}))?$/;
+    const match = str.match(regex);
+    if (!match) return false;
+
+    function horaValida(h, m) {
+      const hh = parseInt(h, 10);
+      const mm = parseInt(m, 10);
+      return hh >= 0 && hh <= 23 && mm >= 0 && mm <= 59;
+    }
+
+    if (!horaValida(match[1], match[2])) return false;
+    if (match[4] && !horaValida(match[4], match[5])) return false;
+
+    return true;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    if (form.dataset.enviando === "true") {
+      console.log("Envio já em andamento.");
+      return;
+    }
+    form.dataset.enviando = "true";
+
+    try {
+      // Validação dos horários finais antes de enviar:
+      for (const dia of diasSemana) {
+        const input = document.getElementById(`horario${dia}`);
+        const checkbox = document.getElementById(`fechado${dia}`);
+
+        if (!checkbox.checked) {
+          const valorHorario = input.value.trim();
+          if (!validarHorarioCompleto(valorHorario)) {
+            alert(`Horário inválido para ${dia}. Use o formato HH:MM - HH:MM ou marque como Fechado.`);
+            input.focus();
+            form.dataset.enviando = "false";
+            return;
+          }
+        }
+      }
+
+      // Validação e busca do CEP
+      let cepComMascara = form.endereco.value.trim();
+      const cep = cepComMascara.replace(/\D/g, "");
+
+      if (cep.length !== 8 || !/^\d{8}$/.test(cep)) {
+        alert("CEP inválido. Deve conter exatamente 8 números.");
+        form.endereco.style.border = "2px solid red";
+        form.dataset.enviando = "false";
+        return;
+      } else {
+        form.endereco.style.border = "";
+      }
+
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+
+      let enderecoCompleto = "";
+      if (!data.erro) {
+        enderecoCompleto = `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
+        form.endereco.value = enderecoCompleto;
+      } else {
+        alert("CEP não encontrado. Use o endereço completo manualmente.");
+      }
+
+      const nome = form.nome.value.trim();
+      const telefone = form.telefone.value.trim();
+
+      const telefoneLimpo = telefone.replace(/\D/g, "");
+      if (!/^\d{10,11}$/.test(telefoneLimpo)) {
+        alert("Telefone inválido. Use o formato (11) 91234-5678.");
+        form.telefone.style.border = "2px solid red";
+        form.dataset.enviando = "false";
+        return;
+      } else {
+        form.telefone.style.border = "";
+      }
+
+      const servicosDivs = servicosContainer.querySelectorAll(".servico");
+      if (servicosDivs.length === 0) {
+        alert("Adicione pelo menos um serviço.");
+        form.dataset.enviando = "false";
+        return;
+      }
+
+      const servicos = [];
+      for (const div of servicosDivs) {
+        const nomeServico = div.querySelector(".nomeServico").value.trim();
+        const preco = parseFloat(div.querySelector(".precoServico").value);
+        const descricaoServico = div.querySelector(".descricaoServico").value.trim();
+
+        if (!nomeServico || isNaN(preco) || preco < 0 || !descricaoServico) {
+          alert("Preencha todos os campos dos serviços corretamente. Preço deve ser um número positivo e descrição não pode estar vazia.");
+          form.dataset.enviando = "false";
+          return;
+        }
+
+        servicos.push({ nomeServico, preco, descricaoServico });
+      }
+
+      const horarios_funcionamento = {};
+      diasSemana.forEach(dia => {
+        const input = document.getElementById(`horario${dia}`);
+        const checkbox = document.getElementById(`fechado${dia}`);
+        horarios_funcionamento[dia.toLowerCase()] = checkbox && checkbox.checked
+          ? "Fechado"
+          : (input?.value.trim() || "Fechado");
+      });
+
+      const payload = {
+        nome,
+        endereco: enderecoCompleto || cepComMascara,
+        telefone,
+        servicos,
+        horarios_funcionamento,
+      };
+
+      const res = await fetch("http://localhost:3000/consultorios", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const json = await res.json();
+      if (res.ok) {
+        alert("Consultório criado com sucesso! ID: " + json.id);
+        form.reset();
+
+        const servicosAtualizados = servicosContainer.querySelectorAll(".servico");
+        for (let i = servicosAtualizados.length - 1; i > 0; i--) {
+          servicosAtualizados[i].remove();
+        }
+
+        diasSemana.forEach(dia => {
+          const input = document.getElementById(`horario${dia}`);
+          if (input) input.disabled = false;
+        });
+
+      } else {
+        alert("Erro: " + (json.error || "Erro desconhecido"));
+      }
+    } catch (err) {
+      alert("Erro na requisição: " + err.message);
+    } finally {
+      form.dataset.enviando = "false";
+    }
+  });
+</script>
+
+
+
+
+
+
+
+
+</body>
+</html>

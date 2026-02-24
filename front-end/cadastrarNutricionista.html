@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Cadastrar Nutricionista</title>
+  <link href="style.css" rel="stylesheet">
+  <style>
+    .CadastroDoNutricionista{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+  <section class="direito">
+    <nav class="menu">
+      <ul id="menu">
+        <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+        <li><a class="item" href="index.html">Início</a></li>    
+        <li><a class="item" href="cadastrarNutricionista.html" id="paginaAtual">Cadastrar Nutricionista</a></li>
+        <li><a class="item" href="Exibircontato.html">Suas mensagens</a></li>
+        <li class="dropdown">
+          <p class="setaNav" id="usuarioLogado">Usuário</p>
+          <div class="drop-menu drop-m2">
+            <a href="cadastro.html" class="item">Cadastro</a>    
+            <a href="entrar.html" class="item">Entrar</a>
+            <a href="perfil.html" class="item">Perfil</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <div class="hamburgue" id="hamburgue"></div>
+  </section>
+</header>
+
+<main class="CadastroDoNutricionista">
+  <div class="container">
+    <h1>Cadastrar Nutricionista</h1>
+    <form id="formNutricionista">
+      <label>Nome completo</label>
+      <input type="text" name="nome" id="nome" required placeholder="Digite o nome do nutricionista" />
+
+      <label>CRN</label>
+      <input type="text" name="crn" required placeholder="Digite o número do CRN" />
+
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" name="senha" required>
+
+      <label>Especialidade</label>
+      <input type="text" name="especialidade" required placeholder="Ex: Nutrição esportiva, clínica..." />
+
+      <label>Email</label>
+      <input type="email" name="email" required placeholder="Digite o e-mail profissional" />
+
+      <label>Telefone/Whatsapp</label>
+      <input type="tel" name="telefone" id="telefone" required placeholder="(11) 91234-5678" />
+
+      <label>Consultório</label>
+      <select id="consultorioSelect" name="consultorioSelect" required>
+        <option value="">Selecione um consultório</option>
+        <!-- Opções serão adicionadas via JS -->
+      </select>
+
+      <div id="servicosDisponiveis">
+        <h3>Serviços disponíveis no consultório selecionado</h3>
+        <!-- Serviços aparecem dinamicamente aqui -->
+      </div>
+
+      <button type="submit" class="btnSalvar">Salvar Nutricionista</button>
+    </form>
+  </div>
+</main>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const telefoneInput = document.getElementById("telefone");
+  const consultorioSelect = document.getElementById("consultorioSelect");
+  const servicosContainer = document.getElementById("servicosDisponiveis");
+
+  // Máscara de telefone
+  telefoneInput.addEventListener("input", () => {
+    let input = telefoneInput.value.replace(/\D/g, "").slice(0, 11);
+    telefoneInput.value = input.length <= 10
+      ? input.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3")
+      : input.replace(/^(\d{2})(\d{5})(\d{0,4})$/, "($1) $2-$3");
+  });
+
+  // Buscar consultórios e preencher o select
+  try {
+    const consultorios = await fetch("http://localhost:3000/consultorios").then(r => r.json());
+    consultorios.forEach(c => {
+      const opt = document.createElement("option");
+      opt.value = c.id;
+      opt.textContent = c.nome;
+      consultorioSelect.appendChild(opt);
+    });
+  } catch (error) {
+    console.error("Erro ao buscar consultórios:", error);
+  }
+
+  // Quando mudar o consultório, carregar os serviços
+  consultorioSelect.addEventListener("change", async () => {
+    servicosContainer.innerHTML = "<h3>Serviços disponíveis no consultório selecionado</h3>";
+    const idConsultorio = consultorioSelect.value;
+
+    if (!idConsultorio) {
+      servicosContainer.innerHTML += "<p>Selecione um consultório para ver os serviços.</p>";
+      return;
+    }
+
+    try {
+      const servicos = await fetch(`http://localhost:3000/consultorios/${idConsultorio}/servicos`)
+        .then(r => r.json());
+
+      if (!servicos.length) {
+        servicosContainer.innerHTML += "<p>Nenhum serviço encontrado.</p>";
+        return;
+      }
+
+      servicos.forEach(servico => {
+        const div = document.createElement("div");
+        div.classList.add("servico-item");
+        div.innerHTML = `
+          <label>
+            <input type="checkbox" name="servicos" value="${servico.id}" />
+            ${servico.nome}
+          </label>
+          <input type="number" name="preco_${servico.id}" placeholder="Preço personalizado (R$)" min="0" step="0.01" />
+        `;
+        servicosContainer.appendChild(div);
+      });
+    } catch (error) {
+      servicosContainer.innerHTML += "<p>Erro ao carregar serviços.</p>";
+      console.error("Erro ao buscar serviços:", error);
+    }
+  });
+
+  // Submissão do formulário de nutricionista
+  const form = document.getElementById("formNutricionista");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const payload = {
+      nome: formData.get("nome"),
+      crn: formData.get("crn"),
+      especialidade: formData.get("especialidade"),
+      email: formData.get("email"),
+      telefone: formData.get("telefone"),
+       senha: formData.get("senha"),
+      consultorios: [],
+      servicos: []
+    };
+
+    // Pega o consultório selecionado e envia como array
+    const consultorioId = formData.get("consultorioSelect");
+    if (consultorioId) {
+      payload.consultorios.push(parseInt(consultorioId));
+    }
+
+    const servicosSelecionados = form.querySelectorAll('input[name="servicos"]:checked');
+    if (servicosSelecionados.length === 0) {
+      alert("Selecione pelo menos um serviço.");
+      return;
+    }
+
+    servicosSelecionados.forEach(input => {
+      const id = parseInt(input.value);
+      const preco = parseFloat(form.querySelector(`input[name="preco_${id}"]`).value || "0");
+      if (!isNaN(preco)) {
+        payload.servicos.push({ id_servico: id, preco });
+      }
+    });
+
+    try {
+      const res = await fetch("http://localhost:3000/nutricionistas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        alert("Nutricionista cadastrado com sucesso!");
+        form.reset();
+        servicosContainer.innerHTML = "";
+      } else {
+        alert("Erro ao cadastrar: " + (result.error || "Erro desconhecido"));
+      }
+    } catch (error) {
+      alert("Erro na requisição: " + error.message);
+    }
+  });
+});
+</script>
+
+
+
+
+
+
+</body>
+</html>

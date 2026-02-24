@@ -1,0 +1,68 @@
+
+POST http://localhost:3000/contatos
+Content-Type: application/json
+
+  {
+    "nome": "Vitor",
+    "email": "Renner@example.com",
+    "mensagem": "Olá, gostaria de saber mais.",
+    "telefone": "119334566",
+    "remetente": "site"
+  }
+
+
+###
+GET http://localhost:3000/contatos
+
+###
+GET http://localhost:3000/usuarios/7
+
+###
+POST http://localhost:3000/usuarios
+Content-Type: application/json
+
+
+  {
+    "id": 5,
+    "email": "ads@gmail.com",
+    "criado_em":"",
+    "nome_usuario": "aadsn",
+    "senha":"12378"
+   
+  }
+###
+POST http://localhost:3000/usuarios
+Content-Type: application/json
+
+{
+    "id": 5,
+    "email": "admin4@gmail.com",
+    "criado_em":"",
+    "nome_usuario": "admin4",
+    "senha":"12345678"
+   
+  }
+###
+PUT  http://localhost:3000/usuarios/5
+Content-Type: application/json
+
+{
+    "id": 5,
+    "email": "kakakaak@gmail.com",
+    "criado_em":"",
+    "nome_usuario": "kakaka",
+    "senha":"12345678"
+  }
+
+###
+DELETE http://localhost:3000/usuarios/6
+Content-Type: application/json
+
+{
+     "id":6 ,
+    "nome_usuario": "admin",
+    "senha": "12345678",
+    "email": "admin@gmail.com",
+    "criado_em": "2025-04-29T11:52:49.000Z"
+  }
+

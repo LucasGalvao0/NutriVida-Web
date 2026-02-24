@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="icon" href="img/logos/logo.png" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="script.js" defer></script>
+    <script src="tela.js" defer></script>
+    <title>Nutrivida Contatos</title>
+
+    <style>
+
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #34d399;
+            --accent: #fbbf24;
+            --orange: #fb923c;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --glass: rgba(30, 41, 59, 0.7);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a1f1a 0%, #0f172a 50%, #1a1f0a 100%);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.15;
+            }
+            50% { 
+                transform: translateY(-30px) rotate(10deg);
+                opacity: 0.25;
+            }
+        }
+
+        /* Grid Pattern */
+        .grid-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(16, 185, 129, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16, 185, 129, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Hero Section with Envelope */
+        .envelope {
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .envelope-container {
+            max-width: 300px;
+            margin: 0 auto 3rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .envelope-icone {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 20px 40px rgba(16, 185, 129, 0.4));
+        }
+
+        .titulo-contatos {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 1s ease;
+        }
+
+        .subtitulo-contatos {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto 4rem;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Container */
+        .Contatos {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 25px 70px rgba(16, 185, 129, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            transition: left 0.6s;
+        }
+
+        .glass-card:hover::before {
+            left: 0;
+        }
+
+        .glass-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 30px 80px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Form Styles */
+        .formulario {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            color: var(--primary);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
+
+        label span {
+            color: var(--orange);
+            font-size: 1.2rem;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 15px;
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--text);
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: var(--text-dim);
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: none;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 20px;
+            padding-right: 3rem;
+        }
+
+        /* Error Messages */
+        .span-required {
+            display: none;
+            color: var(--orange);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            animation: shake 0.3s;
+        }
+
+        .formulario.error .span-required {
+            display: block;
+        }
+
+        .formulario.error input,
+        .formulario.error select,
+        .formulario.error textarea {
+            border-color: var(--orange);
+            box-shadow: 0 0 0 4px rgba(251, 146, 60, 0.1);
+        }
+
+        .formulario.error label {
+            color: var(--orange);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Submit Button */
+        .acao {
+            display: flex;
+            justify-content: center;
+            margin-top: 2.5rem;
+        }
+
+        .btnContato {
+            padding: 1.2rem 3rem;
+            border-radius: 50px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 200px;
+        }
+
+        .btnContato::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btnContato:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .btnContato:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.6);
+        }
+
+        .btnContato:active {
+            transform: translateY(-1px);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); }
+            to { transform: translateX(0); }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="organic-bg-nutrivida">
+        <div class="blob-nutrivida blob-nutrivida-1"></div>
+        <div class="blob-nutrivida blob-nutrivida-2"></div>
+        <div class="blob-nutrivida blob-nutrivida-3"></div>
+        <div class="blob-nutrivida blob-nutrivida-4"></div>
+    </div>
+
+    <div class="floating-foods-nutrivida">
+        <div class="food-icon-nutrivida food-nutrivida-1">
+            <img src="img/abacate.png" alt="abacate-imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-2">
+            <img src="img/maca.png" alt="maça imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-3">
+            <img src="img/salada.png" alt="salada imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-4">
+            <img src="img/tangerina.png" alt="tangerina imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-5">
+            <img src="img/brocolis.png" alt="brocolis imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-6">
+            <img src="img/banana.png" alt="banana imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-7">
+            <img src="img/cenoura.png" alt="imagem cenoura">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-8">
+            <img src="img/kiwi.png" alt="imagem kiwi">
+        </div>
+    </div>
+
+    <header>
+        <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+
+        <section class="direito">
+            <nav class="menu" >
+                <ul id="menu">
+                    <li><a class="item" href="index.html"  data-translate="1">Início</a></li>    
+                    <li class="dropdown"> <a href="#" class="seta" data-translate="2">Serviços</a>
+                    <div class="drop-menu">
+                        <a class="item" href="servico.html" data-translate="7">Nossos serviços</a>
+                        <a class="item" href="imc.html" data-translate="8">Imc</a>
+                        <a class="item" href="Cardapio.html" data-translate="9">Cardápio Personalizado</a>
+                    </div>
+                </li>
+                    <li><a class="item" href="exames.html" data-translate="3">Exames</a>
+                    <li><a class="item" href="sobre.html" data-translate="4">Sobre nós</a></li>
+                    <li><a class="item" href="contatos.html" id="paginaAtual" data-translate="5">Contatos</a></li>
+                     <div class="login-cadastro">
+                    <li><a href="entrar.html" class="login-btn">Login</a></li>
+        
+                    </div>
+                  
+    
+                </ul>
+            </nav>
+    
+        <div class="hamburgue" id="hamburgue"></div>
+    </section>
+   
+    </header>
+
+ 
+    <!-- Hero Section -->
+    <section class="envelope">
+        <div class="envelope-container">
+            <svg class="envelope-icone" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                <!-- Envelope -->
+                <rect x="10" y="30" width="180" height="100" rx="10" fill="url(#gradient1)" stroke="#10b981" stroke-width="2"/>
+                <!-- Flap -->
+                <path d="M10 30 L100 90 L190 30" fill="url(#gradient2)" stroke="#10b981" stroke-width="2"/>
+                <!-- Gradient Definitions -->
+                <defs>
+                    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#10b981;stop-opacity:0.3" />
+                        <stop offset="100%" style="stop-color:#34d399;stop-opacity:0.5" />
+                    </linearGradient>
+                    <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#34d399;stop-opacity:0.6" />
+                        <stop offset="100%" style="stop-color:#10b981;stop-opacity:0.6" />
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+
+        <h1 class="titulo-contatos">Entre em Contato Conosco</h1>
+        <p class="subtitulo-contatos">Preencha os campos a seguir para deixar seu feedback ou tirar suas dúvidas</p>
+    </section>
+
+    <button class="Seta-subir" onclick="backTop();">
+        <img src="img/icons/subir.svg" alt="seta-subir">
+    </button>
+
+     <section class="Contatos">
+        <div class="glass-card">
+            <form id="formcontato">
+                <div class="formulario">
+                    <label for="nomecontato">Nome completo <span>*</span></label>
+                    <input 
+                        type="text" 
+                        id="nomecontato" 
+                        name="nomecontato" 
+                        class="required"
+                        placeholder="Digite seu nome completo"
+                        required
+                    />
+                    <span class="span-required">O nome deve ter no mínimo 3 caracteres.</span>
+                </div>
+
+                <div class="formulario">
+                    <label for="emailcontato">Escreva seu E-mail <span>*</span></label>
+                    <input 
+                        type="email" 
+                        id="emailcontato" 
+                        name="emailcontato" 
+                        class="required"
+                        placeholder="seu@email.com"
+                        required
+                    />
+                    <span class="span-required">Insira um e-mail válido.</span>
+                </div>
+
+                <div class="formulario">
+                    <label for="telefonecontato">Telefone/WhatsApp <span>*</span></label>
+                    <input 
+                        type="tel" 
+                        id="telefonecontato" 
+                        name="telefonecontato" 
+                        class="required"
+                        placeholder="(00) 00000-0000"
+                        required
+                    />
+                    <span class="span-required">Insira um número de telefone com 11 dígitos.</span>
+                </div>
+
+                <div class="formulario">
+                    <label for="Conversarcontato">Selecione com quem você deseja falar <span>*</span></label>
+                    <select id="Conversarcontato" name="Conversarcontato" required>
+                        <option value="">Com quem deseja falar</option>
+                    </select>
+                </div>
+
+                <div class="formulario">
+                    <label for="mensagemcontato">Mensagem <span>*</span></label>
+                    <textarea 
+                        id="mensagemcontato" 
+                        name="mensagemcontato" 
+                        placeholder="Digite sua mensagem aqui..."
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="acao">
+                    <button type="submit" class="btnContato">Enviar Mensagem</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section class="barra-acessibilidade" id="idn-menu">
+            <div class="header-barra">
+                <img class="img-acessibilidade1" src="img/icons/forma acessibilidade10.svg" alt="Imagem da forma do cabeçalho de acessibilidade">
+                <img class="img-acessibilidade2" src="img/icons/forma acessibilidade 3.png" alt="Imagem da forma do cabeçalho de acessibilidade">
+                
+                <div class="organizar">
+                
+                    
+
+                    <select id="languageSelector" onchange="changeLanguage()">
+                        <option value="pt-br">Português</option>
+                        <option value="en">Inglês</option>
+                    </select>
+
+                
+                <button id="fechar-barra"><img src="img/icons/fechar.svg" alt="Ícone do botão de fechar a barra de acessibilidade"></button>
+            </div>
+
+            <h2 class="h2-acessibilidade" data-translate="34">Acessibilidade</h2>
+
+            </div>
+
+            <div class="corpo-barra">
+
+                    <div class="card-barra">
+
+                        <button id="alteraCorDark">
+
+                            <img src="img/icons/icone-lua.svg" alt="simbolo-dark">
+                            <img src="img/icons/icone-sol.svg" alt="simbolo-light">
+                           
+                           </button>
+
+                        <button id="ativarVlibras">
+                            <img src="img/icons/libras.png" alt="ícone do botão do VLibras">
+   
+                        </button>
+
+                        <button id="zoom" class="AumentarDiminuir-zoom">
+                            <img src="img/icons/aumentar-zoom.svg" alt="lupa para aumentar o zoom do site">
+                            <img src="img/icons/diminuir-zoom.svg" alt="lupa para diminuir o zoom do site">
+                        </button>
+
+                        <button id="imagem-alt" class="ler-imagemAlt">
+                            <img src="img/icons/imagem-alt.png"  alt="Simbolo de imagem ativada">
+                            <img src="img/icons/imagemAlt desativada.svg" alt="Simbolo de imagem desativada">
+
+                        </button>
+
+                        <button id="destacar-links">
+                            <img src="img/icons/marca-texto.svg" alt="Ícone do símbolo do marca texto">
+                            <img src="img/icons/marca-texto desativado.svg" alt="Ícone do símbolo do marca texto desativado">
+                        </button>
+                        
+                    </div>
+
+            </div>
+
+            <div class="footer-barra">
+
+                <div class="btnDesligar-barra">
+
+                    <button id="DesligarFuncao" data-translate="35">
+                        Desligar
+                    </button>
+
+                </div>
+
+                <div class="footer-barra2">
+                    <span data-translate="36">Desenvolvido por Nutrivida</span>
+                </div>
+                
+            </div>
+
+            
+    </section>
+
+    <div class="btn-acessibilidade" id="botao-acessibilidade">
+        <button>
+            <img src="img/icons/onu-logo.png" alt="Ícone do botão de acessibilidade">
+        </button>
+    </div>
+    
+
+
+    <footer>
+
+
+    </footer>
+
+
+
+   <script>
+              window.addEventListener('scroll', function() {
+            let scroll = document.querySelector('.Seta-subir')
+            scroll.classList.toggle('active', window.scrollY > 450)
+        })
+
+        function backTop() {
+            window.scrollTo({
+                top:0,
+                behavior: 'smooth'
+            })
+        }
+        </script>
+    
+    <div class="vLibras-barra">
+
+        <div vw class="enabled">
+          <div vw-access-button class="active"></div>
+          <div vw-plugin-wrapper id="vLibras-escondido">
+            <div class="vw-plugin-top-wrapper"></div>
+          </div>
+        </div>
+    </div>
+        <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+        <script>
+          new window.VLibras.Widget('https://vlibras.gov.br/app');
+        </script>
+    
+
+   
+
+
+<script>
+ document.addEventListener("DOMContentLoaded", async () => {
+  const select = document.getElementById("Conversarcontato");
+
+  try {
+    const res = await fetch("http://localhost:3000/nutricionistas");
+    if (!res.ok) throw new Error("Erro ao buscar nutricionistas");
+
+    const nutricionistas = await res.json();
+
+    // Limpa opções, deixando só a primeira
+    select.options.length = 1;
+
+    // Preenche nutricionistas usando o ID como value
+    nutricionistas.forEach(nutri => {
+    const option = document.createElement("option");
+    option.value = nutri.id; // ID do nutricionista para usar no backend
+    option.textContent = nutri.nome || nutri.nome_nutricionista || "Nome desconhecido";
+    select.appendChild(option);
+    });
+
+
+    // Adiciona opção fixa para desenvolvedores
+    const devOption = document.createElement("option");
+    devOption.value = "dev";
+    devOption.textContent = "Desenvolvedores do Site";
+    select.appendChild(devOption);
+
+  } catch (err) {
+    console.error("Erro ao carregar nutricionistas:", err);
+    alert("Erro ao carregar a lista de nutricionistas.");
+  }
+});
+
+</script>
+
+
+<div id="mensagem-flutuante" class="mensagem"></div>
+
+</body>
+</html>

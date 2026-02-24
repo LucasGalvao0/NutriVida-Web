@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perfil do Usuário</title>
+  <link rel="stylesheet" href="perfil.css"/>
+  <script src="perfil.js"></script>
+  <script src="tela.js" defer></script>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #34d399;
+            --accent: #fbbf24;
+            --orange: #fb923c;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --glass: rgba(30, 41, 59, 0.7);
+        }
+  </style>
+  
+</head>    
+
+<body>
+
+<div class="organic-bg-nutrivida">
+        <div class="blob-nutrivida blob-nutrivida-1"></div>
+        <div class="blob-nutrivida blob-nutrivida-2"></div>
+        <div class="blob-nutrivida blob-nutrivida-3"></div>
+        <div class="blob-nutrivida blob-nutrivida-4"></div>
+    </div>
+
+    <div class="floating-foods-nutrivida">
+        <div class="food-icon-nutrivida food-nutrivida-1">
+            <img src="img/abacate.png" alt="abacate-imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-2">
+            <img src="img/maca.png" alt="maça imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-3">
+            <img src="img/salada.png" alt="salada imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-4">
+            <img src="img/tangerina.png" alt="tangerina imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-5">
+            <img src="img/brocolis.png" alt="brocolis imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-6">
+            <img src="img/banana.png" alt="banana imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-7">
+            <img src="img/cenoura.png" alt="imagem cenoura">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-8">
+            <img src="img/kiwi.png" alt="imagem kiwi">
+        </div>
+    </div>
+
+
+  <header >
+        <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+
+           
+
+        <section class="direito">
+        <nav class="menu" >
+            <ul id="menu">
+
+                <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+                <li><a class="item" href="index.html" id="paginaAtual" data-translate="1">Início</a></li>    
+                <li class="dropdown"> <p class="setaNav" data-translate="2">Serviços
+                    
+                </p>
+                
+                <div class="drop-menu">
+                    <a class="item" id="dropdown__link" href="servico.html" data-translate="7">Nossos serviços</a>
+
+                    
+                    <a class="item" id="dropdown__link" href="imc.html" data-translate="8">Imc</a>
+                    <a class="item" id="dropdown__link" href="Cardapio.html" data-translate="9">Cardápio Personalizado</a>
+                    
+                </div>
+            </li>
+                <li><a class="item" href="exames.html" data-translate="3">Exames</a>
+                <li><a class="item" href="sobre.html" data-translate="4">Sobre nós</a></li>
+                <li><a class="item" href="contatos.html" data-translate="5">Contatos</a></li>
+                <li class="dropdown"> <p class="setaNav" data-translate="6">Usuario
+                    
+                </p>
+            
+
+                <div class="drop-menu drop-m2">
+                    <a href="cadastro.html" id="link-cadastro" class="item">Cadastro</a>    
+                    <a href="entrar.html" id="link-login" class="item">Entrar</a>
+                    <a href="perfil.html" id="linkPerfil" class="item">Perfil</a>
+                  </div>
+                  
+            </li>
+              
+
+            </ul>
+        </nav>
+    
+        <div class="hamburgue" id="hamburgue"></div>
+    </section>
+
+    
+    </header>
+
+ 
+
+  <div id="avisoNaoLogado" style="display: none; text-align: center; margin-top: 100px;">
+    <h2>Você ainda não está cadastrado.</h2>
+    <p>Por favor, faça o cadastro ou login antes de acessar o perfil.</p>
+    <div style="margin-top: 20px;">
+      <button onclick="location.href='index.html'" style="padding: 10px 20px; margin-right: 10px;">Voltar</button>
+      <button onclick="location.href='cadastro.html'" style="padding: 10px 20px;">Cadastre-se</button>
+      <button onclick="location.href='entrar.html'" style="padding: 10px 20px;">Faça login</button>
+    </div>
+  </div>
+
+  <div id="containerPerfil" class="perfil-container" style="display: none;">
+    <h2>Meu Perfil</h2>
+
+    <div class="info">
+      <label>Nome:</label>
+      <span id="labelNome"></span>
+      <input type="text" id="inputNome" class="hidden" />
+    </div>
+
+    <div class="info">
+      <label>Email:</label>
+      <span id="labelEmail"></span>
+      <input type="email" id="inputEmail" class="hidden" />
+      <small id="emailErroPerfil" style="color: red; display: none;"></small>
+    </div>
+
+    <div class="info">
+      <label>Senha:</label>
+      <span id="labelSenha">••••••••</span>
+      <input type="password" id="inputSenha" class="hidden" disabled />
+      <p id="senhaAviso" class="aviso hidden">A senha só pode ser alterada na tela de login.</p>
+    </div>
+
+    <div class="botoes">
+      <button id="btnEditar">Editar</button>
+      <button id="btnSalvar" class="hidden">Salvar</button>
+      <button id="btnVoltar">Voltar</button>
+      <button id="btnSair">Sair</button>
+    </div>
+
+    <div id="mensagemPerfil"></div>
+  </div>
+
+
+  <div id="toast"></div>
+
+
+
+</body>
+</html>

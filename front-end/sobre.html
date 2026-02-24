@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="icon" href="img/logos/logo.png" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="tela.js" defer></script>
+    <script src="script.js" defer></script>
+    <title>Nutrivida sobre</title>
+    <style>
+       
+
+        /* Hero Section */
+        .sobreNos {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+        }
+
+        .sobreNos::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .sobre-conteudo {
+            max-width: 1000px;
+            z-index: 1;
+        }
+
+        .sobre-titulo {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .sobre-subtitulo {
+            font-size: 1.5rem;
+            color: var(--text-dim);
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .scroll-indicador {
+            margin-top: 3rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+
+        .scroll-indicador svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--primary);
+        }
+
+        /* Timeline Section */
+        .timeline-sobre {
+            padding: 6rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .timeline-titulo-sobre {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 6rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) .timeline-conteudo {
+            grid-column: 2;
+        }
+
+        .timeline-item:nth-child(even) .timeline-imagem {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            border: 4px solid var(--dark);
+            border-radius: 50%;
+            z-index: 10;
+            box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.2);
+        }
+
+        .timeline-conteudo {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 24px;
+            padding: 3rem;
+            position: relative;
+            animation: slideIn 0.8s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .timeline-conteudo h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .timeline-conteudo p {
+            color: var(--text-dim);
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .timeline-imagem {
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
+            position: relative;
+        }
+
+        .timeline-imagem::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
+        }
+
+        .timeline-icone {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3);
+            z-index: 1;
+        }
+
+        /* Team Section */
+        .equipe-section {
+            padding: 6rem 5%;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .equipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .equipe-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .equipe-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .equipe-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3);
+        }
+
+        .equipe-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .equipe-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: white;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .equipe-nome {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .equipe-funcoes {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .equipe-descricao {
+            color: var(--text-dim);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* CTA Section */
+        .cta-sobre {
+            padding: 8rem 5%;
+            text-align: center;
+        }
+
+        .cta-sobre-conteudo {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-titulo {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-texto {
+            color: var(--text-dim);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            line-height: 1.8;
+        }
+
+        .cta-btnSobre {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            text-decoration: none;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btnSobre::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .cta-btnSobre:hover::before {
+            width: 500px;
+            height: 500px;
+        }
+
+        .cta-btnSobre:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .sobre-titulo {
+                font-size: 3rem;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding-left: 60px;
+            }
+
+            .timeline-item:nth-child(even) .timeline-conteudo,
+            .timeline-item:nth-child(even) .timeline-imagem {
+                grid-column: 1;
+                grid-row: auto;
+            }
+
+            .timeline-dot {
+                left: 20px;
+            }
+
+            .timeline-imagem {
+                height: 200px;
+            }
+
+            nav ul {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .sobre-titulo {
+                font-size: 2rem;
+            }
+
+            .sobre-subtitulo {
+                font-size: 1.2rem;
+            }
+
+            .timeline-titulo-sobre {
+                font-size: 2rem;
+            }
+
+            .timeline-conteudo {
+                padding: 2rem;
+            }
+
+            .cta-titulo {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="organic-bg-nutrivida">
+        <div class="blob-nutrivida blob-nutrivida-1"></div>
+        <div class="blob-nutrivida blob-nutrivida-2"></div>
+        <div class="blob-nutrivida blob-nutrivida-3"></div>
+        <div class="blob-nutrivida blob-nutrivida-4"></div>
+    </div>
+
+    <div class="floating-foods-nutrivida">
+        <div class="food-icon-nutrivida food-nutrivida-1">
+            <img src="img/abacate.png" alt="abacate-imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-2">
+            <img src="img/maca.png" alt="maça imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-3">
+            <img src="img/salada.png" alt="salada imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-4">
+            <img src="img/tangerina.png" alt="tangerina imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-5">
+            <img src="img/brocolis.png" alt="brocolis imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-6">
+            <img src="img/banana.png" alt="banana imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-7">
+            <img src="img/cenoura.png" alt="imagem cenoura">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-8">
+            <img src="img/kiwi.png" alt="imagem kiwi">
+        </div>
+    </div>
+
+    <header>
+        <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida" >
+
+        <section class="direito">
+        <nav class="menu" >
+            <ul id="menu">
+                <li><a class="item" href="index.html" data-translate="1">Início</a></li>    
+                <li class="dropdown"> <a href="#" class="seta" data-translate="2">Serviços</a>
+                <div class="drop-menu">
+                    <a class="item" href="servico.html" data-translate="7">Nossos serviços</a>
+                    <a class="item" href="imc.html" data-translate="8">Imc</a>
+                    <a class="item" href="Cardapio.html" data-translate="9">Cardápio Personalizado</a>
+                    
+                </div>
+            </li>
+                <li><a class="item" href="exames.html" data-translate="3">Exames</a>
+                <li><a class="item" id="paginaAtual" href="sobre.html" data-translate="4">Sobre nós</a></li>
+                <li><a class="item" href="contatos.html" data-translate="5">Contatos</a></li>
+                <div class="login-cadastro">
+                <li><a href="entrar.html" data-translate="6" class="login-btn">Login</a></li>
+    
+                </div>
+              
+
+            </ul>
+        </nav>
+    
+        <div class="hamburgue" id="hamburgue"></div>
+    </section>
+
+    
+
+    
+    </header>
+
+
+    <!-- Hero Section -->
+    <section class="sobreNos">
+        <div class="sobre-conteudo">
+            <h1 class="sobre-titulo">Nossa Jornada em Nutrição</h1>
+            <p class="sobre-subtitulo">Conheça a história de cinco estudantes que transformaram uma conversa em uma revolução nutricional</p>
+            <div class="scroll-indicador">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M12 5v14m0 0l7-7m-7 7l-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="timeline-sobre">
+        <h2 class="timeline-titulo-sobre">A História do NutriVida</h2>
+        
+        <div class="timeline">
+            <!-- Timeline Item 1 -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-conteudo">
+                    <h3>Como surgiu a ideia</h3>
+                    <p>Em 22 de fevereiro de 2024, na FATEC, cinco estudantes — Lucas, Vitor, Raiane, Ana Julia e Renner — se reuniram para discutir suas experiências acadêmicas e pessoais. A conversa logo se transformou em um debate sobre as dificuldades em encontrar informações confiáveis sobre nutrição. Cada um compartilhou frustrações sobre rótulos de alimentos e mitos alimentares, despertando uma consciência coletiva sobre a importância de uma alimentação saudável.</p>
+                </div>
+                <div class="timeline-imagem">
+                    <div class="timeline-icone"></div>
+                </div>
+            </div>
+
+            <!-- Timeline Item 2 -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-conteudo">
+                    <h3>Pesquisas Profundas</h3>
+                    <p>Durante semanas, a equipe mergulhou em uma verdadeira imersão na ciência da nutrição. Participaram de webinars, assistiram a palestras e se envolveram em discussões em fóruns especializados. Lucas destacou a importância de micronutrientes; Vitor explorou as bases de dietas populares; Raiane focou nas melhores práticas de nutrição, enquanto Ana Julia estudou a relação entre alimentação e saúde mental. Renner, com seu olhar voltado ao design, buscou entender como apresentar visualmente as informações de forma atraente e clara.</p>
+                </div>
+                <div class="timeline-imagem">
+                    <div class="timeline-icone"></div>
+                </div>
+            </div>
+
+            <!-- Timeline Item 3 -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-conteudo">
+                    <h3>Planejamento Estratégico</h3>
+                    <p>Com um acervo sólido de informações, a equipe passou para a fase de planejamento. Raiane, como gerente do grupo, coordenou as discussões, garantindo que todos os pontos de vista fossem ouvidos. Juntos, definiram a estrutura do site, decidindo que cada seção abordaria diferentes aspectos da nutrição, como dietas equilibradas, receitas saudáveis e mitos comuns.</p>
+                </div>
+                <div class="timeline-imagem">
+                    <div class="timeline-icone"></div>
+                </div>
+            </div>
+
+            <!-- Timeline Item 4 -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-conteudo">
+                    <h3>Propósitos e Metas</h3>
+                    <p>Determinados a impactar positivamente a vida das pessoas, o grupo definiu que o NutriVida não seria apenas um repositório de informações, mas uma ferramenta prática que permitiria a cada usuário receber um cardápio específico baseado em suas necessidades e preferências. Por meio de formulários interativos, os usuários poderiam informar dados como objetivos de saúde, restrições alimentares e preferências pessoais.</p>
+                </div>
+                <div class="timeline-imagem">
+                    <div class="timeline-icone"></div>
+                </div>
+            </div>
+
+            <!-- Timeline Item 5 -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-conteudo">
+                    <h3>Desenvolvimento e Inovação</h3>
+                    <p>Um dos maiores desafios da equipe foi a complexidade dos formulários necessários para recomendações nutricionais personalizadas. Lucas sugeriu gamificar o processo, tornando-o mais leve e interativo, onde os usuários ganhariam pequenas recompensas conforme avançavam. A equipe trabalhou arduamente para criar uma experiência única e envolvente.</p>
+                </div>
+                <div class="timeline-imagem">
+                    <div class="timeline-icone"></div>
+                </div>
+            </div>
+
+            <!-- Timeline Item 6 -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-conteudo">
+                    <h3>O Futuro do NutriVida</h3>
+                    <p>Com o lançamento do site, a equipe do Nutrivida ficou animada com o impacto positivo das soluções. Lucas planejou integrar uma seção de receitas interativas, enquanto Raiane sonhou com uma comunidade online para que os usuários compartilhassem experiências. Ana Julia buscava garantir a acessibilidade do site, planejando parcerias para expandir seu alcance. O futuro é promissor!</p>
+                </div>
+                <div class="timeline-imagem">
+                    <div class="timeline-icone"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="equipe-section">
+        <h2 class="timeline-titulo-sobre">Nossa Equipe</h2>
+        <div class="equipe-grid">
+            <div class="equipe-card">
+                <div class="equipe-avatar">L</div>
+                <h3 class="equipe-nome">Lucas</h3>
+                <p class="equipe-funcoes">Programação & Marketing</p>
+                <p class="equipe-descricao">Responsável pela programação e marketing, criando uma interface intuitiva e campanhas digitais eficazes.</p>
+            </div>
+
+            <div class="equipe-card">
+                <div class="equipe-avatar">V</div>
+                <h3 class="equipe-nome">Vitor</h3>
+                <p class="equipe-funcoes">Conteúdo & Pesquisa</p>
+                <p class="equipe-descricao">Produziu conteúdos esclarecedores, desmistificando conceitos errôneos sobre nutrição com base em fontes confiáveis.</p>
+            </div>
+
+
+
+            <div class="equipe-card">
+                <div class="equipe-avatar">R</div>
+                <h3 class="equipe-nome">Renner</h3>
+                <p class="equipe-funcoes">Acessibilidade</p>
+                <p class="equipe-descricao">Focou em SEO e acessibilidade, assegurando que o site fosse facilmente encontrado e utilizável por todos.</p>
+            </div>
+
+            <div class="equipe-card">
+                <div class="equipe-avatar">A</div>
+                <h3 class="equipe-nome">Ana Julia</h3>
+                <p class="equipe-funcoes">Design & UX</p>
+                <p class="equipe-descricao">Com seu olhar voltado ao design, buscou apresentar as informações de forma atraente e clara.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-sobre">
+        <div class="cta-sobre-conteudo">
+            <h2 class="cta-titulo">Junte-se à Nossa Jornada</h2>
+            <p class="cta-texto">Faça parte da revolução nutricional e transforme sua vida com informações confiáveis e cardápios personalizados.</p>
+            <a href="cadastro.html" class="cta-btnSobre">Comece Agora</a>
+        </div>
+    </section>
+
+
+    <section class="barra-acessibilidade" id="idn-menu">
+       
+  </section>
+  
+  <div class="btn-acessibilidade" id="botao-acessibilidade">
+    <button>
+        <img src="img/icons/onu-logo.png" alt="Ícone do botão de acessibilidade">
+    </button>
+  </div>
+
+    <footer>
+
+       
+    </footer>
+
+    <script>
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.timeline-item, .equipe-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.8s ease';
+            observer.observe(el);
+        });
+    </script>
+
+    <div class="vLibras-barra">
+
+        <div vw class="enabled">
+          <div vw-access-button class="active"></div>
+          <div vw-plugin-wrapper id="vLibras-escondido">
+            <div class="vw-plugin-top-wrapper"></div>
+          </div>
+        </div>
+      </div>
+        <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+        <script>
+          new window.VLibras.Widget('https://vlibras.gov.br/app');
+        </script>
+
+    </body>
+
+</html>
