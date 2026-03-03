@@ -1,0 +1,2493 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriVida — Sistema do Nutricionista</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #34d399;
+            --accent: #fbbf24;
+            --orange: #fb923c;
+            --dark: #0a1f1a;
+            --dark2: #0f172a;
+            --dark3: #111827;
+            --card: rgba(15, 23, 42, 0.88);
+            --border: rgba(16, 185, 129, 0.18);
+            --border-hover: rgba(16, 185, 129, 0.5);
+            --text: #f0fdf4;
+            --text-dim: #94a3b8;
+            --text-muted: #64748b;
+            --red: #ef4444;
+            --blue: #3b82f6;
+            --purple: #8b5cf6;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background: linear-gradient(135deg, #0a1f1a 0%, #0f172a 50%, #1a1f0a 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Container para blobs animados */
+.organic-bg-nutrivida {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+/* Blobs de gradiente animados */
+.blob-nutrivida {
+    position: absolute;
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    filter: blur(60px);
+    opacity: 0.3;
+    animation: blobMove 20s ease-in-out infinite;
+}
+
+.blob-nutrivida-1 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #10b981 0%, transparent 70%);
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.blob-nutrivida-2 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, #fbbf24 0%, transparent 70%);
+    top: 50%;
+    right: 10%;
+    animation-delay: 3s;
+}
+
+.blob-nutrivida-3 {
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, #34d399 0%, transparent 70%);
+    bottom: 10%;
+    left: 30%;
+    animation-delay: 6s;
+}
+
+.blob-nutrivida-4 {
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, #fb923c 0%, transparent 70%);
+    top: 30%;
+    right: 30%;
+    animation-delay: 9s;
+}
+
+@keyframes blobMove {
+    0%, 100% { 
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    25% { 
+        transform: translate(30px, -30px) scale(1.1) rotate(90deg);
+    }
+    50% { 
+        transform: translate(-20px, 20px) scale(0.9) rotate(180deg);
+    }
+    75% { 
+        transform: translate(20px, 30px) scale(1.05) rotate(270deg);
+    }
+}
+
+/* Ícones de comida flutuantes */
+.floating-foods-nutrivida {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.food-icon-nutrivida {
+    position: absolute;
+    font-size: 3rem;
+    opacity: 0.15;
+    animation: floatFood 15s ease-in-out infinite;
+}
+
+.food-nutrivida-1 img{
+    height: 3rem;
+}
+
+.food-nutrivida-2 img{
+    height: 3rem;
+}
+
+.food-nutrivida-3 img{
+    height: 3rem;
+}
+
+.food-nutrivida-4 img{
+    height: 3rem;
+}
+
+.food-nutrivida-5 img{
+    height: 3rem;
+}
+
+.food-nutrivida-6 img{
+    height: 3rem;
+}
+
+.food-nutrivida-7 img{
+    height: 3rem;
+}
+
+.food-nutrivida-8 img{
+    height: 3rem;
+}
+
+
+.food-nutrivida-1 { top: 15%; left: 8%; animation-delay: 0s; }
+.food-nutrivida-2 { top: 25%; right: 12%; animation-delay: 2s; font-size: 2.5rem; }
+.food-nutrivida-3 { top: 65%; left: 15%; animation-delay: 4s; font-size: 4rem; }
+.food-nutrivida-4 { top: 45%; right: 8%; animation-delay: 6s; font-size: 2rem; }
+.food-nutrivida-5 { bottom: 15%; right: 20%; animation-delay: 8s; font-size: 3.5rem; }
+.food-nutrivida-6 { top: 75%; left: 10%; animation-delay: 10s; font-size: 2.8rem; }
+.food-nutrivida-7 { top: 35%; left: 25%; animation-delay: 12s; font-size: 2.2rem; }
+.food-nutrivida-8 { bottom: 25%; right: 35%; animation-delay: 14s; font-size: 3rem; }
+
+@keyframes floatFood {
+    0%, 100% { 
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.15;
+    }
+    50% { 
+        transform: translateY(-30px) rotate(10deg);
+        opacity: 0.25;
+    }
+}
+
+        /* ── BACKGROUND ORGÂNICO (idêntico ao site) ── */
+        body::after {
+            content: '';
+            position: fixed; inset: 0; z-index: 0;
+            background-image:
+                linear-gradient(rgba(16,185,129,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16,185,129,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+
+        .organic-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+
+        .blob {
+            position: absolute;
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            filter: blur(70px);
+            opacity: 0.22;
+            animation: blobMove 20s ease-in-out infinite;
+        }
+
+        .blob-1 { width: 500px; height: 500px; background: radial-gradient(circle, #10b981, transparent 70%); top: 5%; left: 5%; animation-delay: 0s; }
+        .blob-2 { width: 380px; height: 380px; background: radial-gradient(circle, #fbbf24, transparent 70%); top: 40%; right: 5%; animation-delay: 3s; }
+        .blob-3 { width: 420px; height: 420px; background: radial-gradient(circle, #34d399, transparent 70%); bottom: 5%; left: 25%; animation-delay: 6s; }
+        .blob-4 { width: 300px; height: 300px; background: radial-gradient(circle, #fb923c, transparent 70%); top: 20%; right: 30%; animation-delay: 9s; }
+
+        @keyframes blobMove {
+            0%,100% { transform: translate(0,0) scale(1) rotate(0deg); }
+            25% { transform: translate(25px,-25px) scale(1.08) rotate(90deg); }
+            50% { transform: translate(-15px,15px) scale(0.92) rotate(180deg); }
+            75% { transform: translate(15px,25px) scale(1.04) rotate(270deg); }
+        }
+
+        /* ── LAYOUT ── */
+        .app { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 270px;
+            flex-shrink: 0;
+            background: rgba(10, 31, 26, 0.96);
+            backdrop-filter: blur(30px);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            z-index: 50;
+        }
+
+        .sidebar-brand {
+            padding: 1.8rem 1.6rem 1.4rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand-logo {
+            display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.3rem;
+        }
+
+        .brand-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            box-shadow: 0 0 12px var(--primary);
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%,100% { box-shadow: 0 0 8px var(--primary); }
+            50% { box-shadow: 0 0 20px var(--primary); }
+        }
+
+        .brand-name {
+            font-size: 1.5rem; font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 50%, var(--accent) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-name img{
+            height: 3rem;
+        }
+
+        .brand-sub {
+            font-size: 0.68rem; color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 2px; text-transform: uppercase;
+        }
+
+        /* Nutricionista info */
+        .nutri-card {
+            margin: 1.2rem 1rem;
+            background: rgba(16,185,129,0.06);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1rem;
+            display: flex; align-items: center; gap: 0.9rem;
+        }
+
+        .nutri-ava {
+            width: 46px; height: 46px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; font-weight: 900;
+            box-shadow: 0 0 20px rgba(16,185,129,0.35);
+            flex-shrink: 0;
+        }
+
+        .nutri-name { font-size: 0.92rem; font-weight: 700; }
+        .nutri-crn { font-size: 0.72rem; color: var(--primary); font-family: 'JetBrains Mono', monospace; }
+        .nutri-status { font-size: 0.65rem; color: var(--text-muted); margin-top: 0.15rem; }
+
+        /* Nav */
+        .nav { flex: 1; overflow-y: auto; padding: 0.5rem 0; }
+
+        .nav-grupo-label {
+            font-size: 0.62rem; text-transform: uppercase; letter-spacing: 2.5px;
+            color: var(--text-muted); padding: 0.8rem 1.6rem 0.3rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .nav-btn {
+            width: 100%; display: flex; align-items: center; gap: 0.9rem;
+            padding: 0.72rem 1.6rem;
+            background: none; border: none; border-left: 3px solid transparent;
+            color: var(--text-dim); font-family: 'Roboto Condensed', sans-serif;
+            font-size: 0.92rem; font-weight: 600; cursor: pointer;
+            transition: all 0.25s; text-align: left;
+        }
+
+        .nav-btn:hover { background: rgba(16,185,129,0.07); color: var(--text); border-left-color: rgba(16,185,129,0.4); }
+        .nav-btn.active { background: rgba(16,185,129,0.12); color: var(--primary); border-left-color: var(--primary); }
+
+        .nav-icone { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .nav-icone svg { width: 16px; height: 16px; stroke: currentColor; }
+        .nav-badge { margin-left: auto; background: var(--red); color: #fff; font-size: 0.6rem; font-weight: 700; padding: 0.12rem 0.45rem; border-radius: 20px; font-family: 'JetBrains Mono', monospace; }
+        .nav-badge.green { background: var(--primary); color: var(--dark); }
+
+        .sidebar-footer {
+            padding: 1rem 1.6rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.72rem; color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            text-align: center;
+        }
+
+        /* ── MAIN ── */
+        .main { margin-left: 270px; flex: 1; padding: 2rem 2rem 4rem; min-height: 100vh; }
+
+        /* ── SECTIONS ── */
+        .section { display: none; animation: fadeSection 0.35s ease; }
+        .section.active { display: block; }
+
+        @keyframes fadeSection {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── PAGE HEADER ── */
+        .page-header {
+            display: flex; align-items: flex-start; justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem; font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 60%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+
+        .page-sub { color: var(--text-dim); font-size: 0.88rem; margin-top: 0.3rem; }
+
+        .page-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+
+        /* ── BUTTONS ── */
+        .btn {
+            padding: 0.65rem 1.4rem; border-radius: 50px; border: none;
+            cursor: pointer; font-family: 'Roboto Condensed', sans-serif;
+            font-weight: 700; font-size: 0.85rem; transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff; box-shadow: 0 6px 20px rgba(16,185,129,0.4);
+        }
+
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(16,185,129,0.55); }
+
+        .btn-outline { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
+        .btn-outline:hover { background: rgba(16,185,129,0.1); }
+
+        .btn-ghost { background: rgba(255,255,255,0.05); color: var(--text-dim); border: 1px solid var(--border); }
+        .btn-ghost:hover { background: rgba(255,255,255,0.09); color: var(--text); }
+
+        .btn-danger { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+        .btn-sm { padding: 0.4rem 0.9rem; font-size: 0.78rem; }
+
+        /* ── CARDS ── */
+        .glass-card {
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.6rem;
+            transition: border-color 0.3s;
+        }
+
+        .glass-card:hover { border-color: var(--border-hover); }
+
+        .card-title-sm { font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.8rem; }
+
+        /* ── STAT CARDS ── */
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; margin-bottom: 1.8rem; }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px; padding: 1.3rem;
+            position: relative; overflow: hidden;
+            transition: all 0.35s;
+        }
+
+        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--c); }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 35px rgba(16,185,129,0.2); border-color: var(--border-hover); }
+
+        .sc-1 { --c: linear-gradient(90deg,#10b981,#34d399); }
+        .sc-2 { --c: linear-gradient(90deg,#fbbf24,#fb923c); }
+        .sc-3 { --c: linear-gradient(90deg,#3b82f6,#8b5cf6); }
+        .sc-4 { --c: linear-gradient(90deg,#ef4444,#f97316); }
+
+        .sc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
+        .sc-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; }
+        .sc-icon svg { width: 22px; height: 22px; }
+        .sc-1 .sc-icon { background: rgba(16,185,129,0.12); color: var(--primary); }
+        .sc-2 .sc-icon { background: rgba(251,191,36,0.12); color: var(--accent); }
+        .sc-3 .sc-icon { background: rgba(59,130,246,0.12); color: var(--blue); }
+        .sc-4 .sc-icon { background: rgba(239,68,68,0.12); color: var(--red); }
+        .sc-badge { font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; padding: 0.2rem 0.6rem; border-radius: 20px; font-weight: 700; }
+        .badge-up { background: rgba(16,185,129,0.15); color: var(--primary); }
+        .badge-down { background: rgba(239,68,68,0.15); color: var(--red); }
+        .badge-neutral { background: rgba(148,163,184,0.15); color: var(--text-dim); }
+
+        .sc-num { font-size: 2.2rem; font-weight: 900; font-family: 'JetBrains Mono', monospace; background: linear-gradient(135deg, var(--text), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .sc-label { color: var(--text-dim); font-size: 0.82rem; margin-top: 0.2rem; }
+
+        /* ── GRID LAYOUTS ── */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+        .grid-main { display: grid; grid-template-columns: 1fr 360px; gap: 1.4rem; }
+        .grid-main-left { display: grid; grid-template-columns: 1fr 320px; gap: 1.4rem; }
+
+        /* ── TABLE ESTILO ── */
+        .table-header {
+            display: grid;
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .th { font-size: 0.67rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); font-weight: 700; }
+
+        .table-row {
+            display: grid;
+            padding: 0.9rem 1rem;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.25s;
+            margin-bottom: 0.4rem;
+            align-items: center;
+        }
+
+        .table-row:hover { background: rgba(16,185,129,0.06); border-color: var(--border); }
+        .table-row.row-alert { border-left: 3px solid var(--red) !important; background: rgba(239,68,68,0.04); }
+        .table-row.row-warn { border-left: 3px solid var(--accent) !important; }
+
+        /* ── PACIENTE ROW cols ── */
+        .pac-cols { grid-template-columns: 2.2fr 0.8fr 0.9fr 0.9fr 0.9fr 0.7fr; }
+
+        .pac-info { display: flex; align-items: center; gap: 0.8rem; }
+
+        .p-ava {
+            width: 38px; height: 38px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 0.9rem; flex-shrink: 0;
+        }
+
+        .av-g { background: linear-gradient(135deg, #ec4899, #f43f5e); }
+        .av-b { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+        .av-o { background: linear-gradient(135deg, var(--accent), var(--orange)); }
+        .av-p { background: linear-gradient(135deg, var(--blue), var(--purple)); }
+        .av-t { background: linear-gradient(135deg, var(--secondary), var(--blue)); }
+
+        .p-nm { font-size: 0.9rem; font-weight: 700; }
+        .p-meta { font-size: 0.72rem; color: var(--text-dim); }
+
+        .imc-chip {
+            text-align: center;
+        }
+
+        .imc-val { font-size: 1rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .imc-cl { font-size: 0.62rem; color: var(--text-muted); }
+
+        /* ── STATUS BADGES ── */
+        .status { font-size: 0.7rem; padding: 0.28rem 0.75rem; border-radius: 20px; font-weight: 700; display: inline-block; }
+        .s-ok { background: rgba(16,185,129,0.15); color: var(--primary); }
+        .s-warn { background: rgba(251,191,36,0.15); color: var(--accent); }
+        .s-alert { background: rgba(239,68,68,0.15); color: var(--red); }
+        .s-new { background: rgba(59,130,246,0.15); color: var(--blue); }
+        .s-purple { background: rgba(139,92,246,0.15); color: var(--purple); }
+
+        /* ── PLANO BADGE ── */
+        .plano { font-size: 0.65rem; padding: 0.2rem 0.55rem; border-radius: 20px; font-weight: 700; }
+        .pl-prem { background: rgba(251,191,36,0.15); color: var(--accent); border: 1px solid rgba(251,191,36,0.25); }
+        .pl-int { background: rgba(16,185,129,0.12); color: var(--primary); border: 1px solid rgba(16,185,129,0.25); }
+        .pl-bas { background: rgba(148,163,184,0.1); color: var(--text-dim); border: 1px solid var(--border); }
+
+        /* ── SEARCH / FILTER BAR ── */
+        .filter-bar { display: flex; gap: 0.8rem; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; }
+
+        .search-wrap {
+            display: flex; align-items: center; gap: 0.5rem;
+            background: rgba(16,185,129,0.06); border: 1px solid var(--border);
+            border-radius: 50px; padding: 0.55rem 1.1rem; min-width: 240px;
+            transition: border-color 0.3s;
+        }
+
+        .search-wrap:focus-within { border-color: var(--primary); }
+
+        .search-wrap input {
+            background: none; border: none; outline: none;
+            color: var(--text); font-family: 'Roboto Condensed', sans-serif;
+            font-size: 0.88rem; width: 100%;
+        }
+
+        .search-wrap input::placeholder { color: var(--text-muted); }
+
+        .filter-tabs { display: flex; gap: 0.3rem; background: rgba(16,185,129,0.05); border-radius: 10px; padding: 0.25rem; }
+
+        .ftab {
+            padding: 0.4rem 0.9rem; border-radius: 8px; font-size: 0.8rem; font-weight: 700;
+            border: none; background: none; cursor: pointer; color: var(--text-dim);
+            font-family: 'Roboto Condensed', sans-serif; transition: all 0.2s;
+        }
+
+        .ftab.on { background: var(--primary); color: var(--dark); }
+
+        /* ── AGENDA ITEMS ── */
+        .agenda-item {
+            display: flex; gap: 1rem; align-items: center;
+            padding: 0.85rem; border-radius: 12px;
+            background: rgba(16,185,129,0.04); border: 1px solid var(--border);
+            margin-bottom: 0.6rem; cursor: pointer; transition: all 0.25s;
+        }
+
+        .agenda-item:hover { border-color: var(--primary); background: rgba(16,185,129,0.09); }
+
+        .ag-time { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--primary); font-weight: 700; min-width: 46px; }
+        .ag-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .ag-name { font-size: 0.88rem; font-weight: 700; }
+        .ag-type { font-size: 0.72rem; color: var(--text-dim); }
+        .ag-arrow { margin-left: auto; color: var(--text-muted); font-size: 0.8rem; }
+
+        /* ── ALERTAS ── */
+        .alert-card {
+            display: flex; gap: 1rem; align-items: flex-start;
+            padding: 1rem 1.2rem; border-radius: 14px;
+            border: 1px solid; margin-bottom: 0.7rem;
+            transition: all 0.25s; cursor: pointer;
+        }
+
+        .alert-card:hover { transform: translateX(4px); }
+        .ac-crit { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.3); }
+        .ac-warn { background: rgba(251,191,36,0.05); border-color: rgba(251,191,36,0.25); }
+        .ac-info { background: rgba(59,130,246,0.05); border-color: rgba(59,130,246,0.2); }
+
+        .alert-icon { flex-shrink: 0; margin-top: 0.1rem; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
+        .alert-icon .icon { width: 22px; height: 22px; }
+        .alert-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.2rem; }
+        .alert-desc { font-size: 0.78rem; color: var(--text-dim); line-height: 1.5; }
+        .alert-meta { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.3rem; font-family: 'JetBrains Mono', monospace; }
+
+        /* ── CARDÁPIO VIEW ── */
+        .refeicao-block {
+            border: 1px solid var(--border);
+            border-radius: 16px; overflow: hidden; margin-bottom: 1rem;
+        }
+
+        .ref-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.9rem 1.2rem;
+            background: rgba(16,185,129,0.07);
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .ref-name { font-weight: 700; font-size: 0.95rem; }
+        .ref-time { font-size: 0.75rem; color: var(--primary); font-family: 'JetBrains Mono', monospace; }
+        .ref-kcal { font-size: 0.8rem; color: var(--text-dim); }
+
+        .alimento-grid {
+            display: grid;
+            grid-template-columns: 2.5fr 1fr 0.8fr 0.8fr 0.8fr;
+            gap: 0.5rem;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.82rem;
+            border-bottom: 1px solid rgba(16,185,129,0.06);
+            align-items: center;
+        }
+
+        .alimento-grid.head { color: var(--text-muted); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; background: rgba(0,0,0,0.1); }
+
+        .macro-bar {
+            display: flex; gap: 1rem; padding: 0.8rem 1.2rem;
+            background: rgba(16,185,129,0.04);
+        }
+
+        .macro-item { flex: 1; text-align: center; }
+        .macro-val { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1rem; }
+        .macro-lbl { font-size: 0.65rem; color: var(--text-muted); margin-top: 0.15rem; }
+
+        /* ── METAS ── */
+        .meta-card {
+            background: rgba(16,185,129,0.04);
+            border: 1px solid var(--border);
+            border-radius: 14px; padding: 1.1rem;
+            margin-bottom: 0.8rem; transition: all 0.25s;
+        }
+
+        .meta-card:hover { border-color: var(--border-hover); }
+
+        .meta-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.7rem; }
+        .meta-title { font-size: 0.9rem; font-weight: 700; }
+        .meta-pct { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 900; }
+
+        .prog-track { height: 8px; background: rgba(16,185,129,0.1); border-radius: 10px; overflow: hidden; }
+        .prog-fill { height: 100%; border-radius: 10px; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
+        .pf-green { background: linear-gradient(90deg, var(--primary), var(--secondary)); }
+        .pf-yellow { background: linear-gradient(90deg, var(--accent), var(--orange)); }
+        .pf-red { background: linear-gradient(90deg, var(--red), var(--orange)); }
+
+        .meta-footer { display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.72rem; color: var(--text-muted); }
+
+        /* ── EXAMES ── */
+        .exame-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.85rem 1rem; border-radius: 12px;
+            background: rgba(16,185,129,0.04); border: 1px solid var(--border);
+            margin-bottom: 0.5rem; transition: all 0.25s;
+        }
+
+        .exame-row:hover { border-color: var(--border-hover); }
+
+        .ex-name { font-size: 0.88rem; font-weight: 700; }
+        .ex-date { font-size: 0.7rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+        .ex-val { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.9rem; }
+        .ex-ref { font-size: 0.65rem; color: var(--text-muted); text-align: right; }
+        .ev-ok { color: var(--primary); } .ev-warn { color: var(--accent); } .ev-bad { color: var(--red); }
+
+        .ex-flag {
+            width: 28px; height: 28px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; flex-shrink: 0;
+        }
+
+        .ef-ok { background: rgba(16,185,129,0.15); } .ef-warn { background: rgba(251,191,36,0.15); } .ef-bad { background: rgba(239,68,68,0.15); }
+
+        /* ── FORM ELEMENTS ── */
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.9rem; }
+        .form-g { margin-bottom: 1rem; }
+        .form-g.full { grid-column: 1 / -1; }
+
+        .f-label {
+            display: block; font-size: 0.72rem; font-weight: 700;
+            color: var(--text-dim); margin-bottom: 0.35rem;
+            text-transform: uppercase; letter-spacing: 0.8px;
+        }
+
+        .f-input, .f-select, .f-textarea {
+            width: 100%; background: rgba(16,185,129,0.05);
+            border: 1px solid var(--border); border-radius: 10px;
+            padding: 0.65rem 1rem; color: var(--text);
+            font-family: 'Roboto Condensed', sans-serif; font-size: 0.88rem;
+            outline: none; transition: all 0.25s;
+        }
+
+        .f-input:focus, .f-select:focus, .f-textarea:focus {
+            border-color: var(--primary); background: rgba(16,185,129,0.09);
+            box-shadow: 0 0 0 3px rgba(16,185,129,0.1);
+        }
+
+        .f-select option { background: #0f172a; }
+        .f-textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+
+        /* ── SEMIOLOGIA CHECKBOXES ── */
+        .semi-section { margin-bottom: 1.5rem; }
+        .semi-section-title { font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.6rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); }
+
+        .semi-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+        .semi-chip {
+            padding: 0.38rem 0.8rem; border-radius: 20px;
+            font-size: 0.78rem; cursor: pointer; transition: all 0.2s;
+            border: 1px solid var(--border); background: rgba(16,185,129,0.04);
+            color: var(--text-dim); font-weight: 600;
+            user-select: none;
+        }
+
+        .semi-chip:hover { border-color: rgba(16,185,129,0.4); color: var(--text); }
+        .semi-chip.on { background: rgba(16,185,129,0.15); border-color: var(--primary); color: var(--primary); }
+        .semi-chip.on-warn { background: rgba(251,191,36,0.12); border-color: var(--accent); color: var(--accent); }
+        .semi-chip.on-bad { background: rgba(239,68,68,0.12); border-color: var(--red); color: var(--red); }
+
+        /* ── PROTOCOLOS TABS ── */
+        .proto-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+
+        .proto-tab {
+            padding: 0.5rem 1.1rem; border-radius: 50px;
+            font-size: 0.82rem; font-weight: 700; cursor: pointer;
+            border: 1.5px solid var(--border); background: none;
+            color: var(--text-dim); font-family: 'Roboto Condensed', sans-serif;
+            transition: all 0.25s;
+        }
+
+        .proto-tab:hover { border-color: var(--border-hover); color: var(--text); }
+        .proto-tab.on { background: var(--primary); border-color: var(--primary); color: var(--dark); }
+
+        .proto-content { display: none; }
+        .proto-content.active { display: block; animation: fadeSection 0.3s ease; }
+
+        /* ── MINI CHART (CSS only bars) ── */
+        .bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 70px; margin-top: 0.5rem; }
+
+        .bar {
+            flex: 1; border-radius: 4px 4px 0 0;
+            background: linear-gradient(180deg, var(--primary), rgba(16,185,129,0.3));
+            transition: all 0.3s;
+            min-width: 0;
+        }
+
+        .bar:hover { background: linear-gradient(180deg, var(--secondary), var(--primary)); }
+
+        .bar-label { font-size: 0.6rem; color: var(--text-muted); text-align: center; margin-top: 0.3rem; }
+        .bar-wrap { display: flex; flex-direction: column; flex: 1; }
+
+        /* ── ICON SYSTEM (SVG inline, semântico) ── */
+        .icon {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 1em; height: 1em; vertical-align: -0.125em;
+            flex-shrink: 0;
+        }
+        .icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .icon-md { width: 18px; height: 18px; }
+        .icon-lg { width: 24px; height: 24px; }
+        .icon-xl { width: 32px; height: 32px; }
+
+        /* card-title com ícone SVG */
+        .card-title { display: flex; align-items: center; gap: 0.55rem; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text); margin-bottom: 1.2rem; }
+        .card-title .icon { color: var(--primary); width: 16px; height: 16px; }
+        .card-title .icon-alert { color: var(--red); }
+        .card-title .icon-warn { color: var(--accent); }
+        .card-title .icon-blue { color: var(--blue); }
+        .icon-alert { color: var(--red) !important; }
+        .icon-warn  { color: var(--accent) !important; }
+        .icon-blue  { color: var(--blue) !important; }
+
+        .section-div { height: 1px; background: var(--border); margin: 1.5rem 0; }
+
+        /* ── UPLOAD ZONE ── */
+        .upload-zone {
+            border: 2px dashed var(--border); border-radius: 14px;
+            padding: 2rem; text-align: center; cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-zone:hover { border-color: var(--primary); background: rgba(16,185,129,0.04); }
+        .upload-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .upload-text { font-size: 0.85rem; color: var(--text-dim); }
+        .upload-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.3rem; }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed; bottom: 2rem; right: 2rem;
+            background: rgba(16,185,129,0.95); color: var(--dark);
+            padding: 0.9rem 1.4rem; border-radius: 14px;
+            font-weight: 700; font-size: 0.88rem; z-index: 999;
+            transform: translateY(100px); opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            box-shadow: 0 10px 40px rgba(16,185,129,0.4);
+            max-width: 320px;
+        }
+
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.error { background: rgba(239,68,68,0.95); }
+
+        /* ── PACIENTE DETALHE (slide) ── */
+        .pac-detail {
+            position: fixed; right: -560px; top: 0; bottom: 0;
+            width: 540px; background: rgba(10,31,26,0.98);
+            backdrop-filter: blur(30px); border-left: 1px solid var(--border);
+            z-index: 100; transition: right 0.4s cubic-bezier(0.4,0,0.2,1);
+            overflow-y: auto; padding: 2rem;
+        }
+
+        .pac-detail.open { right: 0; }
+
+        .overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+            z-index: 99; opacity: 0; pointer-events: none; transition: opacity 0.35s;
+        }
+
+        .overlay.show { opacity: 1; pointer-events: all; }
+
+        .detail-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; overflow-x: auto; }
+
+        .dt-tab {
+            padding: 0.65rem 1rem; font-size: 0.82rem; font-weight: 700;
+            color: var(--text-muted); border: none; background: none;
+            border-bottom: 2px solid transparent; cursor: pointer;
+            font-family: 'Roboto Condensed', monospace; transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .dt-tab.on { color: var(--primary); border-bottom-color: var(--primary); }
+
+        /* ── HAMBURGER ── */
+        .hamburger {
+            display: none;
+            position: fixed; top: 1rem; left: 1rem; z-index: 200;
+            width: 44px; height: 44px; border-radius: 12px;
+            background: rgba(10,31,26,0.95); border: 1px solid var(--border);
+            backdrop-filter: blur(20px); cursor: pointer;
+            align-items: center; justify-content: center;
+            flex-direction: column; gap: 5px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: all 0.25s;
+        }
+        .hamburger:hover { border-color: var(--primary); }
+        .hamburger span {
+            display: block; width: 20px; height: 2px;
+            background: var(--primary); border-radius: 2px;
+            transition: all 0.3s;
+        }
+        .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.open span:nth-child(2) { opacity: 0; transform: translateX(-8px); }
+        .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        /* sidebar overlay for mobile — transparent, apenas captura clique fora */
+        .sidebar-overlay {
+            display: none; position: fixed; inset: 0;
+            background: transparent; z-index: 49;
+        }
+        .sidebar-overlay.show { display: block; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1400px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 1100px) { .grid-main, .grid-main-left { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) {
+            .hamburger { display: flex; }
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+                z-index: 50;
+            }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; padding: 1.2rem 1rem 3rem; }
+            .stats-row { grid-template-columns: 1fr 1fr; }
+            .page-header { flex-direction: column; gap: 0.8rem; }
+            .page-title { font-size: 1.5rem; }
+            .pac-cols { grid-template-columns: 2fr 0.7fr 0.6fr !important; }
+            .pac-cols .imc-chip, .pac-cols > div:nth-child(3),
+            .pac-cols > div:nth-child(4), .pac-cols > div:nth-child(5) { display: none; }
+            .pac-cols > div:last-child { display: flex; }
+            .filter-bar { flex-direction: column; align-items: flex-start; }
+            .search-wrap { min-width: unset; width: 100%; }
+            .pac-detail { width: 100%; right: -100%; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .form-row, .form-row-3 { grid-template-columns: 1fr; }
+            .page-actions { width: 100%; flex-wrap: wrap; }
+        }
+        @media (max-width: 600px) {
+            .stats-row { grid-template-columns: 1fr; }
+            .proto-tabs { flex-wrap: wrap; }
+            .main { padding-top: 4rem; }
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(16,185,129,0.25); border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="organic-bg-nutrivida">
+        <div class="blob-nutrivida blob-nutrivida-1"></div>
+        <div class="blob-nutrivida blob-nutrivida-2"></div>
+        <div class="blob-nutrivida blob-nutrivida-3"></div>
+        <div class="blob-nutrivida blob-nutrivida-4"></div>
+    </div>
+
+    <div class="floating-foods-nutrivida">
+        <div class="food-icon-nutrivida food-nutrivida-1">
+            <img src="img/abacate.png" alt="abacate-imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-2">
+            <img src="img/maca.png" alt="maça imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-3">
+            <img src="img/salada.png" alt="salada imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-4">
+            <img src="img/tangerina.png" alt="tangerina imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-5">
+            <img src="img/brocolis.png" alt="brocolis imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-6">
+            <img src="img/banana.png" alt="banana imagem">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-7">
+            <img src="img/cenoura.png" alt="imagem cenoura">
+        </div>
+        <div class="food-icon-nutrivida food-nutrivida-8">
+            <img src="img/kiwi.png" alt="imagem kiwi">
+        </div>
+    </div>
+
+<button class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+    <span></span><span></span><span></span>
+</button>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo">
+                <div class="brand-dot"></div>
+                <span class="brand-name">
+                    <img src="img/logos/Logo texto branco.png" alt="">
+                </span>
+            </div>
+            <div class="brand-sub">Área do Nutricionista</div>
+        </div>
+
+        <div class="nutri-card">
+            <div class="nutri-ava">C</div>
+            <div>
+                <div class="nutri-name">Dra. Camila Rocha</div>
+                <div class="nutri-crn">CRN-3 · 12345</div>
+                <div class="nutri-status">● Online agora</div>
+            </div>
+        </div>
+
+        <nav class="nav">
+            <div class="nav-grupo-label">Visão Geral</div>
+            <button class="nav-btn active" onclick="goSection('visao', this)">
+                <span class="nav-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span> Início
+            </button>
+            <button class="nav-btn" onclick="goSection('pacientes', this)">
+                <span class="nav-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Pacientes
+                <span class="nav-badge green">48</span>
+            </button>
+            <button class="nav-btn" onclick="goSection('agenda', this)">
+                <span class="nav-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Consultas
+                <span class="nav-badge green">3</span>
+            </button>
+
+            <div class="nav-grupo-label">Ferramentas Clínicas</div>
+            <button class="nav-btn" onclick="goSection('cardapio', this)">
+                <span class="nav-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span> Cardápios
+            </button>
+            <button class="nav-btn" onclick="goSection('metas', this)">
+                <span class="nav-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> Metas
+            </button>
+            <button class="nav-btn" onclick="goSection('exames', this)">
+                <span class="nav-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11m0 0H5m4 0h4m0-11v11m0 0h4m-4 0V9m4 5v3"/><line x1="3" y1="9" x2="21" y2="9"/></svg></span> Exames
+            </button>
+            <button class="nav-btn" onclick="goSection('alertas', this)">
+                <span class="nav-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span> Alertas
+                <span class="nav-badge">5</span>
+            </button>
+            <button class="nav-btn" onclick="goSection('anamnese', this)">
+                <span class="nav-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span> Anamnese
+            </button>
+          
+
+           
+        </nav>
+
+        <div class="sidebar-footer">
+            <p>Site não tem erros!!!</p>
+        </div>
+    </aside>
+
+    <!-- ════════════════ MAIN ════════════════ -->
+    <main class="main">
+
+        <!-- ══ VISÃO GERAL ══ -->
+        <div id="sec-visao" class="section active">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">Olá, Dra. Camila</div>
+                    <div class="page-sub">Quinta-feira, 26 de Fevereiro de 2026 &nbsp;·&nbsp; 3 consultas hoje</div>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-ghost" onclick="goSection('alertas')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span> 5 Alertas</button>
+                    <button class="btn btn-primary" onclick="openPacDetail()">+ Novo Registro</button>
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-card sc-1">
+                    <div class="sc-top">
+                        <span class="sc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+                        <span class="sc-badge badge-up">+3 ↑</span>
+                    </div>
+                    <div class="sc-num">48</div>
+                    <div class="sc-label">Pacientes Ativos</div>
+                </div>
+                <div class="stat-card sc-2">
+                    <div class="sc-top">
+                        <span class="sc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+                        <span class="sc-badge badge-neutral">Hoje</span>
+                    </div>
+                    <div class="sc-num">3</div>
+                    <div class="sc-label">Consultas Hoje</div>
+                </div>
+                <div class="stat-card sc-3">
+                    <div class="sc-top">
+                        <span class="sc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
+                        <span class="sc-badge badge-up">94%</span>
+                    </div>
+                    <div class="sc-num">31</div>
+                    <div class="sc-label">Metas Atingidas</div>
+                </div>
+                <div class="stat-card sc-4">
+                    <div class="sc-top">
+                        <span class="sc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+                        <span class="sc-badge badge-down">Urgente</span>
+                    </div>
+                    <div class="sc-num">5</div>
+                    <div class="sc-label">Alertas Ativos</div>
+                </div>
+            </div>
+
+            <div class="grid-main">
+                <!-- Próximas consultas -->
+                <div class="glass-card">
+                    <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Consultas de Hoje</div>
+                    <div class="agenda-item">
+                        <div class="ag-time">09:00</div>
+                        <div class="ag-dot" style="background:var(--primary)"></div>
+                        <div><div class="ag-name">Ana Paula Ferreira</div><div class="ag-type">Retorno · Avaliação Nutricional</div></div>
+                        <span class="status s-ok" style="margin-left:auto">Confirmada</span>
+                    </div>
+                    <div class="agenda-item">
+                        <div class="ag-time">11:30</div>
+                        <div class="ag-dot" style="background:var(--red)"></div>
+                        <div><div class="ag-name">Renata Oliveira</div><div class="ag-type">Urgência · Revisão de Plano</div></div>
+                        <span class="status s-alert" style="margin-left:auto">Urgente</span>
+                    </div>
+                    <div class="agenda-item">
+                        <div class="ag-time">14:00</div>
+                        <div class="ag-dot" style="background:var(--blue)"></div>
+                        <div><div class="ag-name">Lucas Mendes</div><div class="ag-type">1ª Consulta · Anamnese</div></div>
+                        <span class="status s-new" style="margin-left:auto">Novo</span>
+                    </div>
+                    <div class="agenda-item">
+                        <div class="ag-time">16:00</div>
+                        <div class="ag-dot" style="background:var(--accent)"></div>
+                        <div><div class="ag-name">Marcos Silva</div><div class="ag-type">Retorno · Revisão de Metas</div></div>
+                        <span class="status s-warn" style="margin-left:auto">Pendente</span>
+                    </div>
+
+                    <div class="section-div"></div>
+
+                    <div class="card-title-sm"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Próximos 3 dias</div>
+                    <div class="agenda-item">
+                        <div class="ag-time">27/02</div>
+                        <div class="ag-dot" style="background:var(--secondary)"></div>
+                        <div><div class="ag-name">Carla Mendonça</div><div class="ag-type">Retorno · Exames</div></div>
+                        <span class="status s-ok" style="margin-left:auto">Confirmada</span>
+                    </div>
+                    <div class="agenda-item">
+                        <div class="ag-time">28/02</div>
+                        <div class="ag-dot" style="background:var(--purple)"></div>
+                        <div><div class="ag-name">Pedro Alves</div><div class="ag-type">1ª Consulta</div></div>
+                        <span class="status s-new" style="margin-left:auto">Novo</span>
+                    </div>
+                </div>
+
+                <!-- Alertas + Progress -->
+                <div style="display:flex;flex-direction:column;gap:1.4rem">
+                    <div class="glass-card">
+                        <div class="card-title"><span class="icon icon-alert" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span> Alertas Recentes</div>
+                        <div class="alert-card ac-crit" onclick="goSection('alertas')">
+                            <div class="alert-icon"><span class="icon icon-xl icon-alert" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span></div>
+                            <div>
+                                <div class="alert-title" style="color:var(--red)">Renata Oliveira</div>
+                                <div class="alert-desc">IMC 31,2 · Glicose em alta. Requer atenção imediata.</div>
+                                <div class="alert-meta">Hoje, 08:15</div>
+                            </div>
+                        </div>
+                        <div class="alert-card ac-warn" onclick="goSection('alertas')">
+                            <div class="alert-icon"><span class="icon icon-xl icon-warn" aria-hidden="true"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span></div>
+                            <div>
+                                <div class="alert-title" style="color:var(--accent)">Marcos Silva</div>
+                                <div class="alert-desc">3 dias sem registrar refeições no cardápio.</div>
+                                <div class="alert-meta">Ontem</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:0.5rem" onclick="goSection('alertas')">Ver todos os alertas →</button>
+                    </div>
+
+                    <div class="glass-card">
+                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span> Pacientes por Plano</div>
+                        <div style="display:flex;gap:1rem;margin-bottom:1rem">
+                            <div style="flex:1;text-align:center">
+                                <div style="font-size:1.6rem;font-weight:900;color:var(--accent)">18</div>
+                                <span class="plano pl-prem">Premium</span>
+                            </div>
+                            <div style="flex:1;text-align:center">
+                                <div style="font-size:1.6rem;font-weight:900;color:var(--primary)">21</div>
+                                <span class="plano pl-int">Intermediário</span>
+                            </div>
+                            <div style="flex:1;text-align:center">
+                                <div style="font-size:1.6rem;font-weight:900;color:var(--text-dim)">9</div>
+                                <span class="plano pl-bas">Básico</span>
+                            </div>
+                        </div>
+                        <div class="prog-track">
+                            <div class="prog-fill pf-green" style="width:0" data-w="88%"></div>
+                        </div>
+                        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.4rem">88% dos pacientes ativos este mês</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ PACIENTES ══ -->
+        <div id="sec-pacientes" class="section">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">Pacientes</div>
+                    <div class="page-sub">48 pacientes cadastrados · 5 com alertas</div>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-outline"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span> Exportar</button>
+                    <button class="btn btn-primary" onclick="openPacDetail()">+ Novo Paciente</button>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <div class="filter-bar">
+                    <div class="search-wrap">
+                        <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+                        <input type="text" placeholder="Buscar por nome, CPF, plano...">
+                    </div>
+                    <div class="filter-tabs">
+                        <button class="ftab on" onclick="filterPacientes(this,'all')">Todos</button>
+                        <button class="ftab" onclick="filterPacientes(this,'premium')">Premium</button>
+                        <button class="ftab" onclick="filterPacientes(this,'intermediario')">Intermediário</button>
+                        <button class="ftab" onclick="filterPacientes(this,'alerta')"><span class="icon icon-warn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span> Alertas</button>
+                    </div>
+                    <button class="btn btn-ghost btn-sm"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg></span> Filtros</button>
+                </div>
+
+                <div class="table-header pac-cols">
+                    <span class="th">Paciente</span>
+                    <span class="th" style="text-align:center">IMC</span>
+                    <span class="th" style="text-align:center">Plano</span>
+                    <span class="th" style="text-align:center">Próx. Consulta</span>
+                    <span class="th" style="text-align:center">Adesão</span>
+                    <span class="th" style="text-align:center">Status</span>
+                </div>
+
+                <div class="table-row pac-cols pac-row" data-filter="premium ok" onclick="openPacDetail()">
+                    <div class="pac-info"><div class="p-ava av-g">A</div><div><div class="p-nm">Ana Paula Ferreira</div><div class="p-meta">32 anos · (16) 99999-0001</div></div></div>
+                    <div class="imc-chip"><div class="imc-val" style="color:var(--primary)">23,4</div><div class="imc-cl">Normal</div></div>
+                    <div style="text-align:center"><span class="plano pl-prem">Premium</span></div>
+                    <div style="text-align:center;font-size:0.78rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace">26/02</div>
+                    <div style="text-align:center"><span class="status s-ok">92%</span></div>
+                    <div style="text-align:center"><span class="status s-ok">Ótimo</span></div>
+                </div>
+
+                <div class="table-row pac-cols pac-row row-alert" data-filter="premium alerta" onclick="openPacDetail()">
+                    <div class="pac-info"><div class="p-ava av-p">R</div><div><div class="p-nm">Renata Oliveira</div><div class="p-meta">37 anos · (16) 99999-0002</div></div></div>
+                    <div class="imc-chip"><div class="imc-val" style="color:var(--red)">31,2</div><div class="imc-cl">Obesidade I</div></div>
+                    <div style="text-align:center"><span class="plano pl-prem">Premium</span></div>
+                    <div style="text-align:center;font-size:0.78rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace">26/02</div>
+                    <div style="text-align:center"><span class="status s-alert">41%</span></div>
+                    <div style="text-align:center"><span class="status s-alert">Alerta</span></div>
+                </div>
+
+                <div class="table-row pac-cols pac-row row-warn" data-filter="intermediario alerta" onclick="openPacDetail()">
+                    <div class="pac-info"><div class="p-ava av-o">M</div><div><div class="p-nm">Marcos Silva</div><div class="p-meta">28 anos · (16) 99999-0003</div></div></div>
+                    <div class="imc-chip"><div class="imc-val" style="color:var(--accent)">27,1</div><div class="imc-cl">Sobrepeso</div></div>
+                    <div style="text-align:center"><span class="plano pl-int">Intermediário</span></div>
+                    <div style="text-align:center;font-size:0.78rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace">26/02</div>
+                    <div style="text-align:center"><span class="status s-warn">63%</span></div>
+                    <div style="text-align:center"><span class="status s-warn">Atenção</span></div>
+                </div>
+
+                <div class="table-row pac-cols pac-row" data-filter="basico ok" onclick="openPacDetail()">
+                    <div class="pac-info"><div class="p-ava av-b">J</div><div><div class="p-nm">João Santos</div><div class="p-meta">45 anos · (16) 99999-0004</div></div></div>
+                    <div class="imc-chip"><div class="imc-val" style="color:var(--primary)">24,8</div><div class="imc-cl">Normal</div></div>
+                    <div style="text-align:center"><span class="plano pl-bas">Básico</span></div>
+                    <div style="text-align:center;font-size:0.78rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace">01/03</div>
+                    <div style="text-align:center"><span class="status s-ok">88%</span></div>
+                    <div style="text-align:center"><span class="status s-ok">Ótimo</span></div>
+                </div>
+
+                <div class="table-row pac-cols pac-row" data-filter="intermediario novo" onclick="openPacDetail()">
+                    <div class="pac-info"><div class="p-ava av-t">L</div><div><div class="p-nm">Lucas Mendes</div><div class="p-meta">24 anos · (16) 99999-0005</div></div></div>
+                    <div class="imc-chip"><div class="imc-val" style="color:var(--primary)">22,0</div><div class="imc-cl">Normal</div></div>
+                    <div style="text-align:center"><span class="plano pl-int">Intermediário</span></div>
+                    <div style="text-align:center;font-size:0.78rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace">26/02</div>
+                    <div style="text-align:center"><span class="status s-new">—</span></div>
+                    <div style="text-align:center"><span class="status s-new">Novo</span></div>
+                </div>
+
+                <div class="table-row pac-cols pac-row" data-filter="premium ok" onclick="openPacDetail()">
+                    <div class="pac-info"><div class="p-ava av-g" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)">C</div><div><div class="p-nm">Carla Mendonça</div><div class="p-meta">31 anos · (16) 99999-0006</div></div></div>
+                    <div class="imc-chip"><div class="imc-val" style="color:var(--primary)">21,3</div><div class="imc-cl">Normal</div></div>
+                    <div style="text-align:center"><span class="plano pl-prem">Premium</span></div>
+                    <div style="text-align:center;font-size:0.78rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace">27/02</div>
+                    <div style="text-align:center"><span class="status s-ok">97%</span></div>
+                    <div style="text-align:center"><span class="status s-ok">Ótimo</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ AGENDA ══ -->
+        <div id="sec-agenda" class="section">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">Consultas</div>
+                    <div class="page-sub">Fevereiro 2026 · 3 confirmadas hoje</div>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-outline">◀ Fev</button>
+                    <button class="btn btn-ghost">Mar ▶</button>
+                    <button class="btn btn-primary" onclick="toast('Nova consulta agendada!')">+ Agendar</button>
+                </div>
+            </div>
+
+            <div class="grid-main-left">
+                <div class="glass-card">
+                    <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Hoje — 26 de Fevereiro</div>
+
+                    <div class="agenda-item">
+                        <div class="ag-time">09:00</div>
+                        <div class="ag-dot" style="background:var(--primary)"></div>
+                        <div style="flex:1">
+                            <div class="ag-name">Ana Paula Ferreira</div>
+                            <div class="ag-type">Retorno · Avaliação Nutricional · 50 min</div>
+                        </div>
+                        <span class="status s-ok">Confirmada</span>
+                        <button class="btn btn-ghost btn-sm" onclick="openPacDetail()">Abrir</button>
+                    </div>
+
+                    <div class="agenda-item" style="border-color:rgba(239,68,68,0.4)">
+                        <div class="ag-time">11:30</div>
+                        <div class="ag-dot" style="background:var(--red)"></div>
+                        <div style="flex:1">
+                            <div class="ag-name">Renata Oliveira</div>
+                            <div class="ag-type">Urgência · Revisão de Plano · 30 min</div>
+                        </div>
+                        <span class="status s-alert">Urgente</span>
+                        <button class="btn btn-ghost btn-sm" onclick="openPacDetail()">Abrir</button>
+                    </div>
+
+                    <div class="agenda-item">
+                        <div class="ag-time">14:00</div>
+                        <div class="ag-dot" style="background:var(--blue)"></div>
+                        <div style="flex:1">
+                            <div class="ag-name">Lucas Mendes</div>
+                            <div class="ag-type">1ª Consulta · Anamnese Completa · 60 min</div>
+                        </div>
+                        <span class="status s-new">Novo</span>
+                        <button class="btn btn-ghost btn-sm" onclick="openPacDetail()">Abrir</button>
+                    </div>
+
+                    <div class="section-div"></div>
+
+                    <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Próximos Dias</div>
+
+                    <div class="agenda-item">
+                        <div class="ag-time">27/02<br><span style="font-size:0.65rem">09:30</span></div>
+                        <div class="ag-dot" style="background:var(--secondary)"></div>
+                        <div style="flex:1"><div class="ag-name">Carla Mendonça</div><div class="ag-type">Retorno · Exames Laboratoriais</div></div>
+                        <span class="status s-ok">Confirmada</span>
+                    </div>
+                    <div class="agenda-item">
+                        <div class="ag-time">28/02<br><span style="font-size:0.65rem">11:00</span></div>
+                        <div class="ag-dot" style="background:var(--purple)"></div>
+                        <div style="flex:1"><div class="ag-name">Pedro Alves</div><div class="ag-type">1ª Consulta</div></div>
+                        <span class="status s-new">Novo</span>
+                    </div>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:1.2rem">
+                    <div class="glass-card">
+                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span> Resumo do Mês</div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem">
+                            <div style="text-align:center;padding:0.8rem;background:rgba(16,185,129,0.06);border-radius:12px;border:1px solid var(--border)">
+                                <div style="font-size:1.8rem;font-weight:900;color:var(--primary);font-family:'JetBrains Mono',monospace">42</div>
+                                <div style="font-size:0.72rem;color:var(--text-muted)">Realizadas</div>
+                            </div>
+                            <div style="text-align:center;padding:0.8rem;background:rgba(251,191,36,0.06);border-radius:12px;border:1px solid rgba(251,191,36,0.15)">
+                                <div style="font-size:1.8rem;font-weight:900;color:var(--accent);font-family:'JetBrains Mono',monospace">6</div>
+                                <div style="font-size:0.72rem;color:var(--text-muted)">Pendentes</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Notas Rápidas</div>
+                        <textarea id="nota-agenda" class="f-textarea" oninput="notaChanged('nota-agenda-meta')" placeholder="Escreva lembretes ou notas rápidas..." style="height:120px">- Lembrar de pedir exame de vitamina D p/ Renata
+- Lucas Mendes: novo paciente, atletismo</textarea>
+                        <div id="nota-agenda-meta" style="font-size:0.7rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin:0.4rem 0 0.6rem">
+                            Criada: 25/02/2026 às 14:10 &nbsp;·&nbsp; Editada: 25/02/2026 às 14:10
+                        </div>
+                        <button class="btn btn-primary" style="width:100%;margin-top:0.2rem" onclick="salvarNota('nota-agenda-meta'); toast('Notas salvas!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ CARDÁPIOS ══ -->
+        <div id="sec-cardapio" class="section">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">Cardápios dos Pacientes</div>
+                    <div class="page-sub">Veja e acompanhe o que seus pacientes estão usando no site</div>
+                </div>
+                <div class="page-actions">
+                    <div class="filter-tabs">
+                        <button class="ftab on" onclick="ftab(this)">Todos</button>
+                        <button class="ftab" onclick="ftab(this)">Em uso</button>
+                        <button class="ftab" onclick="ftab(this)">Revisão</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-main">
+                <div>
+                    <!-- Seletor de Paciente -->
+                    <div class="glass-card" style="margin-bottom:1.4rem">
+                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Paciente Selecionado</div>
+                        <div class="filter-bar" style="margin-bottom:0">
+                            <select class="f-select" style="max-width:280px">
+                                <option>Ana Paula Ferreira</option>
+                                <option>Marcos Silva</option>
+                                <option>João Santos</option>
+                                <option>Renata Oliveira</option>
+                            </select>
+                            <span class="plano pl-prem">Premium</span>
+                            <span class="status s-ok">Cardápio ativo</span>
+                            <span style="font-size:0.78rem;color:var(--text-muted)">Atualizado: 25/02/26</span>
+                        </div>
+                    </div>
+
+                    <!-- Cardápio ativo -->
+                    <div class="glass-card">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
+                            <div class="card-title" style="margin-bottom:0"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span> Cardápio Atual — Ana Paula</div>
+                            <div style="display:flex;gap:0.6rem">
+                                <button class="btn btn-ghost btn-sm" onclick="toast('Cardápio exportado!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span> Exportar</button>
+                                <button class="btn btn-primary btn-sm" onclick="toast('Observação enviada!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span> Comentar</button>
+                            </div>
+                        </div>
+
+                        <!-- Café da manhã -->
+                        <div class="refeicao-block">
+                            <div class="ref-header" onclick="toggleRef(this)">
+                                <div><div class="ref-name"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg></span> Café da Manhã</div></div>
+                                <div style="display:flex;gap:1rem;align-items:center">
+                                    <span class="ref-time">07:00</span>
+                                    <span class="ref-kcal">278 kcal</span>
+                                    <span style="color:var(--text-muted)">▼</span>
+                                </div>
+                            </div>
+                            <div class="ref-body">
+                                <div class="alimento-grid head"><span>Alimento</span><span>Medida</span><span>Kcal</span><span>Prot.</span><span>Carb.</span></div>
+                                <div class="alimento-grid"><span>Margarina light</span><span>2 col chá</span><span>20,57</span><span>0g</span><span>0g</span></div>
+                                <div class="alimento-grid"><span>Café c/ leite desc.</span><span>1 xícara</span><span>73,58</span><span>5,22g</span><span>12,86g</span></div>
+                                <div class="alimento-grid"><span>Pão francês</span><span>1 un. M</span><span>143,92</span><span>4,71g</span><span>28,4g</span></div>
+                                <div class="alimento-grid"><span>Melão</span><span>1 fatia G</span><span>40,38</span><span>0,71g</span><span>8,27g</span></div>
+                                <div class="macro-bar">
+                                    <div class="macro-item"><div class="macro-val" style="color:var(--primary)">278</div><div class="macro-lbl">Kcal</div></div>
+                                    <div class="macro-item"><div class="macro-val" style="color:var(--blue)">10,64g</div><div class="macro-lbl">Proteína</div></div>
+                                    <div class="macro-item"><div class="macro-val" style="color:var(--accent)">49,53g</div><div class="macro-lbl">Carb.</div></div>
+                                    <div class="macro-item"><div class="macro-val" style="color:var(--orange)">4,2g</div><div class="macro-lbl">Gordura</div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Almoço -->
+                        <div class="refeicao-block">
+                            <div class="ref-header" onclick="toggleRef(this)">
+                                <div><div class="ref-name"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span> Almoço</div></div>
+                                <div style="display:flex;gap:1rem;align-items:center">
+                                    <span class="ref-time">12:30</span>
+                                    <span class="ref-kcal">620 kcal</span>
+                                    <span style="color:var(--text-muted)">▼</span>
+                                </div>
+                            </div>
+                            <div class="ref-body">
+                                <div class="alimento-grid head"><span>Alimento</span><span>Medida</span><span>Kcal</span><span>Prot.</span><span>Carb.</span></div>
+                                <div class="alimento-grid"><span>Arroz branco cozido</span><span>4 col sopa</span><span>188</span><span>3,8g</span><span>41g</span></div>
+                                <div class="alimento-grid"><span>Feijão carioca</span><span>1 concha</span><span>130</span><span>9g</span><span>22g</span></div>
+                                <div class="alimento-grid"><span>Frango grelhado</span><span>150g</span><span>210</span><span>32g</span><span>0g</span></div>
+                                <div class="alimento-grid"><span>Salada verde</span><span>1 prato</span><span>42</span><span>2g</span><span>5g</span></div>
+                                <div class="macro-bar">
+                                    <div class="macro-item"><div class="macro-val" style="color:var(--primary)">620</div><div class="macro-lbl">Kcal</div></div>
+                                    <div class="macro-item"><div class="macro-val" style="color:var(--blue)">46,8g</div><div class="macro-lbl">Proteína</div></div>
+                                    <div class="macro-item"><div class="macro-val" style="color:var(--accent)">68g</div><div class="macro-lbl">Carb.</div></div>
+                                    <div class="macro-item"><div class="macro-val" style="color:var(--orange)">8,4g</div><div class="macro-lbl">Gordura</div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Jantar -->
+                        <div class="refeicao-block">
+                            <div class="ref-header" onclick="toggleRef(this)">
+                                <div><div class="ref-name"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span> Jantar</div></div>
+                                <div style="display:flex;gap:1rem;align-items:center">
+                                    <span class="ref-time">19:30</span>
+                                    <span class="ref-kcal">410 kcal</span>
+                                    <span style="color:var(--text-muted)">▼</span>
+                                </div>
+                            </div>
+                            <div class="ref-body">
+                                <div class="alimento-grid head"><span>Alimento</span><span>Medida</span><span>Kcal</span><span>Prot.</span><span>Carb.</span></div>
+                                <div class="alimento-grid"><span>Omelete de espinafre</span><span>2 ovos</span><span>200</span><span>14g</span><span>3g</span></div>
+                                <div class="alimento-grid"><span>Pão integral</span><span>2 fatias</span><span>150</span><span>6g</span><span>28g</span></div>
+                                <div class="alimento-grid"><span>Iogurte natural</span><span>1 pote 170g</span><span>60</span><span>8g</span><span>5g</span></div>
+                                <div class="macro-bar">
+                                    <div class="macro-item"><div class="macro-val" style="color:var(--primary)">410</div><div class="macro-lbl">Kcal</div></div>
+                                    <div class="macro-item"><div class="macro-val" style="color:var(--blue)">28g</div><div class="macro-lbl">Proteína</div></div>
+                                    <div class="macro-item"><div class="macro-val" style="color:var(--accent)">36g</div><div class="macro-lbl">Carb.</div></div>
+                                    <div class="macro-item"><div class="macro-val" style="color:var(--orange)">11g</div><div class="macro-lbl">Gordura</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumo diário -->
+                <div style="display:flex;flex-direction:column;gap:1.2rem">
+                    <div class="glass-card">
+                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span> Total do Dia</div>
+                        <div style="text-align:center;margin-bottom:1rem">
+                            <div style="font-size:2.8rem;font-weight:900;font-family:'JetBrains Mono',monospace;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent">1.308</div>
+                            <div style="color:var(--text-muted);font-size:0.8rem">Kcal totais</div>
+                        </div>
+                        <div style="margin-bottom:0.8rem">
+                            <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:0.3rem"><span>Proteína</span><span style="color:var(--blue);font-weight:700">85,4g · 26%</span></div>
+                            <div class="prog-track"><div class="prog-fill" style="background:linear-gradient(90deg,var(--blue),var(--purple));width:0" data-w="26%"></div></div>
+                        </div>
+                        <div style="margin-bottom:0.8rem">
+                            <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:0.3rem"><span>Carboidratos</span><span style="color:var(--accent);font-weight:700">153,5g · 47%</span></div>
+                            <div class="prog-track"><div class="prog-fill pf-yellow" style="width:0" data-w="47%"></div></div>
+                        </div>
+                        <div>
+                            <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:0.3rem"><span>Gordura</span><span style="color:var(--orange);font-weight:700">23,6g · 27%</span></div>
+                            <div class="prog-track"><div class="prog-fill" style="background:linear-gradient(90deg,var(--orange),var(--accent));width:0" data-w="27%"></div></div>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Observação do Nutricionista</div>
+                        <textarea id="nota-cardapio" class="f-textarea" oninput="notaChanged('nota-cardapio-meta')" placeholder="Deixe um comentário ou orientação para este cardápio..."></textarea>
+                        <div id="nota-cardapio-meta" style="font-size:0.7rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin:0.4rem 0 0.6rem;display:none">
+                            Editada: —
+                        </div>
+                        <button class="btn btn-primary" style="width:100%;margin-top:0.2rem" onclick="salvarNota('nota-cardapio-meta'); toast('Observação enviada ao paciente!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span> Enviar ao Paciente</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ METAS ══ -->
+        <div id="sec-metas" class="section">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">Metas dos Pacientes</div>
+                    <div class="page-sub">Defina e acompanhe metas personalizadas</div>
+                </div>
+                <div class="page-actions">
+                    <select class="f-select" style="max-width:220px"><option>Ana Paula Ferreira</option><option>Marcos Silva</option><option>Renata Oliveira</option></select>
+                    <button class="btn btn-primary" onclick="toast('Meta criada com sucesso!')">+ Nova Meta</button>
+                </div>
+            </div>
+
+            <div class="grid-main">
+                <div>
+                    <div class="glass-card">
+                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> Metas Ativas — Ana Paula Ferreira</div>
+
+                        <div class="meta-card">
+                            <div class="meta-top">
+                                <div>
+                                    <div class="meta-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="21"/><path d="M3 9l9-6 9 6"/><path d="M3 15l9 6 9-6"/></svg></span> Meta de Peso</div>
+                                    <div style="font-size:0.75rem;color:var(--text-muted)">63,0 kg → 58,0 kg · Prazo: 30/06/26</div>
+                                </div>
+                                <div>
+                                    <div class="meta-pct" style="color:var(--primary)">68%</div>
+                                    <div style="font-size:0.65rem;color:var(--text-muted);text-align:right">-3,4 kg</div>
+                                </div>
+                            </div>
+                            <div class="prog-track"><div class="prog-fill pf-green" style="width:0" data-w="68%"></div></div>
+                            <div class="meta-footer"><span>Início: 01/01/26</span><span>Falta 2,6 kg</span></div>
+                            <div style="display:flex;gap:0.5rem;margin-top:0.8rem">
+                                <button class="btn btn-ghost btn-sm" onclick="toast('Meta editada!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span> Editar</button>
+                                <button class="btn btn-ghost btn-sm" onclick="toast('Registro adicionado!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V17z"/></svg></span> Progresso</button>
+                            </div>
+                        </div>
+
+                        <div class="meta-card">
+                            <div class="meta-top">
+                                <div>
+                                    <div class="meta-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span> Gordura Corporal</div>
+                                    <div style="font-size:0.75rem;color:var(--text-muted)">14,21% → 11,0% · Prazo: 30/06/26</div>
+                                </div>
+                                <div>
+                                    <div class="meta-pct" style="color:var(--accent)">45%</div>
+                                    <div style="font-size:0.65rem;color:var(--text-muted);text-align:right">-1,44%</div>
+                                </div>
+                            </div>
+                            <div class="prog-track"><div class="prog-fill pf-yellow" style="width:0" data-w="45%"></div></div>
+                            <div class="meta-footer"><span>Em progresso</span><span>Falta 3,21%</span></div>
+                        </div>
+
+                        <div class="meta-card">
+                            <div class="meta-top">
+                                <div>
+                                    <div class="meta-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> Adesão ao Cardápio</div>
+                                    <div style="font-size:0.75rem;color:var(--text-muted)">Meta: 85% adesão semanal</div>
+                                </div>
+                                <div>
+                                    <div class="meta-pct" style="color:var(--primary)">92%</div>
+                                    <div style="font-size:0.65rem;color:var(--text-muted);text-align:right">Meta atingida</div>
+                                </div>
+                            </div>
+                            <div class="prog-track"><div class="prog-fill pf-green" style="width:0" data-w="92%"></div></div>
+                            <div class="meta-footer"><span>Esta semana</span><span style="color:var(--primary)">Parabéns!</span></div>
+                        </div>
+
+                        <div class="meta-card">
+                            <div class="meta-top">
+                                <div>
+                                    <div class="meta-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></span> Consumo de Água</div>
+                                    <div style="font-size:0.75rem;color:var(--text-muted)">Meta: 2,5L por dia</div>
+                                </div>
+                                <div>
+                                    <div class="meta-pct" style="color:var(--red)">58%</div>
+                                    <div style="font-size:0.65rem;color:var(--text-muted);text-align:right">1,45L</div>
+                                </div>
+                            </div>
+                            <div class="prog-track"><div class="prog-fill pf-red" style="width:0" data-w="58%"></div></div>
+                            <div class="meta-footer"><span>Hoje</span><span style="color:var(--red)">Abaixo do ideal</span></div>
+                        </div>
+
+                        <button class="btn btn-primary" style="width:100%;margin-top:0.5rem" onclick="toast('Nova meta criada!')">+ Adicionar Meta Personalizada</button>
+                    </div>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:1.2rem">
+                    <div class="glass-card">
+                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Nova Meta</div>
+                        <div class="form-g">
+                            <label class="f-label">Tipo de Meta</label>
+                            <select class="f-select">
+                                <option>Peso corporal</option>
+                                <option>% Gordura</option>
+                                <option>Consumo de água</option>
+                                <option>Adesão ao cardápio</option>
+                                <option>Atividade física</option>
+                                <option>Personalizada</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-g"><label class="f-label">Valor Atual</label><input class="f-input" type="number" placeholder="0"></div>
+                            <div class="form-g"><label class="f-label">Valor Meta</label><input class="f-input" type="number" placeholder="0"></div>
+                        </div>
+                        <div class="form-g"><label class="f-label">Prazo</label><input class="f-input" type="date" value="2026-06-30"></div>
+                        <div class="form-g"><label class="f-label">Observação</label><textarea class="f-textarea" placeholder="Orientações para o paciente..."></textarea></div>
+                        <button class="btn btn-primary" style="width:100%" onclick="toast('Meta salva e enviada!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> Salvar Meta</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ ALERTAS ══ -->
+        <div id="sec-alertas" class="section">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">Central de Alertas</div>
+                    <div class="page-sub">5 alertas ativos · 2 críticos</div>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-ghost" onclick="toast('Todos marcados como lidos!')">Marcar todos como lidos</button>
+                </div>
+            </div>
+
+            <div class="grid-main">
+                <div>
+                    <div class="glass-card">
+                        <div class="filter-tabs" style="margin-bottom:1.2rem">
+                            <button class="ftab on" onclick="filterAlertas(this,'all')">Todos (5)</button>
+                            <button class="ftab" onclick="filterAlertas(this,'crit')"><span class="icon icon-alert" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span> Críticos (2)</button>
+                            <button class="ftab" onclick="filterAlertas(this,'warn')"><span class="icon icon-warn" aria-hidden="true"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span> Atenção (2)</button>
+                            <button class="ftab" onclick="filterAlertas(this,'info')"><span class="icon icon-blue" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span> Info (1)</button>
+                        </div>
+
+                        <div class="alert-card ac-crit alerta-item alerta-crit" onclick="openPacDetail()">
+                            <div class="alert-icon"><span class="icon icon-xl icon-alert" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span></div>
+                            <div style="flex:1">
+                                <div class="alert-title" style="color:var(--red)">Renata Oliveira — Risco Alto</div>
+                                <div class="alert-desc">IMC 31,2 (Obesidade Grau I). Glicose em 118 mg/dL (acima do ref.). Pressão arterial elevada registrada. Requer consulta urgente e revisão do plano alimentar.</div>
+                                <div class="alert-meta">⏰ Hoje, 08:15 · Gerado automaticamente pelo sistema</div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:0.4rem;flex-shrink:0">
+                                <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();toast('Consulta agendada!')">Agendar</button>
+                                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();resolverAlerta(this)">Resolver</button>
+                            </div>
+                        </div>
+
+                        <div class="alert-card ac-crit alerta-item alerta-crit" onclick="openPacDetail()">
+                            <div class="alert-icon"><span class="icon icon-xl icon-alert" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span></div>
+                            <div style="flex:1">
+                                <div class="alert-title" style="color:var(--red)">Marcos Silva — Ausência no Cardápio</div>
+                                <div class="alert-desc">3 dias consecutivos sem registrar refeições. Última atividade em 23/02. Possível abandono do plano. Recomendado contato imediato.</div>
+                                <div class="alert-meta">⏰ Ontem, 18:00 · Baseado em inatividade do paciente</div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:0.4rem;flex-shrink:0">
+                                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();toast('Mensagem enviada!')">Contatar</button>
+                                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();resolverAlerta(this)">Resolver</button>
+                            </div>
+                        </div>
+
+                        <div class="alert-card ac-warn alerta-item alerta-warn" onclick="openPacDetail()">
+                            <div class="alert-icon"><span class="icon icon-xl icon-warn" aria-hidden="true"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span></div>
+                            <div style="flex:1">
+                                <div class="alert-title" style="color:var(--accent)">João Santos — Consulta Atrasada</div>
+                                <div class="alert-desc">Consulta de retorno estava marcada para 15/02 e não foi realizada. Última consulta há 45 dias.</div>
+                                <div class="alert-meta">⏰ 15/02/26 · Retorno em aberto</div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:0.4rem;flex-shrink:0">
+                                <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();toast('Consulta reagendada!')">Reagendar</button>
+                                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();resolverAlerta(this)">Resolver</button>
+                            </div>
+                        </div>
+
+                        <div class="alert-card ac-warn alerta-item alerta-warn" onclick="openPacDetail()">
+                            <div class="alert-icon"><span class="icon icon-xl icon-warn" aria-hidden="true"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span></div>
+                            <div style="flex:1">
+                                <div class="alert-title" style="color:var(--accent)">Ana Paula — Meta Hídrica</div>
+                                <div class="alert-desc">Consumo de água 58% da meta nos últimos 5 dias (meta: 2,5L). Risco de desidratação.</div>
+                                <div class="alert-meta">⏰ Hoje, 06:00 · Monitoramento diário</div>
+                            </div>
+                            <div style="flex-shrink:0;display:flex;flex-direction:column;gap:0.4rem">
+                                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();toast('Lembrete enviado!')">Lembrar</button>
+                                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();resolverAlerta(this)">Resolver</button>
+                            </div>
+                        </div>
+
+                        <div class="alert-card ac-info alerta-item alerta-info" onclick="openPacDetail()">
+                            <div class="alert-icon"><span class="icon icon-xl icon-blue" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span></div>
+                            <div style="flex:1">
+                                <div class="alert-title" style="color:var(--blue)">Lucas Mendes — Novo Paciente</div>
+                                <div class="alert-desc">Paciente agendou 1ª consulta para hoje às 14:00. Plano Intermediário ativado. Anamnese ainda não preenchida.</div>
+                                <div class="alert-meta">⏰ Hoje, 00:00 · Novo cadastro</div>
+                            </div>
+                            <div style="flex-shrink:0">
+                                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();resolverAlerta(this)">Lido</button>
+                            </div>
+                        </div>
+
+                        <div id="alertas-vazio" style="display:none;text-align:center;padding:2rem;color:var(--text-muted)">
+                            <div style="margin-bottom:0.5rem;color:var(--primary)"><span class="icon icon-xl" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span></div>
+                            <div>Nenhum alerta nesta categoria</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="height:fit-content">
+                    <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span> Resumo de Alertas</div>
+                    <div style="display:flex;flex-direction:column;gap:0.8rem">
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:0.7rem;border-radius:10px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);cursor:pointer" onclick="filterAlertasById('crit')">
+                            <span><span class="icon icon-alert" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span> Críticos</span><span id="badge-crit" style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--red)">2</span>
+                        </div>
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:0.7rem;border-radius:10px;background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.2);cursor:pointer" onclick="filterAlertasById('warn')">
+                            <span><span class="icon icon-warn" aria-hidden="true"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span> Atenção</span><span id="badge-warn" style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent)">2</span>
+                        </div>
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:0.7rem;border-radius:10px;background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);cursor:pointer" onclick="filterAlertasById('info')">
+                            <span><span class="icon icon-blue" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span> Informativo</span><span id="badge-info" style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--blue)">1</span>
+                        </div>
+                    </div>
+                    <div class="section-div"></div>
+                    <div class="card-title-sm">Configurar Alertas Automáticos</div>
+                    <div style="display:flex;flex-direction:column;gap:0.5rem;font-size:0.82rem">
+                        <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--primary)"> IMC acima de 30</label>
+                        <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--primary)"> Inatividade &gt; 2 dias</label>
+                        <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--primary)"> Exame fora do referencial</label>
+                        <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer"><input type="checkbox" style="accent-color:var(--primary)"> Adesão abaixo de 60%</label>
+                        <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--primary)"> Consulta atrasada &gt; 30 dias</label>
+                    </div>
+                    <button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="toast('Configurações salvas!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Salvar Configurações</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ EXAMES ══ -->
+        <div id="sec-exames" class="section">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">Exames Laboratoriais</div>
+                    <div class="page-sub">Resumo e laudos completos dos pacientes</div>
+                </div>
+                <div class="page-actions">
+                    <select class="f-select" style="max-width:220px"><option>Ana Paula Ferreira</option><option>Marcos Silva</option><option>Renata Oliveira</option></select>
+                    <button class="btn btn-primary" onclick="openExameModal()">+ Adicionar Exame</button>
+                </div>
+            </div>
+
+            <div class="grid-main">
+                <div>
+                    <div class="glass-card" style="margin-bottom:1.4rem">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
+                            <div class="card-title" style="margin-bottom:0"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3h6M9 3v8l-4 9h14l-4-9V3"/></svg></span> Exames — Ana Paula Ferreira</div>
+                            <div style="display:flex;gap:0.6rem">
+                                <button class="btn btn-ghost btn-sm exame-cat-btn" onclick="filterExames(this,'all')">Todos</button>
+                                <button class="btn btn-primary btn-sm exame-cat-btn" onclick="filterExames(this,'bioquimica')">Bioquímica</button>
+                                <button class="btn btn-ghost btn-sm exame-cat-btn" onclick="filterExames(this,'hemograma')">Hemograma</button>
+                                <button class="btn btn-ghost btn-sm exame-cat-btn" onclick="filterExames(this,'lipidios')">Lipídios</button>
+                                <button class="btn btn-ghost btn-sm exame-cat-btn" onclick="filterExames(this,'hormonal')">Hormonal</button>
+                            </div>
+                        </div>
+
+                        <div style="display:grid;grid-template-columns:2fr 0.9fr 0.9fr 0.6fr 0.7fr;gap:0.5rem;padding:0.4rem 0.8rem;margin-bottom:0.3rem">
+                            <span class="th">Exame</span><span class="th" style="text-align:right">Resultado</span><span class="th" style="text-align:right">Referência</span><span class="th" style="text-align:center">Status</span><span class="th" style="text-align:center">Ações</span>
+                        </div>
+
+                        <div id="exames-lista">
+                            <!-- rows geradas pelo JS -->
+                        </div>
+                    </div>
+
+                    <div class="glass-card">
+                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span> Enviar Laudo Completo</div>
+                        <div class="upload-zone" onclick="toast('Arquivo selecionado!')">
+                            <div class="upload-icon"><span class="icon icon-xl" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span></div>
+                            <div class="upload-text">Clique para enviar o laudo completo do paciente</div>
+                            <div class="upload-sub">PDF, JPG ou PNG · Máx. 10MB</div>
+                        </div>
+                        <div style="display:flex;gap:0.8rem;margin-top:1rem">
+                            <button class="btn btn-outline" style="flex:1" onclick="toast('Laudo exportado!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span> Exportar PDF</button>
+                            <button class="btn btn-primary" style="flex:1" onclick="toast('Laudo enviado ao paciente!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span> Enviar ao Paciente</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:1.2rem">
+                    <div class="glass-card">
+                        <div class="card-title" id="exame-form-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span> Registrar Resultado</div>
+                        <input type="hidden" id="exame-edit-idx" value="">
+                        <div class="form-g"><label class="f-label">Nome do Exame</label><input class="f-input" id="ef-nome" type="text" placeholder="Ex: Hemoglobina, Ferritina..."></div>
+                        <div class="form-row">
+                            <div class="form-g"><label class="f-label">Valor</label><input class="f-input" id="ef-valor" type="text" placeholder="00,0"></div>
+                            <div class="form-g"><label class="f-label">Unidade</label><input class="f-input" id="ef-unidade" type="text" placeholder="mg/dL"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-g"><label class="f-label">Ref. Mín.</label><input class="f-input" id="ef-refmin" type="text" placeholder="0"></div>
+                            <div class="form-g"><label class="f-label">Ref. Máx.</label><input class="f-input" id="ef-refmax" type="text" placeholder="0"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-g"><label class="f-label">Categoria</label>
+                                <select class="f-select" id="ef-cat">
+                                    <option value="bioquimica">Bioquímica</option>
+                                    <option value="hemograma">Hemograma</option>
+                                    <option value="lipidios">Lipídios</option>
+                                    <option value="hormonal">Hormonal</option>
+                                </select>
+                            </div>
+                            <div class="form-g"><label class="f-label">Data</label><input class="f-input" id="ef-data" type="date" value="2026-02-26"></div>
+                        </div>
+                        <div class="form-g"><label class="f-label">Observação</label><textarea class="f-textarea" id="ef-obs" placeholder="Interpretação clínica..."></textarea></div>
+                        <div id="exame-form-meta" style="font-size:0.72rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-bottom:0.6rem;display:none"></div>
+                        <div style="display:flex;gap:0.6rem">
+                            <button class="btn btn-primary" style="flex:1" onclick="salvarExame()"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Salvar Resultado</button>
+                            <button class="btn btn-ghost btn-sm" id="exame-cancel-btn" style="display:none" onclick="cancelarEditarExame()">Cancelar</button>
+                        </div>
+                    </div>
+                    <div class="glass-card" id="exames-alertas-box">
+                        <div class="card-title"><span class="icon icon-warn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span> Valores Alterados</div>
+                        <div id="exames-alertas-lista"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ ANAMNESE ══ -->
+        <div id="sec-anamnese" class="section">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">Anamnese Nutricional</div>
+                    <div class="page-sub" id="anamnese-sub">Ana Paula Ferreira · Última edição: 20/02/2026</div>
+                </div>
+                <div class="page-actions">
+                    <select class="f-select" id="anamnese-pac-select" style="max-width:240px" onchange="loadAnamnese(this.value)">
+                        <option value="ana">Ana Paula Ferreira</option>
+                        <option value="lucas">Lucas Mendes (novo)</option>
+                        <option value="renata">Renata Oliveira</option>
+                        <option value="marcos">Marcos Silva</option>
+                    </select>
+                    <button class="btn btn-outline" onclick="exportarAnamnese()"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span> Exportar</button>
+                    <button class="btn btn-primary" onclick="salvarAnamnese()"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Salvar</button>
+                </div>
+            </div>
+
+            <div class="grid-main">
+                <div>
+                    <div class="glass-card" style="margin-bottom:1.4rem">
+                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Dados Pessoais</div>
+                        <div class="form-row">
+                            <div class="form-g"><label class="f-label">Nome Completo</label><input class="f-input" id="an-nome"></div>
+                            <div class="form-g"><label class="f-label">Data de Nascimento</label><input class="f-input" id="an-nasc" type="date"></div>
+                        </div>
+                        <div class="form-row-3">
+                            <div class="form-g"><label class="f-label">Sexo</label>
+                                <select class="f-select" id="an-sexo">
+                                    <option>Feminino</option><option>Masculino</option><option>Outro</option>
+                                </select>
+                            </div>
+                            <div class="form-g"><label class="f-label">Estado Civil</label>
+                                <select class="f-select" id="an-civil">
+                                    <option>Solteiro(a)</option><option>Casado(a)</option><option>Divorciado(a)</option><option>Viúvo(a)</option>
+                                </select>
+                            </div>
+                            <div class="form-g"><label class="f-label">Escolaridade</label>
+                                <select class="f-select" id="an-escolaridade">
+                                    <option>Ensino Fundamental</option><option>Ensino Médio</option><option>Superior</option><option>Pós-graduação</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-g"><label class="f-label">Profissão</label><input class="f-input" id="an-profissao"></div>
+                            <div class="form-g"><label class="f-label">Telefone</label><input class="f-input" id="an-tel"></div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card" style="margin-bottom:1.4rem">
+                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 2a2 2 0 0 0-2 2v7H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h5v5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-5h5a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-5V4a2 2 0 0 0-2-2h-2z"/></svg></span> Queixa Principal &amp; Histórico</div>
+                        <div class="form-g"><label class="f-label">Motivo da Consulta</label><textarea class="f-textarea" id="an-motivo"></textarea></div>
+                        <div class="form-g"><label class="f-label">Histórico de Doenças</label>
+                            <select class="f-select" id="an-doencas">
+                                <option value="">Nenhuma</option><option>Diabetes tipo 2</option><option>Hipertensão</option><option>Dislipidemia</option><option>Hipotireoidismo</option><option>SOP</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-g"><label class="f-label">Medicamentos em Uso</label><input class="f-input" id="an-medicamentos" placeholder="Ex: metformina, levotiroxina..."></div>
+                            <div class="form-g"><label class="f-label">Suplementos</label><input class="f-input" id="an-suplementos"></div>
+                        </div>
+                        <div class="form-g"><label class="f-label">Alergias e Intolerâncias</label><input class="f-input" id="an-alergias"></div>
+                        <div class="form-g"><label class="f-label">Cirurgias Anteriores</label><textarea class="f-textarea" id="an-cirurgias" style="min-height:50px" placeholder="Descreva cirurgias relevantes..."></textarea></div>
+                    </div>
+
+                    <div class="glass-card" style="margin-bottom:1.4rem">
+                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span> Hábitos Alimentares</div>
+                        <div class="form-row-3">
+                            <div class="form-g"><label class="f-label">Nº Refeições/dia</label>
+                                <select class="f-select" id="an-refeicoes">
+                                    <option>2</option><option>3</option><option>4-5</option><option>6+</option>
+                                </select>
+                            </div>
+                            <div class="form-g"><label class="f-label">Apetite</label>
+                                <select class="f-select" id="an-apetite">
+                                    <option>Diminuído</option><option>Normal</option><option>Aumentado</option>
+                                </select>
+                            </div>
+                            <div class="form-g"><label class="f-label">Mastigação</label>
+                                <select class="f-select" id="an-mastigacao">
+                                    <option>Rápida</option><option>Normal</option><option>Lenta</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-g"><label class="f-label">Alimentos que Gosta</label><textarea class="f-textarea" id="an-gosta" style="min-height:55px"></textarea></div>
+                        <div class="form-g"><label class="f-label">Alimentos que Não Gosta / Restringe</label><textarea class="f-textarea" id="an-naogosta" style="min-height:55px"></textarea></div>
+                        <div class="form-row">
+                            <div class="form-g"><label class="f-label">Consumo de Água (L/dia)</label><input class="f-input" id="an-agua" type="number" step="0.1"></div>
+                            <div class="form-g"><label class="f-label">Consome Álcool?</label>
+                                <select class="f-select" id="an-alcool">
+                                    <option>Não</option><option>Ocasionalmente</option><option>Sim, regularmente</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-g"><label class="f-label">Come Fora de Casa? Com que frequência?</label><input class="f-input" id="an-foracasa"></div>
+                    </div>
+
+                    <div class="glass-card">
+                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span> Atividade Física &amp; Sono</div>
+                        <div class="form-row">
+                            <div class="form-g"><label class="f-label">Pratica Atividade Física?</label>
+                                <select class="f-select" id="an-atividade">
+                                    <option>Não</option><option>Sim</option>
+                                </select>
+                            </div>
+                            <div class="form-g"><label class="f-label">Frequência</label>
+                                <select class="f-select" id="an-freq">
+                                    <option>1x/semana</option><option>2-3x/semana</option><option>4-5x/semana</option><option>Diariamente</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-g"><label class="f-label">Tipo de Atividade</label><input class="f-input" id="an-tipoativ"></div>
+                        <div class="form-row">
+                            <div class="form-g"><label class="f-label">Horas de Sono/noite</label><input class="f-input" id="an-sono" type="number"></div>
+                            <div class="form-g"><label class="f-label">Qualidade do Sono</label>
+                                <select class="f-select" id="an-qualidadesono">
+                                    <option>Ruim</option><option>Regular</option><option>Boa</option><option>Excelente</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-g"><label class="f-label">Nível de Estresse</label>
+                            <select class="f-select" id="an-estresse">
+                                <option>Baixo</option><option>Moderado</option><option>Alto</option><option>Muito alto</option>
+                            </select>
+                        </div>
+                        <div class="form-g"><label class="f-label">Observações Adicionais</label>
+                            <textarea id="nota-anamnese" class="f-textarea" oninput="notaChanged('nota-anamnese-meta')"></textarea>
+                        </div>
+                        <div id="nota-anamnese-meta" style="font-size:0.7rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-bottom:0.8rem">
+                            Criada: 01/01/2026 às 10:00 &nbsp;·&nbsp; Editada: 20/02/2026 às 11:30
+                        </div>
+                        <button class="btn btn-primary" style="width:100%;margin-top:0.5rem" onclick="salvarAnamnese()"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Salvar Anamnese Completa</button>
+                    </div>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:1.2rem">
+                    <div class="glass-card">
+                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 6.5l-2-2-15 15 2 2z"/><path d="M8 3l-5 5"/><path d="M21 21l-5-5"/><line x1="13" y1="13" x2="15" y2="11"/><line x1="9" y1="17" x2="11" y2="15"/><line x1="17" y1="9" x2="19" y2="7"/><line x1="5" y1="19" x2="7" y2="17"/></svg></span> Dados Antropométricos</div>
+                        <div class="form-row">
+                            <div class="form-g"><label class="f-label">Peso Atual (kg)</label><input class="f-input" id="an-peso" type="number" step="0.1" oninput="calcIMC()"></div>
+                            <div class="form-g"><label class="f-label">Estatura (m)</label><input class="f-input" id="an-altura" type="number" step="0.01" oninput="calcIMC()"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-g"><label class="f-label">Peso Usual (kg)</label><input class="f-input" id="an-pesousal" type="number"></div>
+                            <div class="form-g"><label class="f-label">Peso Meta (kg)</label><input class="f-input" id="an-pesometa" type="number"></div>
+                        </div>
+                        <div style="background:rgba(16,185,129,0.07);border-radius:12px;padding:1rem;border:1px solid var(--border);margin-top:0.5rem">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;font-size:0.82rem"><span>IMC Atual</span><span id="an-imc-val" style="font-weight:900;color:var(--primary);font-family:'JetBrains Mono',monospace">—</span></div>
+                            <div style="display:flex;justify-content:space-between;font-size:0.82rem"><span>Classificação</span><span id="an-imc-cls" class="status s-ok">—</span></div>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> Objetivo e Plano</div>
+                        <div class="form-g"><label class="f-label">Objetivo Principal</label>
+                            <select class="f-select" id="an-objetivo">
+                                <option>Emagrecimento</option><option>Ganho de Massa</option><option>Manutenção</option><option>Saúde Geral</option><option>Performance Esportiva</option>
+                            </select>
+                        </div>
+                        <div class="form-g"><label class="f-label">Prazo Desejado</label>
+                            <select class="f-select" id="an-prazo">
+                                <option>1 mês</option><option>3 meses</option><option>6 meses</option><option>12 meses</option>
+                            </select>
+                        </div>
+                        <div class="form-g"><label class="f-label">Plano NutriVida</label>
+                            <select class="f-select" id="an-plano">
+                                <option>Básico</option><option>Intermediário</option><option>Premium</option>
+                            </select>
+                        </div>
+                        <div class="form-g"><label class="f-label">Observação do Nutricionista</label>
+                            <textarea class="f-textarea" id="an-obsnutri"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       
+
+       
+
+    </main>
+</div>
+
+<!-- DETALHE PACIENTE (SLIDE) -->
+<div class="overlay" id="overlay" onclick="closePacDetail()"></div>
+<div class="pac-detail" id="pacDetail">
+    <button style="position:absolute;top:1.5rem;right:1.5rem;background:rgba(16,185,129,0.1);border:1px solid var(--border);color:var(--text);border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center" onclick="closePacDetail()"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></button>
+
+    <div style="display:flex;align-items:center;gap:1.2rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)">
+        <div style="width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#f43f5e);display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:900;box-shadow:0 0 25px rgba(236,72,153,0.3)">A</div>
+        <div>
+            <div style="font-size:1.2rem;font-weight:900">Ana Paula Ferreira</div>
+            <div style="color:var(--text-dim);font-size:0.82rem">32 anos · Feminino · Taquaritinga-SP</div>
+            <span class="plano pl-prem" style="margin-top:0.3rem;display:inline-block">Premium</span>
+        </div>
+    </div>
+
+    <div class="detail-tabs">
+        <button class="dt-tab on" onclick="dtTab(this,'dt-dados')">Dados</button>
+        <button class="dt-tab" onclick="dtTab(this,'dt-metas')">Metas</button>
+        <button class="dt-tab" onclick="dtTab(this,'dt-exames')">Exames</button>
+        <button class="dt-tab" onclick="dtTab(this,'dt-notas')">Notas</button>
+    </div>
+
+    <div id="dt-dados">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1.2rem">
+            <div style="text-align:center;padding:0.8rem;background:rgba(16,185,129,0.07);border-radius:12px;border:1px solid var(--border)"><div style="font-size:1.4rem;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--primary)">63,0</div><div style="font-size:0.7rem;color:var(--text-muted)">Peso (kg)</div></div>
+            <div style="text-align:center;padding:0.8rem;background:rgba(16,185,129,0.07);border-radius:12px;border:1px solid var(--border)"><div style="font-size:1.4rem;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--primary)">23,4</div><div style="font-size:0.7rem;color:var(--text-muted)">IMC</div></div>
+            <div style="text-align:center;padding:0.8rem;background:rgba(16,185,129,0.07);border-radius:12px;border:1px solid var(--border)"><div style="font-size:1.4rem;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--primary)">14,2%</div><div style="font-size:0.7rem;color:var(--text-muted)">% Gordura</div></div>
+            <div style="text-align:center;padding:0.8rem;background:rgba(16,185,129,0.07);border-radius:12px;border:1px solid var(--border)"><div style="font-size:1.4rem;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--accent)">92%</div><div style="font-size:0.7rem;color:var(--text-muted)">Adesão</div></div>
+        </div>
+        <div class="form-g"><label class="f-label">Próxima Consulta</label><input class="f-input" type="datetime-local" value="2026-02-26T09:00"></div>
+        <div class="form-g"><label class="f-label">Observação rápida</label><textarea class="f-textarea" placeholder="Anotação rápida sobre o paciente..."></textarea></div>
+        <button class="btn btn-primary" style="width:100%" onclick="toast('Dados salvos!'); closePacDetail()"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Salvar</button>
+    </div>
+
+    <div id="dt-metas" style="display:none">
+        <div class="meta-card"><div class="meta-top"><div><div class="meta-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="21"/><path d="M3 9l9-6 9 6"/><path d="M3 15l9 6 9-6"/></svg></span> Meta de Peso</div><div style="font-size:0.72rem;color:var(--text-muted)">63 → 58 kg</div></div><div class="meta-pct" style="color:var(--primary)">68%</div></div><div class="prog-track"><div class="prog-fill pf-green" style="width:68%"></div></div></div>
+        <div class="meta-card"><div class="meta-top"><div><div class="meta-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> Adesão ao Cardápio</div><div style="font-size:0.72rem;color:var(--text-muted)">Meta: 85%</div></div><div class="meta-pct" style="color:var(--primary)">92%</div></div><div class="prog-track"><div class="prog-fill pf-green" style="width:92%"></div></div></div>
+        <div class="meta-card"><div class="meta-top"><div><div class="meta-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></span> Hidratação</div><div style="font-size:0.72rem;color:var(--text-muted)">Meta: 2,5L</div></div><div class="meta-pct" style="color:var(--red)">58%</div></div><div class="prog-track"><div class="prog-fill pf-red" style="width:58%"></div></div></div>
+    </div>
+
+    <div id="dt-exames" style="display:none">
+        <div class="exame-row"><div><div class="ex-name">Ácido Úrico</div><div class="ex-date">11/08/2019</div></div><div style="text-align:right"><div class="ex-val ev-bad">7,2 mg/dL</div><div class="ex-ref">Ref: 2,4-6,0</div></div></div>
+        <div class="exame-row"><div><div class="ex-name">Vitamina D</div><div class="ex-date">11/08/2019</div></div><div style="text-align:right"><div class="ex-val ev-warn">22 ng/mL</div><div class="ex-ref">Ref: 30-100</div></div></div>
+        <div class="exame-row"><div><div class="ex-name">Glicose</div><div class="ex-date">11/08/2019</div></div><div style="text-align:right"><div class="ex-val ev-ok">100 mg/dL</div><div class="ex-ref">Ref: 70-99</div></div></div>
+    </div>
+
+    <div id="dt-notas" style="display:none">
+        <div class="form-g">
+            <label class="f-label">Notas da Consulta</label>
+            <textarea id="nota-pac-textarea" class="f-textarea" style="min-height:180px" oninput="notaChanged('nota-pac-meta')">26/02/26 — Retorno. Paciente evoluiu bem. Reduziu 2kg desde a última consulta. Relata dificuldade com hidratação. Ajustar lembrete no app.</textarea>
+        </div>
+        <div id="nota-pac-meta" style="font-size:0.7rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-bottom:0.7rem">
+            Criada: 26/02/2026 às 09:42 &nbsp;·&nbsp; Editada: 26/02/2026 às 09:42
+        </div>
+        <button class="btn btn-primary" style="width:100%" onclick="salvarNota('nota-pac-meta'); toast('Nota salva!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Salvar Nota</button>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+    // ── HELPERS ──
+    function fmtDate(d) {
+        return d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+    }
+    function setVal(id, val) {
+        const el = document.getElementById(id);
+        if (el) el.value = val !== undefined && val !== null ? val : '';
+    }
+    function setSelectVal(id, val) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const opts = Array.from(el.options);
+        const match = opts.find(o => o.value === val || o.text === val);
+        if (match) el.value = match.value;
+    }
+
+    // ── SIDEBAR MOBILE ──
+    function toggleSidebar() {
+        const sb = document.querySelector('.sidebar');
+        const hb = document.getElementById('hamburger');
+        const ov = document.getElementById('sidebarOverlay');
+        sb.classList.toggle('open');
+        hb.classList.toggle('open');
+        ov.classList.toggle('show');
+    }
+    function closeSidebar() {
+        document.querySelector('.sidebar').classList.remove('open');
+        document.getElementById('hamburger').classList.remove('open');
+        document.getElementById('sidebarOverlay').classList.remove('show');
+    }
+
+    // ── NAV ──
+    function goSection(id, el) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById('sec-' + id).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        if (el) el.classList.add('active');
+        if (id === 'exames') renderExames();
+        closeSidebar();
+    }
+
+    function ftab(btn) {
+        btn.closest('.filter-tabs').querySelectorAll('.ftab').forEach(t => t.classList.remove('on'));
+        btn.classList.add('on');
+    }
+
+    function toggleRef(header) {
+        const body = header.nextElementSibling;
+        const arrow = header.querySelector('span:last-child');
+        if (body.style.display === 'none') { body.style.display = 'block'; arrow.textContent = '▲'; }
+        else { body.style.display = 'none'; arrow.textContent = '▼'; }
+    }
+
+    function toggleChip(el) {
+        const isRisco = el.closest('#proto-risco') !== null;
+        if (isRisco) {
+            // No risco: seleção exclusiva dentro do grupo (semi-grid)
+            const grupo = el.closest('.semi-grid');
+            if (grupo) {
+                grupo.querySelectorAll('.semi-chip').forEach(c => c.classList.remove('on','on-warn','on-bad'));
+            }
+            el.classList.add('on');
+            calcRisco();
+        } else {
+            // Semiologia: toggle multi-select com 3 estados
+            if (el.classList.contains('on-bad')) {
+                el.classList.remove('on-bad');
+            } else if (el.classList.contains('on-warn')) {
+                el.classList.remove('on-warn');
+                el.classList.add('on-bad');
+            } else if (el.classList.contains('on')) {
+                el.classList.remove('on');
+                el.classList.add('on-warn');
+            } else {
+                el.classList.add('on');
+            }
+        }
+    }
+
+    function calcRisco() {
+        const risco = document.getElementById('proto-risco');
+        if (!risco) return;
+
+        let total = 0;
+        risco.querySelectorAll('.semi-grid').forEach(grupo => {
+            const sel = grupo.querySelector('.semi-chip.on');
+            if (sel) {
+                // Extrai pontuação do texto: "(N pts)" ou "(N pt)"
+                const match = sel.textContent.match(/\((\d+)\s*pts?\)/);
+                if (match) total += parseInt(match[1]);
+            }
+        });
+
+        const pontuacaoEl = risco.querySelector('.man-score');
+        const classEl     = risco.querySelector('.man-class');
+        if (!pontuacaoEl || !classEl) return;
+
+        pontuacaoEl.textContent = total + ' pts';
+
+        let cls, cor, statusCls;
+        if (total <= 7)       { cls = 'Risco Alto';     cor = 'var(--red)';     statusCls = 'status s-alert'; }
+        else if (total <= 11) { cls = 'Risco Moderado'; cor = 'var(--accent)';  statusCls = 'status s-warn';  }
+        else                  { cls = 'Sem Risco';       cor = 'var(--primary)'; statusCls = 'status s-ok';    }
+
+        pontuacaoEl.style.color = cor;
+        classEl.className = statusCls;
+        classEl.textContent = cls;
+    }
+
+    function protoTab(btn, id) {
+        document.querySelectorAll('.proto-tab').forEach(t => t.classList.remove('on'));
+        btn.classList.add('on');
+        document.querySelectorAll('.proto-content').forEach(c => c.classList.remove('active'));
+        document.getElementById('proto-' + id).classList.add('active');
+        if (id === 'risco') calcRisco();
+    }
+
+    function openPacDetail() {
+        document.getElementById('pacDetail').classList.add('open');
+        document.getElementById('overlay').classList.add('show');
+    }
+    function closePacDetail() {
+        document.getElementById('pacDetail').classList.remove('open');
+        document.getElementById('overlay').classList.remove('show');
+    }
+
+    function dtTab(btn, id) {
+        document.querySelectorAll('.dt-tab').forEach(t => t.classList.remove('on'));
+        btn.classList.add('on');
+        document.querySelectorAll('[id^="dt-"]').forEach(p => p.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+    }
+
+    function toast(msg, type) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = 'toast' + (type === 'error' ? ' error' : '') + ' show';
+        setTimeout(() => t.classList.remove('show'), 3200);
+    }
+
+    // ── NOTAS COM TIMESTAMP ──
+    const notaMeta = {};
+    function notaChanged(metaId) {
+        if (!notaMeta[metaId]) notaMeta[metaId] = { created: new Date(), dirty: true };
+        else notaMeta[metaId].dirty = true;
+        const el = document.getElementById(metaId);
+        if (el) {
+            el.style.display = 'block';
+            el.innerHTML = 'Criada: ' + fmtDate(notaMeta[metaId].created) + ' &nbsp;·&nbsp; <span style="color:var(--accent);font-weight:700">Não salva</span>';
+        }
+    }
+    function salvarNota(metaId) {
+        const now = new Date();
+        if (!notaMeta[metaId]) notaMeta[metaId] = { created: now };
+        notaMeta[metaId].edited = now; notaMeta[metaId].dirty = false;
+        const el = document.getElementById(metaId);
+        if (el) {
+            el.style.display = 'block';
+            el.innerHTML = 'Criada: ' + fmtDate(notaMeta[metaId].created) + ' &nbsp;·&nbsp; <strong style="color:var(--primary)">Editada: ' + fmtDate(now) + '</strong>';
+        }
+    }
+
+    // ── IMC CALC ──
+    function calcIMC() {
+        const p = parseFloat(document.getElementById('an-peso') && document.getElementById('an-peso').value);
+        const h = parseFloat(document.getElementById('an-altura') && document.getElementById('an-altura').value);
+        const valEl = document.getElementById('an-imc-val');
+        const clsEl = document.getElementById('an-imc-cls');
+        if (!valEl || !clsEl) return;
+        if (!p || !h || h <= 0) { valEl.textContent = '—'; clsEl.textContent = '—'; return; }
+        const imc = p / (h * h);
+        valEl.textContent = imc.toFixed(1).replace('.', ',');
+        let cls, color;
+        if (imc < 18.5) { cls = 'Baixo Peso'; color = 'var(--blue)'; }
+        else if (imc < 25) { cls = 'Peso Normal'; color = 'var(--primary)'; }
+        else if (imc < 30) { cls = 'Sobrepeso'; color = 'var(--accent)'; }
+        else if (imc < 35) { cls = 'Obesidade Grau I'; color = 'var(--orange)'; }
+        else if (imc < 40) { cls = 'Obesidade Grau II'; color = 'var(--red)'; }
+        else { cls = 'Obesidade Grau III'; color = 'var(--red)'; }
+        clsEl.textContent = cls; clsEl.style.color = color; valEl.style.color = color;
+    }
+
+    // ── ANAMNESE DATA ──
+    const anamneseDB = {
+        ana: { nome:'Ana Paula Ferreira', nasc:'1993-08-14', sexo:'Feminino', civil:'Casado(a)', escolaridade:'Superior', profissao:'Professora', tel:'(16) 99999-0001', motivo:'Paciente busca emagrecimento saudável e sustentável, relata dificuldade em manter dieta por longos períodos.', doencas:'', medicamentos:'', suplementos:'Vitamina D, Ômega-3', alergias:'Intolerância à lactose', cirurgias:'', refeicoes:'4-5', apetite:'Normal', mastigacao:'Normal', gosta:'Frango, saladas, frutas tropicais, iogurte.', naogosta:'Brócolis, fígado. Evita alimentos com lactose.', agua:'1.5', alcool:'Ocasionalmente', foracasa:'Sim, 2-3x por semana (almoço no trabalho)', atividade:'Sim', freq:'2-3x/semana', tipoativ:'Caminhada 30 min + musculação leve', sono:'7', qualidadesono:'Regular', estresse:'Moderado', obs:'Paciente relata episódios de compulsão alimentar nos finais de semana, principalmente a noite. Recomendado acompanhamento com psicólogo.', peso:'63', altura:'1.64', pesousal:'68', pesometa:'58', objetivo:'Emagrecimento', prazo:'6 meses', plano:'Premium', obsnutri:'Paciente com boa motivação. Recomendo início gradual com foco em reeducação alimentar e hidratação.', ultimaEdicao:'20/02/2026' },
+        lucas: { nome:'Lucas Mendes', nasc:'2002-03-15', sexo:'Masculino', civil:'Solteiro(a)', escolaridade:'Superior', profissao:'Estudante de Educação Física', tel:'(16) 99999-0005', motivo:'Primeiro atendimento. Atleta amador de atletismo buscando otimização da performance e composição corporal.', doencas:'', medicamentos:'', suplementos:'Whey Protein, Creatina', alergias:'', cirurgias:'', refeicoes:'6+', apetite:'Aumentado', mastigacao:'Rápida', gosta:'Carnes, ovos, batata-doce, frutas.', naogosta:'Vegetais folhosos.', agua:'3', alcool:'Não', foracasa:'Raramente. Come em casa ou leva marmita.', atividade:'Sim', freq:'Diariamente', tipoativ:'Atletismo + musculação 6x por semana', sono:'8', qualidadesono:'Boa', estresse:'Baixo', obs:'Novo paciente, atleta. Avaliar necessidade calórica aumentada e periodização nutricional.', peso:'72', altura:'1.78', pesousal:'72', pesometa:'70', objetivo:'Performance Esportiva', prazo:'3 meses', plano:'Intermediário', obsnutri:'Agendar retorno em 30 dias. Solicitar hemograma completo.', ultimaEdicao:null },
+        renata: { nome:'Renata Oliveira', nasc:'1987-11-22', sexo:'Feminino', civil:'Casado(a)', escolaridade:'Ensino Médio', profissao:'Auxiliar Administrativo', tel:'(16) 99999-0002', motivo:'Paciente com obesidade Grau I, histórico de glicose elevada. Encaminhada pelo médico para reeducação alimentar urgente.', doencas:'Diabetes tipo 2', medicamentos:'Metformina 500mg', suplementos:'', alergias:'', cirurgias:'Cesárea (2015)', refeicoes:'3', apetite:'Aumentado', mastigacao:'Rápida', gosta:'Massas, frituras, doces.', naogosta:'Verduras em geral.', agua:'0.8', alcool:'Não', foracasa:'Sim, almoça fora todos os dias.', atividade:'Não', freq:'1x/semana', tipoativ:'', sono:'5', qualidadesono:'Ruim', estresse:'Alto', obs:'ALERTA: Glicose em 118 mg/dL. Necessário controle rigoroso de carboidratos simples e açúcar. Paciente com dificuldade de adesão — requer acompanhamento intensivo.', peso:'92', altura:'1.72', pesousal:'85', pesometa:'70', objetivo:'Emagrecimento', prazo:'12 meses', plano:'Premium', obsnutri:'Caso de alta complexidade. Coordenar com médico endocrinologista. Metas: reduzir 1kg/mês e normalizar glicemia.', ultimaEdicao:'24/02/2026' },
+        marcos: { nome:'Marcos Silva', nasc:'1997-07-08', sexo:'Masculino', civil:'Solteiro(a)', escolaridade:'Superior', profissao:'Designer Gráfico', tel:'(16) 99999-0003', motivo:'Emagrecimento e melhora da disposição. Relata sedentarismo e alimentação irregular devido à rotina de trabalho.', doencas:'', medicamentos:'', suplementos:'Cafeína pré-treino', alergias:'', cirurgias:'', refeicoes:'2', apetite:'Normal', mastigacao:'Normal', gosta:'Fast food, hambúrguer, pizza.', naogosta:'Peixes, frutos do mar.', agua:'1.2', alcool:'Ocasionalmente', foracasa:'Sim, quase todos os dias — pede delivery.', atividade:'Sim', freq:'1x/semana', tipoativ:'Musculação (irregular)', sono:'6', qualidadesono:'Regular', estresse:'Alto', obs:'Paciente sem registros no cardápio há 3 dias. Requer contato imediato. Dificuldade de aderência documentada.', peso:'88', altura:'1.80', pesousal:'82', pesometa:'78', objetivo:'Emagrecimento', prazo:'6 meses', plano:'Intermediário', obsnutri:'Foco em praticidade — montar opções de refeições rápidas e saudáveis. Aumentar hidratação.', ultimaEdicao:'18/02/2026' }
+    };
+
+    let anamnesePacAtual = 'ana';
+
+    function loadAnamnese(pac) {
+        anamnesePacAtual = pac;
+        const d = anamneseDB[pac];
+        if (!d) return;
+        setVal('an-nome', d.nome); setVal('an-nasc', d.nasc);
+        setSelectVal('an-sexo', d.sexo); setSelectVal('an-civil', d.civil);
+        setSelectVal('an-escolaridade', d.escolaridade);
+        setVal('an-profissao', d.profissao); setVal('an-tel', d.tel);
+        setVal('an-motivo', d.motivo); setSelectVal('an-doencas', d.doencas);
+        setVal('an-medicamentos', d.medicamentos); setVal('an-suplementos', d.suplementos);
+        setVal('an-alergias', d.alergias); setVal('an-cirurgias', d.cirurgias);
+        setSelectVal('an-refeicoes', d.refeicoes); setSelectVal('an-apetite', d.apetite);
+        setSelectVal('an-mastigacao', d.mastigacao);
+        setVal('an-gosta', d.gosta); setVal('an-naogosta', d.naogosta);
+        setVal('an-agua', d.agua); setSelectVal('an-alcool', d.alcool);
+        setVal('an-foracasa', d.foracasa); setSelectVal('an-atividade', d.atividade);
+        setSelectVal('an-freq', d.freq); setVal('an-tipoativ', d.tipoativ);
+        setVal('an-sono', d.sono); setSelectVal('an-qualidadesono', d.qualidadesono);
+        setSelectVal('an-estresse', d.estresse); setVal('nota-anamnese', d.obs);
+        setVal('an-peso', d.peso); setVal('an-altura', d.altura);
+        setVal('an-pesousal', d.pesousal); setVal('an-pesometa', d.pesometa);
+        setSelectVal('an-objetivo', d.objetivo); setSelectVal('an-prazo', d.prazo);
+        setSelectVal('an-plano', d.plano); setVal('an-obsnutri', d.obsnutri);
+        calcIMC();
+        const sub = document.getElementById('anamnese-sub');
+        if (sub) sub.textContent = d.nome + (d.ultimaEdicao ? ' · Última edição: ' + d.ultimaEdicao : ' · Novo paciente — sem registros anteriores');
+        const metaEl = document.getElementById('nota-anamnese-meta');
+        if (metaEl) {
+            metaEl.innerHTML = d.ultimaEdicao
+                ? 'Última edição registrada: ' + d.ultimaEdicao
+                : '<span style="color:var(--blue)">Novo paciente — nenhuma edição anterior</span>';
+            metaEl.style.display = 'block';
+        }
+    }
+
+    function salvarAnamnese() {
+        const pac = anamnesePacAtual;
+        const d = anamneseDB[pac];
+        if (d) {
+            // Coleta todos os campos editáveis
+            const fields = ['nome','nasc','profissao','tel','motivo','medicamentos',
+                'suplementos','alergias','cirurgias','gosta','naogosta','agua',
+                'foracasa','tipoativ','sono','peso','altura','pesousal','pesometa','obsnutri'];
+            const selects = ['sexo','civil','escolaridade','doencas','refeicoes',
+                'apetite','mastigacao','alcool','atividade','freq',
+                'qualidadesono','estresse','objetivo','prazo','plano'];
+            fields.forEach(k => {
+                const el = document.getElementById('an-' + k);
+                if (el) d[k] = el.value;
+            });
+            selects.forEach(k => {
+                const el = document.getElementById('an-' + k);
+                if (el) d[k] = el.options[el.selectedIndex]?.text || el.value;
+            });
+            d.obs = document.getElementById('nota-anamnese')?.value || '';
+            d.ultimaEdicao = new Date().toLocaleDateString('pt-BR');
+        }
+        salvarNota('nota-anamnese-meta');
+        const sub = document.getElementById('anamnese-sub');
+        if (sub && d) sub.textContent = d.nome + ' · Última edição: ' + d.ultimaEdicao;
+        toast('Anamnese salva com sucesso!');
+    }
+
+    function exportarAnamnese() {
+        const pac = anamnesePacAtual;
+        // Primeiro salva os dados atuais
+        salvarAnamnese();
+        const d = anamneseDB[pac];
+        if (!d) return;
+
+        const now = new Date().toLocaleDateString('pt-BR');
+        const imc = d.peso && d.altura
+            ? (parseFloat(d.peso) / (parseFloat(d.altura) ** 2)).toFixed(1)
+            : '—';
+
+    
+
+        const blob = new Blob([printHTML], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'anamnese-' + d.nome.toLowerCase().replace(/\s+/g,'-') + '-' + now.replace(/\//g,'-') + '.html';
+        a.click();
+        URL.revokeObjectURL(url);
+        toast('Anamnese exportada!');
+    }
+
+    // ── ALERTAS FILTER ──
+    let alertaFiltroAtivo = 'all';
+    function filterAlertas(btn, cat) {
+        alertaFiltroAtivo = cat;
+        btn.closest('.filter-tabs').querySelectorAll('.ftab').forEach(t => t.classList.remove('on'));
+        btn.classList.add('on');
+        _applyAlertaFilter(cat);
+    }
+    function filterAlertasById(cat) {
+        alertaFiltroAtivo = cat;
+        document.querySelectorAll('#sec-alertas .ftab').forEach(t => {
+            const oc = t.getAttribute('onclick') || '';
+            t.classList.toggle('on', oc.includes("'" + cat + "'"));
+        });
+        _applyAlertaFilter(cat);
+    }
+    function _applyAlertaFilter(cat) {
+        const items = document.querySelectorAll('.alerta-item');
+        let visible = 0;
+        items.forEach(item => {
+            const show = cat === 'all'
+                || (cat === 'crit' && item.classList.contains('alerta-crit'))
+                || (cat === 'warn' && item.classList.contains('alerta-warn'))
+                || (cat === 'info' && item.classList.contains('alerta-info'));
+            item.style.display = show ? 'flex' : 'none';
+            if (show) visible++;
+        });
+        const vazio = document.getElementById('alertas-vazio');
+        if (vazio) vazio.style.display = visible === 0 ? 'block' : 'none';
+    }
+    function resolverAlerta(btn) {
+        const card = btn.closest('.alert-card');
+        card.style.transition = 'opacity 0.4s, transform 0.4s';
+        card.style.opacity = '0'; card.style.transform = 'translateX(30px)';
+        setTimeout(() => { card.remove(); _recountAlertas(); toast('Alerta resolvido!'); }, 400);
+    }
+    function _recountAlertas() {
+        const crit = document.querySelectorAll('.alerta-crit').length;
+        const warn = document.querySelectorAll('.alerta-warn').length;
+        const info = document.querySelectorAll('.alerta-info').length;
+        const total = crit + warn + info;
+        const tabs = document.querySelectorAll('#sec-alertas .ftab');
+        if (tabs[0]) tabs[0].textContent = 'Todos (' + total + ')';
+        if (tabs[1]) tabs[1].innerHTML = '<span class=\"icon icon-alert\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"/></svg></span> Cr&#237;ticos (' + crit + ')';
+        if (tabs[2]) tabs[2].innerHTML = '<span class=\"icon icon-warn\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><polygon points=\"13 2 3 14 12 14 11 22 21 10 12 10 13 2\"/></svg></span> Aten&#231;&#227;o (' + warn + ')';
+        if (tabs[3]) tabs[3].innerHTML = '<span class=\"icon icon-blue\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" y1=\"16\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"8\" x2=\"12.01\" y2=\"8\"/></svg></span> Info (' + info + ')';
+        const bc = document.getElementById('badge-crit'); if (bc) bc.textContent = crit;
+        const bw = document.getElementById('badge-warn'); if (bw) bw.textContent = warn;
+        const bi = document.getElementById('badge-info'); if (bi) bi.textContent = info;
+        _applyAlertaFilter(alertaFiltroAtivo);
+    }
+
+    // ── PACIENTES FILTER ──
+    function filterPacientes(btn, cat) {
+        btn.closest('.filter-tabs').querySelectorAll('.ftab').forEach(t => t.classList.remove('on'));
+        btn.classList.add('on');
+        document.querySelectorAll('.pac-row').forEach(row => {
+            const f = row.getAttribute('data-filter') || '';
+            const show = cat === 'all'
+                || (cat === 'premium' && f.includes('premium'))
+                || (cat === 'intermediario' && f.includes('intermediario'))
+                || (cat === 'basico' && f.includes('basico'))
+                || (cat === 'alerta' && (f.includes('alerta') || f.includes('warn')));
+            row.style.display = show ? 'grid' : 'none';
+        });
+    }
+
+    // ── EXAMES ──
+    let examesFiltro = 'bioquimica';
+    let examesData = [
+        { nome:'Glicose em Jejum', valor:'100', unidade:'mg/dL', refMin:'70', refMax:'99', cat:'bioquimica', data:'2019-08-11', obs:'Limítrofe - monitorar.', criado:new Date('2019-08-11T10:00'), editado:new Date('2019-08-11T10:00') },
+        { nome:'HbA1c', valor:'5,4', unidade:'%', refMin:'0', refMax:'5.7', cat:'bioquimica', data:'2019-08-11', obs:'', criado:new Date('2019-08-11T10:00'), editado:new Date('2019-08-11T10:00') },
+        { nome:'Insulina de Jejum', valor:'18', unidade:'µUI/mL', refMin:'2.6', refMax:'24.9', cat:'bioquimica', data:'2019-08-11', obs:'', criado:new Date('2019-08-11T10:00'), editado:new Date('2019-08-11T10:00') },
+        { nome:'Creatinina', valor:'0,9', unidade:'mg/dL', refMin:'0.7', refMax:'1.2', cat:'bioquimica', data:'2019-08-11', obs:'', criado:new Date('2019-08-11T10:00'), editado:new Date('2019-08-11T10:00') },
+        { nome:'Ácido Úrico', valor:'7,2', unidade:'mg/dL', refMin:'2.4', refMax:'6.0', cat:'bioquimica', data:'2019-08-11', obs:'Valor elevado. Orientar redução de purinas.', criado:new Date('2019-08-11T10:00'), editado:new Date('2019-08-11T10:00') },
+        { nome:'Vitamina D (25-OH)', valor:'22', unidade:'ng/mL', refMin:'30', refMax:'100', cat:'bioquimica', data:'2019-08-11', obs:'Insuficiência. Suplementar.', criado:new Date('2019-08-11T10:00'), editado:new Date('2019-08-11T10:00') },
+        { nome:'Ferro Sérico', valor:'88', unidade:'µg/dL', refMin:'60', refMax:'170', cat:'bioquimica', data:'2019-08-11', obs:'', criado:new Date('2019-08-11T10:00'), editado:new Date('2019-08-11T10:00') },
+        { nome:'TSH', valor:'2,1', unidade:'mUI/L', refMin:'0.4', refMax:'4.0', cat:'hormonal', data:'2019-08-11', obs:'', criado:new Date('2019-08-11T10:00'), editado:new Date('2019-08-11T10:00') },
+        { nome:'Hemoglobina', valor:'13,8', unidade:'g/dL', refMin:'12', refMax:'16', cat:'hemograma', data:'2019-08-11', obs:'', criado:new Date('2019-08-11T10:00'), editado:new Date('2019-08-11T10:00') },
+        { nome:'Colesterol Total', valor:'198', unidade:'mg/dL', refMin:'0', refMax:'200', cat:'lipidios', data:'2019-08-11', obs:'', criado:new Date('2019-08-11T10:00'), editado:new Date('2019-08-11T10:00') },
+    ];
+
+    function getStatus(ex) {
+        const v = parseFloat(ex.valor.replace(',','.')), mn = parseFloat(ex.refMin), mx = parseFloat(ex.refMax);
+        if (isNaN(v)||isNaN(mn)||isNaN(mx)) return 'ok';
+        if (v < mn || v > mx) return 'bad';
+        const m = (mx-mn)*0.15;
+        if (v < mn+m || v > mx-m) return 'warn';
+        return 'ok';
+    }
+    function statusIcon(s) {
+        return s==='bad'?{flag:'ef-bad',icon:'!',valClass:'ev-bad'}:s==='warn'?{flag:'ef-warn',icon:'~',valClass:'ev-warn'}:{flag:'ef-ok',icon:'ok',valClass:'ev-ok'};
+    }
+    function fmtDataBR(d) {
+        if (!d) return '—'; const [y,m,day]=d.split('-'); return day+'/'+m+'/'+y;
+    }
+    function renderExames() {
+        const lista = document.getElementById('exames-lista');
+        const alertasLista = document.getElementById('exames-alertas-lista');
+        if (!lista) return;
+        const filtered = examesData.filter(ex => examesFiltro==='all' || ex.cat===examesFiltro);
+        lista.innerHTML = filtered.length===0 ? '<div style="text-align:center;padding:2rem;color:var(--text-muted)">Nenhum exame nesta categoria</div>' : filtered.map(ex => {
+            const ri = examesData.indexOf(ex), st = getStatus(ex), si = statusIcon(st);
+            const refStr = (ex.refMin==='0'&&ex.refMax==='0') ? '—' : ex.refMin.replace('.',',')+' – '+ex.refMax.replace('.',',');
+            const metaStr = ex.editado.getTime()===ex.criado.getTime() ? 'Criado: '+fmtDate(ex.criado) : 'Editado: '+fmtDate(ex.editado);
+            return '<div class="exame-row" style="grid-template-columns:2fr 0.9fr 0.9fr 0.6fr 0.7fr;display:grid;align-items:center"><div><div class="ex-name">'+ex.nome+'</div><div class="ex-date">'+fmtDataBR(ex.data)+' &nbsp;·&nbsp; <span style="color:var(--text-muted);font-size:0.65rem">'+metaStr+'</span></div>'+(ex.obs?'<div style="font-size:0.68rem;color:var(--text-muted);font-style:italic">'+ex.obs+'</div>':'')+'</div><div style="text-align:right"><div class="ex-val '+si.valClass+'">'+ex.valor+' '+ex.unidade+'</div><div class="ex-ref">'+refStr+'</div></div><div style="text-align:right;font-size:0.75rem;color:var(--text-muted)">'+ex.unidade+'</div><div style="display:flex;justify-content:center"><div class="ex-flag '+si.flag+'">'+si.icon+'</div></div><div style="display:flex;justify-content:center;gap:0.3rem"><button class="btn btn-ghost btn-sm" style="padding:0.3rem 0.6rem" onclick="editarExame('+ri+')" aria-label="Editar"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span></button><button class="btn btn-danger btn-sm" style="padding:0.3rem 0.6rem" onclick="excluirExame('+ri+')" aria-label="Excluir"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></span></button></div></div>';
+        }).join('');
+        const alertados = examesData.filter(ex => getStatus(ex)!=='ok');
+        if (alertasLista) alertasLista.innerHTML = alertados.length===0 ? '<div style="color:var(--primary);font-size:0.82rem">Todos os valores dentro do referencial</div>' : alertados.map(ex => {
+            const st=getStatus(ex), cls=st==='bad'?'ac-crit':'ac-warn', cor=st==='bad'?'var(--red)':'var(--accent)', icon=st==='bad'?'crit':'warn', v=parseFloat(ex.valor.replace(',','.')), mx=parseFloat(ex.refMax), dir=v>mx?'ALTO':'BAIXO';
+            return '<div class="alert-card '+cls+'" style="margin-bottom:0.5rem"><div class="alert-icon" style="font-size:1rem">'+icon+'</div><div><div class="alert-title" style="color:'+cor+';font-size:0.82rem">'+ex.nome+' — '+dir+'</div><div class="alert-desc" style="font-size:0.72rem">'+ex.valor+' '+ex.unidade+' (Ref: '+ex.refMin+'–'+ex.refMax+')</div></div></div>';
+        }).join('');
+    }
+    function filterExames(btn, cat) {
+        examesFiltro = cat;
+        document.querySelectorAll('.exame-cat-btn').forEach(b => b.className='btn btn-ghost btn-sm exame-cat-btn');
+        btn.className='btn btn-primary btn-sm exame-cat-btn';
+        renderExames();
+    }
+    function openExameModal() {
+        document.getElementById('exame-edit-idx').value='';
+        ['ef-nome','ef-valor','ef-unidade','ef-refmin','ef-refmax','ef-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+        document.getElementById('ef-data').value=new Date().toISOString().split('T')[0];
+        document.getElementById('exame-form-title').innerHTML='<span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span> Registrar Resultado';
+        document.getElementById('exame-form-meta').style.display='none';
+        document.getElementById('exame-cancel-btn').style.display='none';
+        document.getElementById('ef-nome').focus();
+    }
+    function editarExame(idx) {
+        const ex=examesData[idx];
+        document.getElementById('exame-edit-idx').value=idx;
+        document.getElementById('ef-nome').value=ex.nome;
+        document.getElementById('ef-valor').value=ex.valor;
+        document.getElementById('ef-unidade').value=ex.unidade;
+        document.getElementById('ef-refmin').value=ex.refMin;
+        document.getElementById('ef-refmax').value=ex.refMax;
+        document.getElementById('ef-cat').value=ex.cat;
+        document.getElementById('ef-data').value=ex.data;
+        document.getElementById('ef-obs').value=ex.obs;
+        document.getElementById('exame-form-title').innerHTML='<span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span> Editar Exame';
+        const meta=document.getElementById('exame-form-meta');
+        meta.style.display='block';
+        meta.innerHTML='Criado: '+fmtDate(ex.criado)+' &nbsp;·&nbsp; Editado: '+fmtDate(ex.editado);
+        document.getElementById('exame-cancel-btn').style.display='inline-flex';
+        document.getElementById('ef-nome').scrollIntoView({behavior:'smooth',block:'center'});
+        document.getElementById('ef-nome').focus();
+    }
+    function cancelarEditarExame() {
+        document.getElementById('exame-edit-idx').value='';
+        document.getElementById('exame-form-title').innerHTML='<span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span> Registrar Resultado';
+        document.getElementById('exame-form-meta').style.display='none';
+        document.getElementById('exame-cancel-btn').style.display='none';
+        ['ef-nome','ef-valor','ef-unidade','ef-refmin','ef-refmax','ef-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    }
+    function salvarExame() {
+        const nome=document.getElementById('ef-nome').value.trim();
+        if (!nome) { toast('Informe o nome do exame','error'); return; }
+        const idx=document.getElementById('exame-edit-idx').value, now=new Date();
+        const obj={nome, valor:document.getElementById('ef-valor').value.trim(), unidade:document.getElementById('ef-unidade').value.trim(), refMin:document.getElementById('ef-refmin').value.trim(), refMax:document.getElementById('ef-refmax').value.trim(), cat:document.getElementById('ef-cat').value, data:document.getElementById('ef-data').value, obs:document.getElementById('ef-obs').value.trim()};
+        if (idx!=='') { obj.criado=examesData[parseInt(idx)].criado; obj.editado=now; examesData[parseInt(idx)]=obj; toast('Exame atualizado!'); }
+        else { obj.criado=now; obj.editado=now; examesData.push(obj); toast('Exame registrado!'); }
+        const meta=document.getElementById('exame-form-meta');
+        meta.style.display='block';
+        meta.innerHTML='Criado: '+fmtDate(obj.criado)+' &nbsp;·&nbsp; <strong style="color:var(--primary)">Editado: '+fmtDate(obj.editado)+'</strong>';
+        cancelarEditarExame(); renderExames();
+    }
+    function excluirExame(idx) {
+        if (!confirm('Remover este exame?')) return;
+        examesData.splice(idx,1); renderExames(); toast('Exame removido!');
+    }
+
+    // ── INIT ──
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            document.querySelectorAll('.prog-fill[data-w]').forEach(bar => {
+                bar.style.width = bar.getAttribute('data-w');
+            });
+        }, 500);
+        loadAnamnese('ana');
+        renderExames();
+    });
+</script>
+</body>
+</html>

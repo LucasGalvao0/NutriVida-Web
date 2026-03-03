@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -166,7 +167,40 @@
   background-color: #df8a45;
   
 }
-    
+    #baixarPdfBtn{
+  background-color: var(--primary);
+  border: none;
+  padding: 5px 10px;
+  margin-top: 0.6rem;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .5s;
+}
+.pdf-page {
+  font-family: Arial, sans-serif;
+  background: #ffffff !important;
+  color: #000000 !important;
+  padding: 25px;
+}
+
+.pdf-page h1,
+.pdf-page h2,
+.pdf-page h3,
+.pdf-page h4,
+.pdf-page p,
+.pdf-page li,
+.pdf-page strong {
+  color: #000000 !important;
+}
+
+.page-break {
+  page-break-before: always;
+}
+#baixarPdfBtn:hover{
+  background-color: var(--primary-dark);
+}
 
   </style>
   <link rel="icon" href="img/logos/logo.png" type="image/x-icon">
@@ -211,6 +245,8 @@
 
   <h1>Seu Cardápio Personalizado</h1>
   <button id="toggleViewBtn">Ver como Livro</button>
+  <button id="baixarPdfBtn">Baixar PDF</button>
+<div id="area-pdf" style="display:none; background:white; color:black; padding:30px;"></div>
 
   <section id="info-pessoal">
     <h2>Informações Pessoais</h2>
@@ -398,8 +434,137 @@
       <canvas id="graficoCalorias"></canvas>
   </section>
 
-
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
+    function getCampo(obj, ...possibilidades) {
+        for (const campo of possibilidades) {
+            if (obj[campo] !== undefined && obj[campo] !== null && obj[campo] !== "") {
+                return obj[campo];
+            }
+        }
+        return "Não informado";
+    }
+
+    document.getElementById("baixarPdfBtn").addEventListener("click", function () {
+        const raw = sessionStorage.getItem("cardapio");
+        if (!raw) {
+            alert("Nenhum cardápio encontrado.");
+            return;
+        }
+        const cardapio = JSON.parse(raw);
+        const pdfArea = document.getElementById("area-pdf");
+        
+        const diasSemana = [
+            "Segunda-feira", "Terça-feira", "Quarta-feira", 
+            "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"
+        ];
+
+        // Mapeamento de dados reais do paciente 
+        const nome = getCampo(cardapio, "nome", "name");
+        const objetivo = getCampo(cardapio, "objetivo", "objective");
+        const peso = getCampo(cardapio, "peso", "weight");
+        const altura = getCampo(cardapio, "altura", "height");
+        const imc = getCampo(cardapio, "imc");
+        const idade = getCampo(cardapio, "idade", "age");
+        const rotina = getCampo(cardapio, "rotina");
+
+        let html = `
+            <div style="font-family: Arial, sans-serif; color: #000000 !important; padding: 30px; background-color: #ffffff;">
+                <style>
+                    .pdf-header { border-bottom: 2px solid #000000; margin-bottom: 20px; padding-bottom: 5px; }
+                    h1, h2, h3, h4 { color: #000000 !important; margin: 10px 0; }
+                    .info-grid { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; padding: 10px; border: 1px solid #000000; }
+                    .info-item { min-width: 140px; font-size: 13px; color: #000000 !important; }
+                    .dia-bloco { margin-top: 25px; page-break-inside: avoid; }
+                    .dia-titulo { border-bottom: 1px solid #000000; padding-bottom: 2px; text-transform: uppercase; font-size: 16px; font-weight: bold; color: #000000 !important; }
+                    .refeicao-item { margin-top: 12px; color: #000000 !important; }
+                    ul { list-style-type: none; padding-left: 0; margin: 5px 0; }
+                    li { margin-bottom: 3px; padding-left: 8px; border-left: 1px solid #000000; font-size: 13px; color: #000000 !important; }
+                    .secao-final { margin-top: 40px; border-top: 2px solid #000000; padding-top: 15px; color: #000000 !important; }
+                    strong { color: #000000 !important; }
+                </style>
+                
+                <div class="pdf-header">
+                    <h1>Plano Alimentar - Nutrivida</h1>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item"><strong>Paciente:</strong><br>${nome}</div>
+                    <div class="info-item"><strong>Idade:</strong><br>${idade}</div>
+                    <div class="info-item"><strong>Objetivo:</strong><br>${objetivo}</div>
+                    <div class="info-item"><strong>Peso:</strong><br>${peso}</div>
+                    <div class="info-item"><strong>Altura:</strong><br>${altura}</div>
+                    <div class="info-item"><strong>IMC:</strong><br>${imc}</div>
+                </div>
+        `;
+
+        // REFEIÇÕES [cite: 3, 37, 66, 90, 112, 136, 156]
+        if (cardapio.refeicoes) {
+            cardapio.refeicoes.forEach((dia, index) => {
+                html += `
+                    <div class="dia-bloco">
+                        <h3 class="dia-titulo">${diasSemana[index] || dia.nome || "Dia " + (index + 1)}</h3>
+                `;
+                if (dia.refeicoes) {
+                    dia.refeicoes.forEach(ref => {
+                        html += `
+                            <div class="refeicao-item">
+                                <strong>${ref.nome} (${ref.horario || "A definir"})</strong>
+                                <ul>
+                        `;
+                        (ref.alimentos || []).forEach(alimento => {
+                            html += `<li>${alimento}</li>`;
+                        });
+                        html += `</ul></div>`;
+                    });
+                }
+                html += `</div>`;
+            });
+        }
+
+        // SUPLEMENTOS E OBSERVAÇÕES [cite: 181, 190]
+        html += `<div class="secao-final" style="page-break-before: always;">`;
+        
+        const sup = cardapio.suplementos || {};
+        if (sup.suplementos_gerais || sup.suplementos_antes_treino_academia) {
+            html += `<h2>Plano de Suplementação</h2>`;
+            const addSup = (tit, lista) => {
+                if (lista && lista.length > 0) {
+                    html += `<p><strong>${tit}:</strong></p><ul>`;
+                    lista.forEach(i => { html += `<li>${i}</li>`; });
+                    html += `</ul>`;
+                }
+            };
+            addSup("Geral", sup.suplementos_gerais);
+            addSup("Pré-Treino", sup.suplementos_antes_treino_academia);
+        }
+
+        html += `
+                <div style="margin-top: 30px;">
+                    <h2>Observações Gerais</h2>
+                    <p style="font-size: 13px; line-height: 1.5; color: #000000 !important;">${rotina !== "Não informado" ? rotina : "Seguir as orientações de hidratação e horários conforme discutido."}</p>
+                </div>
+            </div>
+        </div>`;
+
+        pdfArea.innerHTML = html;
+        pdfArea.style.display = "block";
+
+        const opt = {
+            margin: [0.5, 0.5, 0.5, 0.5],
+            filename: `plano-alimentar-${nome.toLowerCase().replace(/\s+/g, '-')}.pdf`,
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(pdfArea).save().then(() => {
+            pdfArea.style.display = "none";
+        });
+    });
+</script>
+<script>
+ 
 (() => {
   console.log(" Buscando cardápio no sessionStorage...");
 

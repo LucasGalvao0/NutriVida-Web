@@ -499,7 +499,7 @@ mostrarMensagem(dados.message, "sucesso");
                 // Redireciona conforme o tipo de usuário
                 setTimeout(() => {
                     if (dados.tipo === "nutricionista") {
-                        window.location.href = "cadastrarConsultorio.html"; // página do nutricionista
+                        window.location.href = "informacoesNutricionista.html"; // página do nutricionista
                     } else {
                         window.location.href = "index.html"; // página do usuário comum
                     }
