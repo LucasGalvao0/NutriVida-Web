@@ -1,4 +1,20 @@
 
 ###
-GET http://localhost:3000/nutricionistas/1
+GET http://localhost:3000/nutricionistas/4
 Content-Type: application/json
+
+###
+http://localhost:3000/agendamentos/nutricionista/4/consultas-hoje
+
+###
+http://localhost:3000/agendamentos/nutricionista/4/resumo-mes
+
+###
+http://localhost:3000/agendamentos/nutricionista/4/historico
+
+###
+PUT http://localhost:3000/agendamentos/26/realizada
+
+###
+GET http://localhost:3000/agendamentos/nutricionista/4/resumo-mes
+

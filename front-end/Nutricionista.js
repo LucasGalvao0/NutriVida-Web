@@ -797,6 +797,58 @@ ${d.obsnutri ? `<div class="section">
         examesData.splice(idx,1); renderExames(); toast('Exame removido!');
     }
 
+    let historicoData = [];
+
+function agendaAba(btn, aba) {
+    document.querySelectorAll('#sec-agenda .filter-tabs .ftab').forEach(t => t.classList.remove('on'));
+    btn.classList.add('on');
+    document.getElementById('agenda-aba-agenda').style.display    = aba === 'agenda'    ? '' : 'none';
+    document.getElementById('agenda-aba-historico').style.display = aba === 'historico' ? '' : 'none';
+    if (aba === 'historico') carregarHistorico();
+}
+
+function renderHistorico() {
+    const filPac  = document.getElementById('hist-pac').value;
+    const filTipo = document.getElementById('hist-tipo').value;
+    const filMes  = document.getElementById('hist-mes').value;
+    const mesesMap = { 'Fevereiro':'02/2026', 'Janeiro':'01/2026', 'Dezembro':'12/2025' };
+
+    const filtrado = historicoData.filter(c => {
+        if (filPac  && c.pac  !== filPac)  return false;
+        if (filTipo && c.tipo !== filTipo) return false;
+        if (filMes  && !c.data.includes(mesesMap[filMes])) return false;
+        return true;
+    });
+
+    document.getElementById('hist-count').textContent = filtrado.length + ' consulta' + (filtrado.length !== 1 ? 's' : '');
+
+    const lista = document.getElementById('hist-lista');
+    if (!filtrado.length) {
+        lista.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted)">Nenhuma consulta encontrada</div>';
+        return;
+    }
+
+    lista.innerHTML = filtrado.map(c => {
+        const stClass = c.status === 'realizada' ? 's-ok' : c.status === 'faltou' ? 's-alert' : 's-warn';
+        const stLabel = c.status === 'realizada' ? 'Realizada' : c.status === 'faltou' ? 'Faltou' : 'Cancelada';
+        return `<div class="agenda-item" style="display:grid;grid-template-columns:100px 1fr 160px 110px 90px;gap:0.5rem;align-items:center;cursor:default">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--primary);font-weight:700;line-height:1.4">
+                ${c.data}<br><span style="color:var(--text-muted);font-weight:400">${c.hora}</span>
+            </div>
+            <div>
+                <div style="display:flex;align-items:center;gap:0.5rem">
+                    <div class="ag-dot" style="background:${c.dot};flex-shrink:0"></div>
+                    <div class="ag-name">${c.pac}</div>
+                </div>
+                <div class="ag-type">${c.desc}</div>
+            </div>
+            <div style="font-size:0.82rem;color:var(--text-dim)">${c.tipo}</div>
+            <div style="font-size:0.78rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace">${c.dur}</div>
+            <div style="text-align:center"><span class="status ${stClass}">${stLabel}</span></div>
+        </div>`;
+    }).join('');
+}
+
     // ── INIT ──
     window.addEventListener('load', () => {
         setTimeout(() => {

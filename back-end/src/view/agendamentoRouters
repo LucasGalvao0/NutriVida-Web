@@ -58,6 +58,123 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+router.get('/nutricionista/:nutricionistaId/consultas-hoje', async (req, res) => {
+  try {
 
+    const { nutricionistaId } = req.params;
+
+    const total = await agendamentoModel.contarConsultasHojePorNutricionista(nutricionistaId);
+
+    res.json(total);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get('/nutricionista/:nutricionistaId/consultas-dia', async (req, res) => {
+  try {
+
+    const { nutricionistaId } = req.params;
+
+    const consultas = await agendamentoModel.listarConsultasHojePorNutricionista(nutricionistaId);
+
+    res.json(consultas);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get('/nutricionista/:nutricionistaId/proximos-3-dias', async (req, res) => {
+
+  try {
+
+    const { nutricionistaId } = req.params;
+
+    const consultas = await agendamentoModel.listarConsultasProximos3Dias(nutricionistaId);
+
+    res.json(consultas);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+
+});
+
+router.get('/nutricionista/:nutricionistaId/agenda', async (req, res) => {
+
+  try {
+
+    const { nutricionistaId } = req.params;
+
+    const consultas = await agendamentoModel.listarAgendaCompleta(nutricionistaId);
+
+    res.json(consultas);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+
+});
+
+router.get('/nutricionista/:id/resumo-mes', async (req, res) => {
+
+  const nutricionistaId = req.params.id;
+
+  const resumo = await agendamentoModel.resumoMesNutricionista(nutricionistaId);
+
+  res.json(resumo);
+
+});
+
+router.get('/nutricionista/:nutricionistaId/historico', async (req, res) => {
+
+  try {
+
+    const { nutricionistaId } = req.params;
+
+    const historico = await agendamentoModel.listarHistoricoNutricionista(nutricionistaId);
+
+    res.json(historico);
+
+  } catch (error) {
+
+    console.error(error);
+    res.status(500).json({ error: error.message });
+
+  }
+
+});
+
+router.put('/:id/realizada', async (req, res) => {
+
+  const { id } = req.params;
+
+  await agendamentoModel.marcarComoRealizada(id);
+
+  res.json({ message: "Consulta realizada" });
+
+});
 
 module.exports = router;
+
+router.get('/nutricionista/:nutricionistaId/consultas-realizadas', async (req, res) => {
+
+  try {
+
+    const { nutricionistaId } = req.params;
+
+    const total = await agendamentoModel.contarConsultasRealizadas(nutricionistaId);
+
+    res.json(total);
+
+  } catch (error) {
+
+    console.error(error);
+    res.status(500).json({ error: error.message });
+
+  }
+
+});
