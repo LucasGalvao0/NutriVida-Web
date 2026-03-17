@@ -213,4 +213,40 @@ router.post("/", async (req, res) => {
     }
 });
 
+    // ==========================================
+// GET /cardapio/usuario/:usuarioId
+// ==========================================
+router.get("/usuario/:usuarioId", async (req, res) => {
+  try {
+    const usuarioId = req.params.usuarioId;
+
+    // Busca todos os cardápios do usuário (mais recentes primeiro)
+    const cardapios = await salvarCardapioService.buscarPorUsuarioId(usuarioId);
+
+    if (!cardapios || cardapios.length === 0) {
+      return res.status(404).json({ erro: "Cardápio não encontrado para este usuário" });
+    }
+
+    const cardapioMaisRecente = cardapios[0]; // pega o mais recente
+
+    // Retorna as refeições já parseadas
+    let cardapioJSON = {};
+    try {
+      cardapioJSON = JSON.parse(cardapioMaisRecente.cardapio_texto);
+    } catch (e) {
+      console.error("Erro ao parsear cardapio_texto:", e);
+    }
+
+    res.json({
+      refeicoes: cardapioJSON.refeicoes || [],
+      grafico: cardapioJSON.grafico || []
+    });
+
+  } catch (error) {
+    console.error("Erro ao buscar cardápio do usuário:", error);
+    res.status(500).json({ erro: "Erro interno ao buscar cardápio" });
+  }
+});
+
+
 module.exports = router;

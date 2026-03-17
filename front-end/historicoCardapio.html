@@ -411,10 +411,12 @@
   </div>
 </div>
 
+<footer></footer>
+
 <script>
-// ═══════════════════════════════════════════════════════
-// BANCO DE CARDÁPIOS  –  adicione ou remova planos aqui
-// ═══════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════
+  // BANCO DE CARDÁPIOS  –  adicione ou remova planos aqui
+  // ═══════════════════════════════════════════════════════
 const TODOS_CARDAPIOS = [
   {
     // ── meta do cartão seletor ──
@@ -908,5 +910,204 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 100);
 });
 </script>
+
+<script>
+let usuarioLogado = null;
+
+// ===============================
+// PEGAR USUÁRIO DA SESSÃO
+// ===============================
+function getUsuarioSessao() {
+  const user =
+    sessionStorage.getItem("usuario") ||
+    localStorage.getItem("dadosUsuario");
+
+  if (!user) {
+    console.warn("Usuário não está logado");
+    return null;
+  }
+
+  return JSON.parse(user);
+}
+
+// ===============================
+// BUSCAR FORMULÁRIO DO USUÁRIO
+// ===============================
+async function carregarUsuario() {
+  try {
+    const usuario = getUsuarioSessao();
+    if (!usuario) return;
+
+    const userId = usuario.id;
+
+    const res = await fetch(`http://localhost:3000/respostas/usuario/${userId}`);
+    const data = await res.json();
+
+    if (!data.respostas || data.respostas.length === 0) {
+      console.warn("Usuário não preencheu o formulário ainda");
+      return;
+    }
+
+    // ✅ pega o mais recente
+    usuarioLogado = data.respostas[0];
+
+    renderPatient();
+
+    // 🔹 após carregar o usuário, busca o cardápio do banco
+    await carregarCardapioDoBanco(usuario.id);
+
+  } catch (err) {
+    console.error("Erro ao carregar usuário:", err);
+  }
+}
+
+// ===============================
+// 🎨 RENDER CARD
+// ===============================
+function renderPatient() {
+  if (!usuarioLogado) return;
+
+  const u = usuarioLogado;
+
+  const initials = u.name
+    ? u.name.split(' ')
+        .map(w => w[0])
+        .slice(0, 2)
+        .join('')
+    : "??";
+
+  const favoritos = u.alimentosFavoritos
+    ? JSON.parse(u.alimentosFavoritos)
+    : [];
+
+  document.getElementById('patientCard').innerHTML = `
+    <div class="patient-avatar">${initials}</div>
+    <div class="patient-info">
+      <h2>${u.name || "Sem nome"}</h2>
+      <div class="patient-tags">
+        <span class="tag">${u.age || "--"} anos</span>
+        <span class="tag">${u.height || "--"}m · ${u.weight || "--"}kg</span>
+        ${u.dietaAtual ? `<span class="tag yellow">${u.dietaAtual}</span>` : ''}
+        ${u.objective ? `<span class="tag green">${u.objective}</span>` : ''}
+        ${u.trabalho ? `<span class="tag blue">${u.trabalho}</span>` : ''}
+        ${u.alergia && u.alergia !== 'Nenhuma' ? `<span class="tag red">${u.alergia}</span>` : ''}
+        ${favoritos.length > 0 ? favoritos.map(f => `<span class="tag green">${f}</span>`).join(' ') : "Nenhum informado"}
+      </div>
+    </div>
+  `;
+}
+
+// ===============================
+// 🔹 BUSCAR CARDÁPIO DO BANCO
+// ===============================
+async function carregarCardapioDoBanco(usuarioId) {
+  try {
+    const res = await fetch(`http://localhost:3000/salvarCardapio/usuario/${usuarioId}`);
+    if (!res.ok) throw new Error("Não foi possível buscar o cardápio");
+
+    const cardapio = await res.json();
+
+    // parse cardapio_texto que vem do banco
+    let refeicoes = [];
+    if (cardapio.cardapio_texto) {
+      try {
+        const parsed = JSON.parse(cardapio.cardapio_texto);
+        refeicoes = parsed.refeicoes || [];
+      } catch (e) {
+        console.error("Erro ao parsear cardapio_texto:", e);
+      }
+    }
+
+    // substitui a variável global
+ 
+    usuarioLogado.refeicoes = refeicoes;
+
+    renderDailyMeals(); // renderiza com dados do backend
+
+  } catch (err) {
+    console.error("Erro ao carregar cardápio do banco:", err);
+  }
+}
+
+// ===============================
+// 🎨 RENDER REFEIÇÕES DO DIA
+// ===============================
+// ===============================
+// 🎨 RENDER REFEIÇÕES DO DIA
+// ===============================
+function renderDailyMeals() {
+  const refeicoesPorDia = usuarioLogado?.refeicoes || TODOS_CARDAPIOS;
+  if (!refeicoesPorDia || refeicoesPorDia.length === 0) return;
+
+  const container = document.getElementById('mealsGrid');
+  if (!container) return;
+  container.innerHTML = '';
+
+  refeicoesPorDia.forEach(dia => {
+    const diaCard = document.createElement('div');
+    diaCard.classList.add('day-card');
+    diaCard.innerHTML = `<h3>${dia.nome}</h3>`; // título do dia
+
+    dia.refeicoes.forEach(refeicao => {
+      // Define o ícone e classe dependendo do tipo de refeição
+      const nomeLower = refeicao.nome.toLowerCase();
+      let cls = 'icon-lanche', svg = MEAL_SVGS.lanche;
+      if (nomeLower.includes('cafe')) { cls = 'icon-cafe'; svg = MEAL_SVGS.cafe; }
+      else if (nomeLower.includes('almoco')) { cls = 'icon-almoco'; svg = MEAL_SVGS.almoco; }
+      else if (nomeLower.includes('jantar')) { cls = 'icon-jantar'; svg = MEAL_SVGS.jantar; }
+      else if (nomeLower.includes('ceia')) { cls = 'icon-ceia'; svg = MEAL_SVGS.ceia; }
+
+      // Monta os itens, destacando temperos
+      const items = refeicao.alimentos.map(a => {
+        if (a.toLowerCase().startsWith('tempero:')) {
+          return `<li class="tempero">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px">
+              <path d="M12 22V12"></path>
+              <path d="M5 3s0 6 7 9"></path>
+              <path d="M19 3s0 6-7 9"></path>
+            </svg>${a}</li>`;
+        }
+        return `<li>${a}</li>`;
+      }).join('');
+
+      diaCard.innerHTML += `
+        <div class="meal-card">
+          <div class="meal-header">
+            <div class="meal-icon ${cls}">${svg}</div>
+            <div>
+              <div class="meal-title">${refeicao.nome}</div>
+              <div class="meal-time">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                ${refeicao.horario || '--'}
+              </div>
+            </div>
+            <div class="meal-kcal">${refeicao.calorias || 0} kcal</div>
+          </div>
+          <div class="meal-body"><ul>${items}</ul></div>
+        </div>
+      `;
+    });
+
+    container.appendChild(diaCard);
+  });
+}
+
+// ===============================
+// 🚀 INICIAR
+// ===============================
+document.addEventListener('DOMContentLoaded', async () => {
+  // 1️⃣ Carrega usuário e cardápio do backend
+  await carregarUsuario(); // já chama renderDailyMeals() internamente
+
+  // 2️⃣ Só depois executa outras funções que não sobrescrevam mealsGrid
+  renderPatient();
+  renderCalBars(); // se precisar
+  renderSupps();
+});
+</script>
+
 </body>
 </html>

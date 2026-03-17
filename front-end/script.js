@@ -4,6 +4,8 @@ window.addEventListener("load", paginacarregada);
 
 function paginacarregada() {
 
+  
+
     
 //funão de compra do mercadopago
 window.criarPreferencia = function(title, price) {
