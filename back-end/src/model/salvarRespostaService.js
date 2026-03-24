@@ -45,6 +45,14 @@ async function salvarRespostas(dados) {
       ]
     );
 
+    if (weight && height) {
+      await banco.query(`
+        UPDATE pacientes 
+        SET peso = ?, altura = ?
+        WHERE usuario_id = ?
+      `, [weight, height, usuario_id]);
+    }
+
     return result.insertId;
 
   } catch (error) {

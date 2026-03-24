@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento Confirmado · NutriVida</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="tela.js" defer></script>
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #34d399;
+            --accent: #fbbf24;
+            --dark: #0f172a;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a1f1a 0%, #0f172a 50%, #1a1f0a 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .grade-fundo {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background-image:
+                linear-gradient(rgba(16, 185, 129, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16, 185, 129, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .area-central {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-sucesso {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.9));
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: 30px;
+            padding: 3.5rem 3rem;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 70px rgba(16, 185, 129, 0.15);
+            animation: surgir 0.6s ease both;
+        }
+
+        .icone-sucesso {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .titulo-sucesso {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.6rem;
+        }
+
+        .subtitulo-sucesso {
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-plano {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 999px;
+            padding: 0.4rem 1.2rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+        }
+
+        .btn-inicio {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: #fff;
+            padding: 0.9rem 2.5rem;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-decoration: none;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.35);
+            transition: all 0.3s;
+        }
+        .btn-inicio:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.5);
+        }
+
+        @keyframes surgir {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="grade-fundo" aria-hidden="true"></div>
+
+<header></header>
+
+<main class="area-central">
+    <div class="card-sucesso">
+        <div class="icone-sucesso">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+            </svg>
+        </div>
+        <h1 class="titulo-sucesso">Pagamento Confirmado!</h1>
+        <p class="subtitulo-sucesso" id="msg-plano">Seu plano foi ativado com sucesso.</p>
+        <div class="badge-plano" id="badge-plano">Plano Ativo</div>
+        <br>
+        <a href="index.html" class="btn-inicio">Ir para o início</a>
+    </div>
+</main>
+
+<footer></footer>
+
+<script>
+const params     = new URLSearchParams(window.location.search);
+const plano      = params.get('plano');
+const preco      = params.get('preco');
+const usuario_id = params.get('usuario_id');
+
+// Atualiza textos
+if (plano) {
+    document.getElementById('msg-plano').textContent = `Seu ${plano} foi ativado com sucesso!`;
+    document.getElementById('badge-plano').textContent = plano;
+}
+
+async function confirmarPagamento() {
+    // Confirma o plano como ATIVO no banco
+    if (usuario_id) {
+        try {
+            await fetch(`http://localhost:3000/planos/${usuario_id}/confirmar`, {
+                method: "PUT"
+            });
+        } catch (err) {
+            console.error("Erro ao confirmar plano:", err);
+        }
+    }
+
+    // Atualiza localStorage com o plano
+    const usuario = JSON.parse(localStorage.getItem('dadosUsuario'));
+    if (usuario && plano) {
+        usuario.plano = plano;
+        localStorage.setItem('dadosUsuario', JSON.stringify(usuario));
+    }
+}
+
+confirmarPagamento();
+</script>
+</body>
+</html>

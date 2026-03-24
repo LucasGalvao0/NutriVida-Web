@@ -1,6 +1,6 @@
 // back-end/src/app.js
-const express = require('express');
 const dotenv = require('dotenv');
+const express = require('express');
 const passport = require('passport');
 const session = require('express-session');
 const cors = require('cors');
@@ -17,6 +17,11 @@ const rotasNutricionista = require('./view/nutricionistaRouters');
 const salvarCardapioRouters = require("./view/salvarCardapioRouters");
 const salvarRespostasRouters = require("./view/salvarRespostaRouters");
 const pacientesRouter = require("./view/pacientesRouters");
+const alertasRouters = require('./view/alertasRouters');
+const metasRouters = require('./view/metasRouters');
+const prontuarioRouters = require('./view/prontuarioRouters');
+const examesRouters = require('./view/examesRouters');
+const planosRouters = require('./view/planosRouters');
 
 // Carrega variáveis do .env
 dotenv.config();
@@ -95,14 +100,14 @@ app.get("/auth/google/failure", (req, res) => {
 });
 
 app.use("/api", pacientesRouter);
-
-
-
-
+app.use('/alertas', alertasRouters);
+app.use('/metas', metasRouters);
+app.use('/prontuarios', prontuarioRouters);
+app.use('/exames', examesRouters);
 app.use(cors({
  
 }));
-
+app.use('/planos', planosRouters);
 
 mercadopago.configure({
   access_token: "TEST-3795022885879010-111307-5bed7f8dacf6034ae8c1e0498d0af000-1190022787" // coloque o seu token completo aqui
@@ -110,23 +115,21 @@ mercadopago.configure({
 
 app.post("/criar-preferencia", async (req, res) => {
   try {
-    const { title, price } = req.body;
+    const { title, price, usuario_id } = req.body;
 
     const preference = {
       items: [
         {
-          title: title || "Produto Exemplo",
+          title: title || "Plano NutriVida",
           quantity: 1,
           unit_price: parseFloat(price) || 100.00
         }
       ],
-      
       back_urls: {
-        success: "http://localhost:3000/sucesso",
-        failure: "http://localhost:3000/falha",
-        pending: "http://localhost:3000/pendente"
-      },
-      // auto_return: "approved"
+        success: "http://localhost:3000/index.html",
+        failure: "http://localhost:3000/index.html",
+        pending: "http://localhost:3000/index.html"
+      }
     };
 
     const response = await mercadopago.preferences.create(preference);

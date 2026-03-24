@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resumo da Consulta · NutriVida</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="tela.js" defer></script>
+<style>
+  :root {
+    --verde: #10b981;
+    --verde-escuro: #059669;
+    --verde-claro: #34d399;
+    --amarelo: #fbbf24;
+    --laranja: #fb923c;
+    --fundo: #0f172a;
+    --fundo-claro: #1e293b;
+    --texto: #e2e8f0;
+    --texto-suave: #94a3b8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, #0a1f1a 0%, #0f172a 50%, #1a1f0a 100%);
+    color: var(--texto);
+    overflow-x: hidden;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── GRADE DE FUNDO ── */
+  .grade-fundo {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+    background-image:
+      linear-gradient(rgba(16, 185, 129, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(16, 185, 129, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  /* ── FRUTAS FLUTUANTES ── */
+  .frutas-flutuantes {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .fruta {
+    position: absolute;
+    animation: flutuar 6s ease-in-out infinite;
+    opacity: 0.15;
+  }
+  .fruta img { width: 56px; height: 56px; object-fit: contain; }
+  .fruta-1 { top: 8%;  left: 4%;   animation-delay: 0s; }
+  .fruta-2 { top: 12%; right: 5%;  animation-delay: 1.2s; }
+  .fruta-3 { top: 42%; left: 2%;   animation-delay: 2.4s; }
+  .fruta-4 { bottom: 22%; right: 3%; animation-delay: 0.8s; }
+  .fruta-5 { bottom: 10%; left: 6%; animation-delay: 1.8s; }
+  .fruta-6 { top: 65%; right: 7%;  animation-delay: 3s; }
+
+  @keyframes flutuar {
+    0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.15; }
+    50%       { transform: translateY(-30px) rotate(10deg); opacity: 0.25; }
+  }
+
+  /* ── CABEÇALHO / NAVEGAÇÃO ── */
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--texto);
+    text-decoration: none;
+  }
+  .logo-ponto {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--verde);
+    box-shadow: 0 0 10px var(--verde);
+  }
+
+
+  /* ── SEÇÃO PRINCIPAL ── */
+  main {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── APRESENTAÇÃO ── */
+  .apresentacao {
+    padding: 4rem 2rem 2rem;
+    text-align: center;
+    animation: surgir 0.8s ease both;
+  }
+  .etiqueta-consulta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 999px;
+    padding: 0.4rem 1.1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--verde);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    margin-top: 3rem;
+  }
+  .etiqueta-consulta::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--verde);
+    box-shadow: 0 0 6px var(--verde);
+  }
+  .titulo-saudacao {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900;
+    margin-bottom: 0.6rem;
+    background: linear-gradient(135deg, var(--verde), var(--verde-claro), var(--amarelo));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .subtitulo-saudacao {
+    font-size: 1rem;
+    color: var(--texto-suave);
+    margin-bottom: 0.4rem;
+  }
+  .data-atualizacao {
+    font-size: 0.82rem;
+    color: var(--texto-suave);
+    opacity: 0.7;
+  }
+
+  /* ── CONTEÚDO CENTRAL ── */
+  .conteudo-central {
+    margin: 0 auto;
+    padding: 11rem;
+  }
+
+  /* ── CARD NUTRICIONISTA ── */
+  .card-nutricionista {
+    background: linear-gradient(135deg, rgba(5, 150, 105, 0.15), rgba(16, 185, 129, 0.05));
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    border-radius: 20px;
+    padding: 1.4rem 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+    animation: surgir 0.8s ease 0.1s both;
+  }
+  .foto-nutricionista {
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--verde-escuro), var(--verde));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 1.2rem;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  }
+  .dados-nutricionista { flex: 1; }
+  .nome-nutricionista { font-weight: 700; font-size: 0.95rem; color: var(--texto); }
+  .crn-nutricionista  { font-size: 0.78rem; color: var(--texto-suave); margin-top: 0.1rem; }
+  .selo-verificado {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    border-radius: 999px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--verde);
+  }
+
+  /* ── CARDS DE INFORMAÇÃO ── */
+  .card-informacao {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 30px;
+    padding: 2.2rem 2.4rem;
+    box-shadow: 0 25px 70px rgba(16, 185, 129, 0.1);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1.2rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-informacao::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 4px;
+    background: linear-gradient(90deg, var(--verde), var(--verde-claro), var(--amarelo));
+    transition: left 0.6s;
+  }
+  .card-informacao:hover::before { left: 0; }
+  .card-informacao:hover {
+    border-color: var(--verde);
+    box-shadow: 0 30px 80px rgba(16, 185, 129, 0.2);
+  }
+  .card-situacao  { animation: surgir 0.8s ease 0.2s both; }
+  .card-exames    { animation: surgir 0.8s ease 0.3s both; }
+  .card-proximos  { animation: surgir 0.8s ease 0.4s both; }
+
+  .cabecalho-card {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: 1.3rem;
+  }
+  .icone-card {
+    width: 44px; height: 44px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .icone-verde   { background: rgba(16, 185, 129, 0.15); }
+  .icone-azul    { background: rgba(56, 189, 248, 0.15); }
+  .icone-amarelo { background: rgba(251, 191, 36, 0.15); }
+
+  .rotulo-card {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--verde) !important;
+    margin-bottom: 0.2rem;
+  }
+  .titulo-card {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--texto) !important;
+  }
+  .texto-card {
+    font-size: 0.95rem;
+    line-height: 1.85;
+    color: var(--texto-suave) !important;
+  }
+
+  /* ── LISTA DE PASSOS ── */
+  .lista-passos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    list-style: none;
+  }
+  .item-passo {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    background: rgba(16, 185, 129, 0.05);
+    border: 1px solid rgba(16, 185, 129, 0.15);
+    border-radius: 16px;
+    transition: all 0.3s;
+  }
+  .item-passo:hover {
+    border-color: rgba(16, 185, 129, 0.35);
+    background: rgba(16, 185, 129, 0.08);
+  }
+  .numero-passo {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--verde-escuro), var(--verde));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.72rem;
+    color: #fff;
+    flex-shrink: 0;
+    margin-top: 2px;
+    box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+  }
+  .texto-passo {
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--texto-suave);
+  }
+
+  /* ── ESTADOS DE CARREGAMENTO / VAZIO ── */
+  .estado-vazio {
+    text-align: center;
+    padding: 5rem 2rem;
+    animation: surgir 0.6s ease both;
+  }
+  .titulo-vazio  { font-size: 1.2rem; font-weight: 700; color: var(--texto-suave); margin-bottom: 0.5rem; }
+  .descricao-vazio { font-size: 0.88rem; color: var(--texto-suave); opacity: 0.7; }
+
+  .carregando {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 5rem 2rem;
+  }
+  .circulo-carregando {
+    width: 38px; height: 38px;
+    border: 3px solid rgba(16, 185, 129, 0.2);
+    border-top-color: var(--verde);
+    border-radius: 50%;
+    animation: girar 0.8s linear infinite;
+  }
+  .carregando p { font-size: 0.85rem; color: var(--texto-suave); }
+
+
+
+  @keyframes girar  { to { transform: rotate(360deg); } }
+  @keyframes surgir {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="grade-fundo" aria-hidden="true"></div>
+
+<div class="frutas-flutuantes" aria-hidden="true">
+  <div class="fruta fruta-1"><img src="img/abacate.png" alt=""></div>
+  <div class="fruta fruta-2"><img src="img/maca.png" alt=""></div>
+  <div class="fruta fruta-3"><img src="img/brocolis.png" alt=""></div>
+  <div class="fruta fruta-4"><img src="img/tangerina.png" alt=""></div>
+  <div class="fruta fruta-5"><img src="img/banana.png" alt=""></div>
+  <div class="fruta fruta-6"><img src="img/kiwi.png" alt=""></div>
+</div>
+
+<header>
+
+</header>
+
+<main>
+  <section class="apresentacao" id="apresentacao" style="display:none" aria-label="Saudação">
+    <div class="etiqueta-consulta">Resumo da Consulta</div>
+    <h1 class="titulo-saudacao" id="titulo-saudacao">Olá!</h1>
+    <p class="subtitulo-saudacao">Aqui está o resumo preparado pela sua nutricionista</p>
+    <p class="data-atualizacao" id="data-atualizacao"></p>
+  </section>
+
+  <div class="conteudo-central">
+    <div id="area-conteudo">
+      <div class="carregando" role="status" aria-live="polite">
+        <div class="circulo-carregando"></div>
+        <p>Carregando seu resumo...</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>NutriVida · Todos os direitos reservados</p>
+</footer>
+
+<script>
+  const BASE = 'http://localhost:3000';
+
+async function iniciar() {
+    const usuario = JSON.parse(localStorage.getItem('dadosUsuario'));
+
+    if (!usuario) {
+        toast('Você precisa estar logado para acessar essa página!', 'var(--red)');
+        setTimeout(() => { window.location.href = 'entrar.html'; }, 2000);
+        return;
+    }
+
+    // Verifica se tem consulta com nutricionista
+    try {
+        const res = await fetch(`http://localhost:3000/agendamentos/usuario/${usuario.id}/tem-consulta`);
+        const dados = await res.json();
+        if (!dados.temConsulta) {
+            toast('Você precisa ter pelo menos uma consulta com um nutricionista!', 'var(--red)');
+            setTimeout(() => { window.location.href = 'index.html'; }, 2500);
+            return;
+        }
+    } catch (err) {
+        console.error("Erro ao verificar consulta:", err);
+    }
+
+    const nome = usuario.nome_usuario || usuario.nome || 'Paciente';
+    const nomeCurto = nome.split(' ')[0];
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('previa') === 'true') {
+        const previa = JSON.parse(localStorage.getItem('previa_resumo'));
+        if (previa) {
+            document.getElementById('apresentacao').style.display = 'block';
+            document.getElementById('titulo-saudacao').textContent = `Prévia — Como o paciente verá`;
+            document.getElementById('data-atualizacao').textContent = 'Visualização prévia — ainda não enviado';
+            exibirResumo(previa);
+            return;
+        }
+    }
+
+    await carregarResumo(usuario, nomeCurto);
+}
+
+let _historicoResumos = [];
+
+async function carregarResumo(usuario, nomeCurto) {
+  try {
+    const resposta = await fetch(`${BASE}/prontuarios/paciente/${usuario.id}/historico`);
+
+    if (!resposta.ok || (await resposta.clone().json()).length === 0) {
+      exibirEstadoVazio('Nenhum resumo disponível', 'Seu nutricionista ainda não registrou nenhum resumo de consulta para você.');
+      return;
+    }
+
+    const historico = await resposta.json();
+
+    document.getElementById('apresentacao').style.display = 'block';
+    document.getElementById('titulo-saudacao').textContent = `Olá, ${nomeCurto}! 👋`;
+    _historicoResumos = historico;
+    // Mostra o mais recente
+    const maisRecente = historico[0];
+    if (maisRecente.atualizado_em) {
+      document.getElementById('data-atualizacao').textContent =
+        'Atualizado em ' + new Date(maisRecente.atualizado_em).toLocaleDateString('pt-BR', {
+          day: '2-digit', month: 'long', year: 'numeric'
+        });
+    }
+
+    // Se tem mais de um, mostra selector de histórico
+    if (historico.length > 1) {
+      exibirSeletorHistorico(historico);
+    }
+
+    exibirResumo(maisRecente);
+
+  } catch (erro) {
+    console.error(erro);
+    exibirEstadoVazio('Erro ao carregar', 'Não foi possível carregar seu resumo. Tente novamente mais tarde.');
+  }
+}
+
+function exibirSeletorHistorico(historico) {
+  const area = document.getElementById('area-conteudo');
+  const seletor = document.createElement('div');
+  seletor.id = 'seletor-historico';
+  seletor.style.cssText = `
+    display:flex;align-items:center;gap:0.8rem;
+    margin-bottom:1.5rem;flex-wrap:wrap;
+  `;
+  seletor.innerHTML = `
+    <span style="font-size:0.78rem;color:var(--texto-suave);font-weight:600;text-transform:uppercase;letter-spacing:1px">
+      Consultas anteriores:
+    </span>
+    ${historico.map((h, i) => `
+      <button 
+        onclick="trocarResumo(${i})" 
+        id="btn-historico-${i}"
+        style="padding:0.3rem 0.9rem;border-radius:999px;border:1px solid rgba(16,185,129,${i===0?'0.6':'0.2'});
+        background:rgba(16,185,129,${i===0?'0.15':'0.05'});color:var(--verde);
+        font-size:0.72rem;font-weight:600;cursor:pointer;transition:all 0.2s">
+        ${new Date(h.atualizado_em).toLocaleDateString('pt-BR', {day:'2-digit',month:'short',year:'numeric'})}
+      </button>
+    `).join('')}
+  `;
+  area.insertAdjacentElement('beforebegin', seletor);
+}
+
+
+  function exibirResumo(dados) {
+    const nomeNutri = dados.nutricionista_nome || 'Sua Nutricionista';
+    const crnNutri  = dados.nutricionista_crn  || '';
+
+    let html = `
+      <article class="card-nutricionista" aria-label="Nutricionista responsável">
+        <div class="foto-nutricionista" aria-hidden="true">${nomeNutri.charAt(0)}</div>
+        <div class="dados-nutricionista">
+          <p class="nome-nutricionista">${nomeNutri}</p>
+          <p class="crn-nutricionista">${crnNutri ? 'CRN · ' + crnNutri : 'Nutricionista'}</p>
+        </div>
+        <span class="selo-verificado">✓ Verificado</span>
+      </article>
+    `;
+
+if (dados.pac_situacao) {
+  html += `
+    <article class="card-informacao card-situacao" aria-label="Situação geral">
+      <section class="cabecalho-card">
+        <div class="icone-card icone-verde" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="rotulo-card">Situação Geral</p>
+          <h2 class="titulo-card">Como você está</h2>
+        </div>
+      </section>
+      <p class="texto-card">${dados.pac_situacao.replace(/\n/g, '<br>')}</p>
+    </article>
+  `;
+}
+
+if (dados.pac_exames_resumo) {
+  html += `
+    <article class="card-informacao card-exames" aria-label="Resumo dos exames">
+      <section class="cabecalho-card">
+        <div class="icone-card icone-azul" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.5 2v17.5c0 1.4-1.1 2.5-2.5 2.5s-2.5-1.1-2.5-2.5V2"/>
+            <path d="M8.5 2h7"/>
+            <path d="M14.5 16h-5"/>
+          </svg>
+        </div>
+        <div>
+          <p class="rotulo-card">Seus Exames</p>
+          <h2 class="titulo-card">O que os resultados mostram</h2>
+        </div>
+      </section>
+      <p class="texto-card">${dados.pac_exames_resumo.replace(/\n/g, '<br>')}</p>
+    </article>
+  `;
+}
+
+if (dados.pac_passos) {
+  const linhas = dados.pac_passos.split('\n').map(l => l.trim()).filter(l => l);
+  const itensPassos = linhas.map((linha, i) => {
+    const texto = linha.replace(/^[·\-\*]\s*/, '');
+    return texto ? `
+      <li class="item-passo">
+        <span class="numero-passo" aria-hidden="true">${i + 1}</span>
+        <span class="texto-passo">${texto}</span>
+      </li>` : '';
+  }).join('');
+
+  html += `
+    <article class="card-informacao card-proximos" aria-label="Próximos passos">
+      <section class="cabecalho-card">
+        <div class="icone-card icone-amarelo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+        </div>
+        <div>
+          <p class="rotulo-card">Próximos Passos</p>
+          <h2 class="titulo-card">O que fazer a partir de agora</h2>
+        </div>
+      </section>
+      <ol class="lista-passos" aria-label="Lista de próximos passos">${itensPassos}</ol>
+    </article>
+  `;
+}
+    document.getElementById('area-conteudo').innerHTML = html;
+  }
+
+function trocarResumo(index) {
+  // Atualiza botões
+  document.querySelectorAll('[id^="btn-historico-"]').forEach((btn, i) => {
+    btn.style.borderColor = i === index ? 'rgba(16,185,129,0.6)' : 'rgba(16,185,129,0.2)';
+    btn.style.background  = i === index ? 'rgba(16,185,129,0.15)' : 'rgba(16,185,129,0.05)';
+  });
+
+  const dados = _historicoResumos[index];
+  document.getElementById('data-atualizacao').textContent =
+    'Atualizado em ' + new Date(dados.atualizado_em).toLocaleDateString('pt-BR', {
+      day: '2-digit', month: 'long', year: 'numeric'
+    });
+
+  exibirResumo(dados);
+}  
+
+  function exibirEstadoVazio(titulo, descricao) {
+    document.getElementById('area-conteudo').innerHTML = `
+      <div class="estado-vazio" role="status">
+        <h2 class="titulo-vazio">${titulo}</h2>
+        <p class="descricao-vazio">${descricao}</p>
+      </div>
+    `;
+  }
+
+  function toast(msg, cor = '#10b981') {
+    const el = document.createElement('div');
+    el.textContent = msg;
+    el.style.cssText = `
+        position:fixed;top:4rem;left:50%;transform:translateX(-50%);
+        background:red;color:#fff;padding:0.8rem 1.5rem;
+        border-radius:999px;font-weight:600;font-size:0.88rem;
+        z-index:9999;box-shadow:0 8px 25px rgba(0,0,0,0.3);
+        animation:surgir 0.3s ease;
+    `;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2500);
+}
+
+  iniciar();
+</script>
+</body>
+</html>

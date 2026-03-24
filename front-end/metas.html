@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minhas Metas — NutriVida</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --primary: #10b981;
+      --primary-dark: #059669;
+      --secondary: #34d399;
+      --accent: #fbbf24;
+      --orange: #fb923c;
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --dark: #0f172a;
+      --dark-light: #1e293b;
+      --text: #e2e8f0;
+      --text-dim: #94a3b8;
+      --text-muted: #64748b;
+      --glass: rgba(30, 41, 59, 0.7);
+      --border: rgba(16, 185, 129, 0.15);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0a1f1a 0%, #0f172a 50%, #1a1f0a 100%);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* GRID PATTERN */
+    .grid-pattern {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(16,185,129,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16,185,129,0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+    }
+
+    /* FLOATING FOODS */
+    .floating-foods {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .food-icon {
+      position: absolute;
+      opacity: 0.12;
+      animation: floatFood 8s ease-in-out infinite;
+    }
+
+    .food-icon img { width: 60px; height: 60px; object-fit: contain; }
+    .food-icon:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+    .food-icon:nth-child(2) { top: 20%; right: 8%; animation-delay: 1.5s; }
+    .food-icon:nth-child(3) { top: 60%; left: 3%; animation-delay: 3s; }
+    .food-icon:nth-child(4) { top: 75%; right: 5%; animation-delay: 4.5s; }
+    .food-icon:nth-child(5) { top: 40%; left: 92%; animation-delay: 2s; }
+
+    @keyframes floatFood {
+      0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.12; }
+      50% { transform: translateY(-20px) rotate(8deg); opacity: 0.2; }
+    }
+
+   
+    /* MAIN-metas */
+    .main-metas {
+      position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* PAGE HEADER */
+    .page-header {
+      margin-bottom: 2rem;
+      animation: fadeInUp 0.6s ease both;
+      margin-top: 5rem;
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .page-sub { color: var(--text-dim); font-size: 0.9rem; margin-top: 0.3rem; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* GLASS CARD */
+    .glass-card {
+      background: linear-gradient(135deg, rgba(15,23,42,0.9), rgba(30,41,59,0.9));
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.5rem;
+      margin-bottom: 1.2rem;
+      transition: border-color 0.3s;
+    }
+
+    .glass-card:hover { border-color: rgba(16,185,129,0.3); }
+
+    .card-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-title svg { width: 16px; height: 16px; stroke: var(--primary); fill: none; stroke-width: 2; }
+
+    /* STATS ROW */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      animation: fadeInUp 0.6s ease 0.1s both;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, rgba(15,23,42,0.9), rgba(30,41,59,0.9));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.2rem;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 2rem;
+      font-weight: 900;
+      font-family: 'JetBrains Mono', monospace;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-label { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+    /* META CARD */
+    .meta-card {
+      background: rgba(16,185,129,0.04);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s;
+      animation: fadeInUp 0.5s ease both;
+    }
+
+    .meta-card:hover { border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.07); }
+
+    .meta-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.8rem;
+    }
+
+    .meta-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .meta-title svg { width: 14px; height: 14px; stroke: var(--primary); fill: none; stroke-width: 2; }
+
+    .meta-info { font-size: 0.75rem; color: var(--text-muted); }
+
+    .meta-pct {
+      font-size: 1.6rem;
+      font-weight: 900;
+      font-family: 'JetBrains Mono', monospace;
+      text-align: right;
+    }
+
+    .meta-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* PROGRESS BAR */
+    .prog-track {
+      height: 6px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 99px;
+      overflow: hidden;
+      margin: 0.5rem 0;
+    }
+
+    .prog-fill {
+      height: 100%;
+      border-radius: 99px;
+      transition: width 1s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .pf-green { background: linear-gradient(90deg, var(--primary), var(--secondary)); }
+    .pf-yellow { background: linear-gradient(90deg, var(--accent), #f59e0b); }
+    .pf-red { background: linear-gradient(90deg, var(--red), #f87171); }
+    .pf-blue { background: linear-gradient(90deg, var(--blue), #60a5fa); }
+
+    /* FORM */
+    .form-g { margin-bottom: 1rem; }
+    .f-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-dim);
+      margin-bottom: 0.4rem;
+    }
+
+    .f-input, .f-select, .f-textarea {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(15,23,42,0.6);
+      color: var(--text);
+      font-size: 0.85rem;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .f-input:focus, .f-select:focus, .f-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(16,185,129,0.1);
+    }
+
+    .f-select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.8rem center;
+      background-size: 16px;
+      padding-right: 2.5rem;
+    }
+
+    .f-textarea { min-height: 80px; resize: vertical; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+
+    /* BUTTONS */
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #000;
+      font-weight: 700;
+    }
+
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(16,185,129,0.4); }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+
+    .btn-ghost:hover { border-color: var(--primary); color: var(--primary); background: rgba(16,185,129,0.05); }
+
+    .btn-danger { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: var(--red); }
+    .btn-danger:hover { background: rgba(239,68,68,0.25); }
+
+    /* STATUS BADGE */
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 99px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-green { background: rgba(16,185,129,0.15); color: var(--primary); }
+    .badge-yellow { background: rgba(251,191,36,0.15); color: var(--accent); }
+    .badge-red { background: rgba(239,68,68,0.15); color: var(--red); }
+
+    /* MODAL PROGRESSO */
+    .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .modal-overlay.open {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: all;
+    }
+
+    .modal {
+      background: linear-gradient(135deg, rgba(15,23,42,0.98), rgba(30,41,59,0.98));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+      margin: 1rem;
+      animation: fadeInUp 0.3s ease;
+    }
+
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      color: var(--primary);
+    }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+    }
+
+    .empty-state svg { width: 48px; height: 48px; stroke: var(--text-muted); fill: none; stroke-width: 1.5; margin-bottom: 1rem; }
+    .empty-state p { font-size: 0.9rem; }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--primary);
+      color: #000;
+      font-weight: 700;
+      padding: 0.8rem 1.5rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      z-index: 999;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s;
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* SEÇÃO VAZIA */
+    #metas-container { animation: fadeInUp 0.6s ease 0.2s both; }
+
+    /* PROGRESSO CIRCULAR (decorativo) */
+    .circle-progress {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      flex-shrink: 0;
+    }
+
+    /* RESPONSIVO */
+    @media (max-width: 600px) {
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .navbar { padding: 1rem; }
+      .nav-links { gap: 0.3rem; }
+      .nav-btn { padding: 0.4rem 0.7rem; font-size: 0.78rem; }
+    }
+  </style>
+  <script src="tela.js" defer></script>
+</head>
+<body>
+
+<div class="grid-pattern"></div>
+
+<div class="floating-foods">
+  <div class="food-icon"><img src="img/abacate.png" alt=""></div>
+  <div class="food-icon"><img src="img/maca.png" alt=""></div>
+  <div class="food-icon"><img src="img/salada.png" alt=""></div>
+  <div class="food-icon"><img src="img/banana.png" alt=""></div>
+  <div class="food-icon"><img src="img/brocolis.png" alt=""></div>
+</div>
+
+<!-- NAVBAR -->
+<header></header>
+
+<!-- MAIN-metas -->
+<main class="main-metas">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="page-title">Minhas Metas</div>
+    <div class="page-sub" id="page-sub">Acompanhe sua evolução e registre seu progresso</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="stat-total">0</div>
+      <div class="stat-label">Metas Ativas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="background:linear-gradient(135deg,var(--accent),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent" id="stat-andamento">0</div>
+      <div class="stat-label">Em Andamento</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-concluidas">0</div>
+      <div class="stat-label">Concluídas</div>
+    </div>
+  </div>
+
+  <!-- METAS -->
+  <div id="metas-container">
+    <div class="glass-card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        Suas Metas
+      </div>
+      <div id="metas-lista">
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          <p>Carregando suas metas...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL PROGRESSO -->
+<div class="modal-overlay" id="modal-progresso">
+  <div class="modal">
+    <div class="modal-title">Atualizar Progresso</div>
+    <input type="hidden" id="prog-meta-id">
+    <div class="form-g">
+      <label class="f-label" id="prog-label">Valor atual</label>
+      <input class="f-input" id="prog-valor" type="number" step="0.1" placeholder="0">
+    </div>
+    <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:1rem" id="prog-info"></div>
+    <div style="display:flex;gap:0.6rem">
+      <button class="btn btn-primary" style="flex:1" onclick="confirmarProgresso()">Salvar</button>
+      <button class="btn btn-ghost" onclick="fecharModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ═══════════════════════════════════
+  // UTILITÁRIOS
+  // ═══════════════════════════════════
+  function toast(msg, cor = 'var(--primary)') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.style.background = cor;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  function fecharModal() {
+    document.getElementById('modal-progresso').classList.remove('open');
+  }
+
+  // ═══════════════════════════════════
+  // CARREGAR METAS
+  // ═══════════════════════════════════
+async function carregarMetas() {
+    const usuario = JSON.parse(localStorage.getItem('dadosUsuario'));
+
+    if (!usuario) {
+        toast('Você precisa estar logado para acessar essa página!', 'var(--red)');
+        setTimeout(() => { window.location.href = 'entrar.html'; }, 2000);
+        return;
+    }
+
+    // Verifica se tem consulta com nutricionista
+    try {
+        const res = await fetch(`http://localhost:3000/agendamentos/usuario/${usuario.id}/tem-consulta`);
+        const dados = await res.json();
+        if (!dados.temConsulta) {
+            toast('Você precisa ter pelo menos uma consulta com um nutricionista!', 'var(--red)');
+            setTimeout(() => { window.location.href = 'index.html'; }, 2500);
+            return;
+        }
+    } catch (err) {
+        console.error("Erro ao verificar consulta:", err);
+    }
+
+    // resto do código existente...
+    document.getElementById('page-sub').textContent =
+        `Olá, ${usuario.nome || usuario.name || 'Usuário'}! Acompanhe sua evolução.`;
+    
+
+    try {
+      const res = await fetch(`http://localhost:3000/metas/paciente/${usuario.id}`);
+      const metas = await res.json();
+
+      const lista = document.getElementById('metas-lista');
+
+      if (!metas.length) {
+        lista.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            <p>Nenhuma meta cadastrada ainda.<br>Seu nutricionista irá definir suas metas em breve.</p>
+          </div>`;
+        return;
+      }
+
+      // Stats
+      const concluidas = metas.filter(m => {
+        const pct = (m.valor_atual / m.valor_meta) * 100;
+        return pct >= 100;
+      }).length;
+
+      document.getElementById('stat-total').textContent = metas.length;
+      document.getElementById('stat-andamento').textContent = metas.length - concluidas;
+      document.getElementById('stat-concluidas').textContent = concluidas;
+
+      lista.innerHTML = '';
+
+      metas.forEach((m, idx) => {
+        const pct = Math.min(Math.round((m.valor_atual / m.valor_meta) * 100), 100);
+        const falta = Math.max(m.valor_meta - m.valor_atual, 0).toFixed(1);
+        const prazo = m.prazo ? new Date(m.prazo).toLocaleDateString('pt-BR') : '—';
+        const criado = m.criado_em ? new Date(m.criado_em).toLocaleDateString('pt-BR') : '—';
+
+        let cor, pfClass, badgeClass, badgeText;
+        if (pct >= 100) {
+          cor = 'var(--primary)'; pfClass = 'pf-green';
+          badgeClass = 'badge-green'; badgeText = '✓ Concluída';
+        } else if (pct >= 60) {
+          cor = 'var(--accent)'; pfClass = 'pf-yellow';
+          badgeClass = 'badge-yellow'; badgeText = 'Em progresso';
+        } else {
+          cor = 'var(--red)'; pfClass = 'pf-red';
+          badgeClass = 'badge-red'; badgeText = 'Atenção';
+        }
+
+        const icones = {
+          'Peso corporal': `<svg viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="21"/><path d="M3 9l9-6 9 6"/><path d="M3 15l9 6 9-6"/></svg>`,
+          '% Gordura': `<svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`,
+          'Consumo de água': `<svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>`,
+          'Adesão ao cardápio': `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
+          'Atividade física': `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+        };
+        const icone = icones[m.tipo] || `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`;
+
+        lista.innerHTML += `
+          <div class="meta-card" style="animation-delay:${idx * 0.1}s">
+            <div class="meta-top">
+              <div style="flex:1">
+                <div class="meta-title">
+                  ${icone}
+                  ${m.tipo}
+                  <span class="badge ${badgeClass}" style="margin-left:0.4rem">${badgeText}</span>
+                </div>
+                <div class="meta-info">
+                  ${m.valor_atual} → ${m.valor_meta} ${m.unidade || ''} · Prazo: ${prazo}
+                </div>
+                ${m.observacao ? `<div style="font-size:0.75rem;color:var(--text-dim);margin-top:0.3rem;font-style:italic">"${m.observacao}"</div>` : ''}
+              </div>
+              <div style="text-align:right;margin-left:1rem">
+                <div class="meta-pct" style="color:${cor}">${pct}%</div>
+                <div style="font-size:0.65rem;color:var(--text-muted)">${m.valor_atual} ${m.unidade || ''}</div>
+              </div>
+            </div>
+
+            <div class="prog-track">
+              <div class="prog-fill ${pfClass}" style="width:0" data-w="${pct}%"></div>
+            </div>
+
+            <div class="meta-footer">
+              <span>Iniciada: ${criado}</span>
+              <span>${pct >= 100 ? 'Meta atingida!' : `Falta ${falta} ${m.unidade || ''}`}</span>
+            </div>
+
+            ${pct < 100 ? `
+            <div style="margin-top:0.8rem">
+              <button class="btn btn-ghost" onclick="abrirProgresso(${m.id}, '${m.tipo}', ${m.valor_atual}, ${m.valor_meta}, '${m.unidade || ''}')">
+                <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Registrar progresso
+              </button>
+            </div>` : ''}
+          </div>`;
+      });
+
+      // Anima as barras
+      setTimeout(() => {
+        document.querySelectorAll('.prog-fill[data-w]').forEach(el => {
+          el.style.width = el.dataset.w;
+        });
+      }, 100);
+
+    } catch (err) {
+      console.error(err);
+      document.getElementById('metas-lista').innerHTML = `
+        <div class="empty-state">
+          <p>Erro ao carregar metas. Verifique sua conexão.</p>
+        </div>`;
+    }
+  }
+
+  // ═══════════════════════════════════
+  // PROGRESSO
+  // ═══════════════════════════════════
+  function abrirProgresso(id, tipo, valorAtual, valorMeta, unidade) {
+  console.log("abrindo modal", id, tipo, valorAtual);
+  document.getElementById('prog-meta-id').value = id;
+  document.getElementById('prog-label').textContent = `Novo valor atual (${unidade || tipo})`;
+  document.getElementById('prog-valor').value = valorAtual;
+  document.getElementById('prog-info').textContent =
+    `Meta: ${valorMeta} ${unidade} · Atual: ${valorAtual} ${unidade}`;
+  document.getElementById('modal-progresso').classList.add('open');
+}
+
+  async function confirmarProgresso() {
+    const id = document.getElementById('prog-meta-id').value;
+    const valor = parseFloat(document.getElementById('prog-valor').value);
+
+    if (isNaN(valor)) { toast('Digite um valor válido!', 'var(--red)'); return; }
+
+    try {
+      const res = await fetch(`http://localhost:3000/metas/${id}/progresso`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ valor_atual: valor })
+      });
+
+      if (!res.ok) throw new Error();
+      fecharModal();
+      toast('Progresso atualizado!');
+      carregarMetas();
+    } catch (err) {
+      toast('Erro ao atualizar.', 'var(--red)');
+    }
+  }
+
+  // Fechar modal clicando fora
+  document.getElementById('modal-progresso').addEventListener('click', function(e) {
+    if (e.target === this) fecharModal();
+  });
+
+   function toast(msg, cor = '#10b981') {
+    const el = document.createElement('div');
+    el.textContent = msg;
+    el.style.cssText = `
+        position:fixed;top:4rem;left:50%;transform:translateX(-50%);
+        background:red;color:#fff;padding:0.8rem 1.5rem;
+        border-radius:999px;font-weight:600;font-size:0.88rem;
+        z-index:9999;box-shadow:0 8px 25px rgba(0,0,0,0.3);
+        animation:surgir 0.3s ease;
+    `;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2500);
+}
+
+  // INIT
+  document.addEventListener('DOMContentLoaded', carregarMetas);
+</script>
+</body>
+</html>

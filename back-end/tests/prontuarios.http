@@ -1,0 +1,23 @@
+### Buscar prontuário
+GET http://localhost:3000/prontuarios/1/4
+
+### Buscar dados completos
+GET http://localhost:3000/prontuarios/1/dados-completos
+
+### Buscar prontuário usuario 2
+GET http://localhost:3000/prontuarios/2/4
+
+### Salvar prontuário
+POST http://localhost:3000/prontuarios
+Content-Type: application/json
+
+{
+  "usuario_id": 1,
+  "nutricionista_id": 4,
+  "nome": "lucas teste",
+  "peso": 70,
+  "altura": 1.75
+}
+
+###
+GET http://localhost:3000/prontuarios/paciente/1

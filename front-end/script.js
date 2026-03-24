@@ -9,7 +9,6 @@ function paginacarregada() {
     
 //funão de compra do mercadopago
 window.criarPreferencia = function(title, price) {
-  // Mostra o modal de confirmação
   const modal = document.getElementById("confirmacaoCompra");
   const mensagem = document.getElementById("mensagemConfirmacao");
   mensagem.textContent = `Deseja realmente comprar o ${title} por R$${price}?`;
@@ -21,15 +20,37 @@ window.criarPreferencia = function(title, price) {
   btnSim.onclick = null;
   btnCancelar.onclick = null;
 
-  btnSim.onclick = function () {
+  btnSim.onclick = async function() {
     modal.style.display = "none";
 
+    const usuario = JSON.parse(localStorage.getItem("dadosUsuario"));
+    const usuario_id = usuario?.id || null;
+
+    // 1. Salva o plano como PENDENTE no banco
+    if (usuario_id) {
+      try {
+        await fetch("http://localhost:3000/planos", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ usuario_id, plano: title, preco: price, status: 'pendente' })
+        });
+      } catch (err) {
+        console.error("Erro ao salvar plano:", err);
+      }
+    }
+
+    // 2. Salva flag no localStorage
+    localStorage.setItem("pagamento_pendente", JSON.stringify({
+      plano: title,
+      preco: price,
+      usuario_id
+    }));
+
+    // 3. Vai pro Mercado Pago
     fetch("http://localhost:3000/criar-preferencia", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ title, price })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, price, usuario_id })
     })
     .then(res => res.json())
     .then(data => {
@@ -45,10 +66,21 @@ window.criarPreferencia = function(title, price) {
     });
   };
 
-  btnCancelar.onclick = function () {
+  btnCancelar.onclick = function() {
     modal.style.display = "none";
   };
 };
+
+// 4. Ao voltar pro site verifica pagamento pendente
+(function verificarPagamentoPendente() {
+  const pagamentoPendente = localStorage.getItem("pagamento_pendente");
+  if (pagamentoPendente) {
+    const dados = JSON.parse(pagamentoPendente);
+    localStorage.removeItem("pagamento_pendente");
+    window.location.href = `sucesso.html?plano=${encodeURIComponent(dados.plano)}&preco=${dados.preco}&usuario_id=${dados.usuario_id}`;
+  }
+})();
+
 
 
 

@@ -7,7 +7,7 @@ async function cadastrarNutricionista(data) {
   try {
     await conn.beginTransaction();
 
-    // 🔐 Criptografa a senha antes de salvar
+    // Criptografa a senha antes de salvar
     const senhaHash = await bcrypt.hash(data.senha, 10);
 
     const queryNutricionista = `
@@ -86,6 +86,7 @@ async function atualizarNutricionista(id, dadosAtualizados) {
       'nome',
       'crn',
       'especialidade',
+      'bio',
       'email',
       'telefone',
       'senha'

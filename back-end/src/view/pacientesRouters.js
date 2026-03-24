@@ -35,4 +35,22 @@ router.get("/:nutricionistaId/total", async (req, res) => {
   }
 });
 
+// Rota para buscar o cardápio mais recente de um paciente pelo usuario_id
+router.get("/paciente/:usuarioId/cardapio", async (req, res) => {
+  const { usuarioId } = req.params;
+  try {
+    const [rows] = await require("../model/database").banco.query(
+      `SELECT id, nome_cardapio, cardapio_texto, criado_em 
+       FROM cardapio 
+       WHERE usuario_id = ? 
+       ORDER BY id DESC`,
+      [usuarioId]
+    );
+    if (!rows.length) return res.status(404).json({ erro: "Nenhum cardápio encontrado" });
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({ erro: error.message });
+  }
+});
+
 module.exports = router;

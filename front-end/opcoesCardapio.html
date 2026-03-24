@@ -272,7 +272,6 @@
                 <li><a class="item" href="index.html"  data-translate="1">Início</a></li>    
                 <li class="dropdown"> <a href="#" class="seta" data-translate="2">Serviços</a>
                 <div class="drop-menu">
-                    <a class="item" href="servico.html" data-translate="7">Nossos serviços</a>
                     <a class="item" href="imc.html" data-translate="8">Imc</a>
                     <a class="item" href="opcoescardapio.html" id="paginaAtual" data-translate="9">Cardápio Personalizado</a>
                     
@@ -448,6 +447,65 @@
         </ul>
     </div>
 </footer>
+
+<script>
+async function verificarPlano() {
+    const usuario = JSON.parse(localStorage.getItem('dadosUsuario'));
+
+    if (!usuario) {
+        toast('Você precisa estar logado para acessar essa página!', 'red');
+        setTimeout(() => { window.location.href = 'entrar.html'; }, 2000);
+        return false;
+    }
+
+    try {
+        const res = await fetch(`http://localhost:3000/planos/${usuario.id}`);
+        
+        if (!res.ok) {
+            toast('Você precisa de um plano ativo para acessar o cardápio!', 'red');
+            setTimeout(() => { window.location.href = 'index.html#para-baixo'; }, 2500);
+            return false;
+        }
+
+        const dados = await res.json();
+
+        if (dados.status !== 'ativo') {
+            toast('Você precisa de um plano ativo para acessar o cardápio!', 'red');
+            setTimeout(() => { window.location.href = 'index.html#para-baixo'; }, 2500);
+            return false;
+        }
+
+        // Mostra o plano ativo com cor verde
+        toast(`Plano ativo: ${dados.plano}`, '#10b981');
+        return true;
+
+    } catch (err) {
+        console.error("Erro ao verificar plano:", err);
+        toast('Erro ao verificar plano. Tente novamente.', 'red');
+        setTimeout(() => { window.location.href = 'index.html#para-baixo'; }, 2500);
+        return false;
+    }
+}
+
+function toast(msg, cor = '#10b981') {
+    const el = document.createElement('div');
+    el.textContent = msg;
+    el.style.cssText = `
+        position:fixed;top:2rem;left:50%;transform:translateX(-50%);
+        background:${cor};color:#fff;padding:0.8rem 1.5rem;
+        border-radius:999px;font-weight:600;font-size:0.88rem;
+        z-index:9999;box-shadow:0 8px 25px rgba(0,0,0,0.3);
+        animation:surgir 0.3s ease;
+    `;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2500);
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const temPlano = await verificarPlano();
+    if (!temPlano) return;
+});
+</script>
 
 </body>
 </html>

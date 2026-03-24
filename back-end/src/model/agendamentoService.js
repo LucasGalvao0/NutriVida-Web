@@ -65,6 +65,8 @@ async function contarConsultasHojePorNutricionista(nutricionistaId) {
 
 async function listarConsultasHojePorNutricionista(nutricionistaId) {
 
+  console.log("nutricionistaId recebido:", nutricionistaId); // 👈 adicione isso
+  console.log("tipo:", typeof nutricionistaId);     
   const sql = `
     SELECT 
       a.hora,
@@ -72,7 +74,7 @@ async function listarConsultasHojePorNutricionista(nutricionistaId) {
       u.nome_usuario AS paciente_nome,
       s.nome_servico
     FROM agendamentos a
-    JOIN usuarios u ON a.usuario_id = u.id
+    LEFT JOIN usuarios u ON a.usuario_id = u.id
     JOIN servicos s ON a.servico_id = s.id
     JOIN consultorios c ON a.consultorio_id = c.id
     JOIN nutricionistas_consultorios nc ON nc.consultorio_id = c.id
@@ -84,6 +86,7 @@ async function listarConsultasHojePorNutricionista(nutricionistaId) {
   `;
 
   const [rows] = await pool.execute(sql, [nutricionistaId]);
+  console.log("rows retornadas:", rows);  
   return rows;
 }
 
@@ -97,7 +100,7 @@ async function listarConsultasProximos3Dias(nutricionistaId) {
       u.nome_usuario AS paciente_nome,
       s.nome_servico
     FROM agendamentos a
-    JOIN usuarios u ON a.usuario_id = u.id
+    LEFT JOIN usuarios u ON a.usuario_id = u.id
     JOIN servicos s ON a.servico_id = s.id
     JOIN consultorios c ON a.consultorio_id = c.id
     JOIN nutricionistas_consultorios nc ON nc.consultorio_id = c.id
@@ -123,7 +126,7 @@ async function listarAgendaCompleta(nutricionistaId) {
       u.nome_usuario AS paciente_nome,
       s.nome_servico
     FROM agendamentos a
-    JOIN usuarios u ON a.usuario_id = u.id
+    LEFT JOIN usuarios u ON a.usuario_id = u.id
     JOIN servicos s ON a.servico_id = s.id
     JOIN consultorios c ON a.consultorio_id = c.id
     JOIN nutricionistas_consultorios nc ON nc.consultorio_id = c.id
@@ -209,6 +212,13 @@ async function contarConsultasRealizadas(nutricionistaId) {
   return rows[0];
 }
 
+async function verificarConsultaUsuario(usuarioId) {
+  const [rows] = await pool.execute(`
+    SELECT COUNT(*) AS total FROM pacientes WHERE usuario_id = ?
+  `, [usuarioId]);
+  return rows[0].total > 0;
+}
+
 module.exports = {
   criarAgendamento,
   listarAgendamentos,
@@ -221,6 +231,7 @@ module.exports = {
   resumoMesNutricionista,
   listarHistoricoNutricionista,
   marcarComoRealizada,
-  contarConsultasRealizadas
+  contarConsultasRealizadas,
+  verificarConsultaUsuario
 };
 

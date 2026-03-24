@@ -427,13 +427,11 @@
                 <li><a class="item" href="index.html"  data-translate="1">Início</a></li>    
                 <li class="dropdown"> <a href="#" class="seta" data-translate="2">Serviços</a>
                 <div class="drop-menu">
-                    <a class="item" href="servico.html" data-translate="7">Nossos serviços</a>
                     <a class="item" href="imc.html" data-translate="8">Imc</a>
                     <a class="item" href="Cardapio.html" id="paginaAtual" data-translate="9">Cardápio Personalizado</a>
                     
                 </div>
             </li>
-                <li><a class="item" href="exames.html" data-translate="3">Exames</a>
                 <li><a class="item" href="sobre.html" data-translate="4">Sobre nós</a></li>
                 <li><a class="item" href="contatos.html" data-translate="5">Contatos</a></li>
                  <div class="login-cadastro">
@@ -642,13 +640,11 @@
     <script>
   // ========== FUNÇÕES DE LOADING ==========
   function mostrarLoading() {
-    // Remove loading anterior se existir
     const loadingExistente = document.getElementById('loading-overlay');
     if (loadingExistente) {
       loadingExistente.remove();
     }
 
-    // Cria o overlay de loading
     const loadingHTML = `
       <div id="loading-overlay" style="
         position: fixed;
@@ -715,21 +711,18 @@
 
     const usuario_id = user.id;
     
-    // Nome
     const nome = document.getElementById("nomeInput").value.trim();
     if (!nome) {
       mostrarMensagem("Por favor, preencha o Nome completo.", "erro");
       return;
     }
 
-    // Idade
     const idade = parseInt(document.getElementById("idadeInput").value, 10);
     if (isNaN(idade) || idade <= 0) {
       mostrarMensagem("Por favor, insira uma idade válida.", "erro");
       return;
     }
 
-    // IMC
     const imcRaw = document.getElementById("imcInput").value.trim().replace(",", ".");
     const imc = parseFloat(imcRaw);
     if (isNaN(imc) || imc <= 0) {
@@ -737,7 +730,6 @@
       return;
     }
 
-    // Altura
     let alturaRaw = document.getElementById("altura").value.trim();
     alturaRaw = alturaRaw.replace(",", ".");
     const altura = parseFloat(alturaRaw);
@@ -746,21 +738,18 @@
       return;
     }
 
-    // Peso
     const peso = parseFloat(document.getElementById("inputPesoAtual").value);
     if (isNaN(peso) || peso <= 0) {
       mostrarMensagem("Por favor, insira um peso válido.", "erro");
       return;
     }
 
-    // Sexo
     const sexo = document.querySelector('input[name="sexo"]:checked')?.value;
     if (!sexo) {
       mostrarMensagem("Por favor, selecione o Sexo.", "erro");
       return;
     }
 
-    // Objetivo
     const objetivoRadio = document.querySelector('input[name="resposta"]:checked');
     let objetivo = "";
     if (!objetivoRadio) {
@@ -781,35 +770,30 @@
       }
     }
 
-    // Nível de Atividade
     const level = document.getElementById("level").value;
     if (!level) {
       mostrarMensagem("Por favor, selecione o nível de atividade física.", "erro");
       return;
     }
 
-    // Tempo de preparo
     const tempoPreparo = document.getElementById("tempoPreparo").value;
     if (!tempoPreparo) {
       mostrarMensagem("Por favor, selecione o tempo de preparo.", "erro");
       return;
     }
 
-    // Trabalho
     const trabalho = document.getElementById("trabalho_tipo").value.trim();
     if (!trabalho) {
       mostrarMensagem("Por favor, informe o tipo de trabalho.", "erro");
       return;
     }
 
-    // Rotina
     const rotina = document.getElementById("rotina").value.trim();
     if (!rotina) {
       mostrarMensagem("Por favor, descreva sua rotina.", "erro");
       return;
     }
 
-    // Alergia
     const alergiaRadio = document.querySelector('input[name="alergia"]:checked');
     let alergia = "Nenhuma";
     if (!alergiaRadio) {
@@ -824,7 +808,6 @@
       alergia = campoAlergia;
     }
 
-    // Dieta atual
     const dietaRadio = document.querySelector('input[name="resposta2"]:checked');
     let dietaAtual = "Nenhuma";
     if (!dietaRadio) {
@@ -839,7 +822,6 @@
       dietaAtual = campoDieta;
     }
 
-    // Esporte
     const esporteRadio = document.querySelector('input[name="resposta3"]:checked');
     let esporte = "Nenhum";
     if (!esporteRadio) {
@@ -854,7 +836,6 @@
       esporte = campoEsporte;
     }
 
-    // Alimentos favoritos
     const alimentosFavoritosRaw = document.getElementById("alimentoFavorito").value.trim();
     const alimentosFavoritos = alimentosFavoritosRaw
       ? alimentosFavoritosRaw.split(",").map(a => a.trim()).filter(a => a.length > 0)
@@ -868,7 +849,6 @@
       document.getElementById("alimentos-feedback").style.display = "none";
     }
 
-    // JSON final
     const dados = {
       usuario_id,
       name: nome,
@@ -890,7 +870,6 @@
 
     console.log("JSON que o front-end está enviando:", JSON.stringify(dados, null, 2));
 
-    // ========== MOSTRAR LOADING AQUI ==========
     mostrarLoading();
 
     try {
@@ -899,13 +878,12 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dados),
-        
       });
 
       const respostaBackend = await salvarResp.json();
 
       if (!respostaBackend.sucesso) {
-        esconderLoading(); // ESCONDER SE DER ERRO
+        esconderLoading();
         mostrarMensagem("Erro ao salvar respostas!", "erro");
         console.error("Erro salvarResposta:", respostaBackend);
         return;
@@ -914,7 +892,7 @@
       const respostas_id = respostaBackend.respostas_id;
       console.log("ID das respostas salvas:", respostas_id);
 
-      // 2. Gerar o cardápio normalmente
+      // 2. Gerar o cardápio
       const response = await fetch(
         `http://localhost:3000/cardapio/CardapioCriado?timestamp=${Date.now()}`,
         {
@@ -933,35 +911,30 @@
 
         // 3. SALVAR O CARDÁPIO NO BANCO
         try {
-          // Verifica se CryptoJS está disponível
           if (typeof CryptoJS === 'undefined') {
             console.error('CryptoJS não está carregado!');
-            // Continua sem hash (o backend pode gerar)
             var hash_respostas = '';
           } else {
             var hash_respostas = CryptoJS.SHA256(JSON.stringify(dados)).toString();
           }
 
-          // ✅ Garante que o cardápio seja uma string JSON
           const cardapioParaSalvar = typeof result.data === 'string' 
             ? result.data 
             : JSON.stringify(result.data);
 
-          console.log("Enviando para /salvarCardapio:", {
-            usuario_id: usuario_id,
-            respostas_id: respostas_id, // ✅ ADICIONA O ID DAS RESPOSTAS
-            cardapio_texto: cardapioParaSalvar,
-            tipo: typeof cardapioParaSalvar
-          });
+          // 👇 PEGA O NOME GERADO PELA IA
+          const nomeCardapio = result.data?.nome_cardapio || "Meu Plano Nutricional";
+          console.log("Nome do cardápio gerado pela IA:", nomeCardapio);
 
           const salvarCardapio = await fetch("http://localhost:3000/salvarCardapio", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               usuario_id: usuario_id,
-              respostas_id: respostas_id, // ✅ ENVIA O ID
+              respostas_id: respostas_id,
               hash_respostas: hash_respostas,
               cardapio_texto: cardapioParaSalvar,
+              nome_cardapio: nomeCardapio,       // 👈 LINHA ADICIONADA
               respostas_formulario: dados
             })
           });
@@ -985,7 +958,7 @@
         sessionStorage.setItem("cardapio", JSON.stringify(result.data));
         sessionStorage.setItem("respostas_id", respostas_id);
 
-        esconderLoading(); // ESCONDER QUANDO TERMINAR
+        esconderLoading();
         mostrarMensagem("Cardápio gerado com sucesso!", "sucesso");
 
         setTimeout(() => {
@@ -993,13 +966,13 @@
         }, 2000);
 
       } else {
-        esconderLoading(); // ESCONDER SE DER ERRO
+        esconderLoading();
         mostrarMensagem("Erro ao gerar o cardápio. Tente novamente.", "erro");
         console.error("Erro HTTP:", await response.text());
       }
 
     } catch (error) {
-      esconderLoading(); // ESCONDER SE DER ERRO
+      esconderLoading();
       mostrarMensagem("Erro de conexão com o servidor.", "erro");
       console.error("Erro geral:", error);
     }

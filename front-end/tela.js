@@ -1,65 +1,84 @@
 document.addEventListener("DOMContentLoaded", function() {
     function inserirHeader() {
-        const path = window.location.pathname;
+    const path = window.location.pathname;
 
-        let paginaAtual = "";
+    let paginaAtual = "";
 
-        if (path.includes("index.html")) {
-            paginaAtual = "index";
-        } else if (path.includes("servico.html")) {
-            paginaAtual = "servico";
-        } else if (path.includes("imc.html")) {
-            paginaAtual = "imc";
-        } else if (path.includes("Cardapio.html")) {
-            paginaAtual = "cardapio";
-        } else if (path.includes("agendamento.html")) {
-            paginaAtual = "agendamento";
-        } else if (path.includes("sobre.html")) {
-            paginaAtual = "sobre";
-        } else if (path.includes("contatos.html")) {
-            paginaAtual = "contatos";
-        }
-
-        const headerHTML = `
-            <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
-            <section class="direito">
-                <nav class="menu">
-                    <ul id="menu">
-                        <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
-                        <li><a class="item ${paginaAtual === 'index' ? 'paginaAtual' : ''}" href="index.html" data-translate="1">Início</a></li>    
-                        <li class="dropdown">
-                            <p class="setaNav" data-translate="2">Serviços</p>
-                            <div class="drop-menu">
-                                <a class="item ${paginaAtual === 'servico' ? 'paginaAtual' : ''}" id="dropdown__link" href="servico.html" data-translate="7">Nossos serviços</a>
-                                <a class="item ${paginaAtual === 'imc' ? 'paginaAtual' : ''}" id="dropdown__link" href="imc.html" data-translate="8">Imc</a>
-                                <a class="item ${paginaAtual === 'dica' ? 'paginaAtual' : ''}" id="dropdown__link" href="dica.html" data-translate="8">Dicas</a>
-                                <a class="item ${paginaAtual === 'cardapio' ? 'paginaAtual' : ''}" id="dropdown__link" href="opcoescardapio.html" data-translate="9">Cardápio Personalizado</a>
-                                <a class="item ${paginaAtual === 'agendamento' ? 'paginaAtual' : ''}" id="dropdown__link" href="agendamento.html" data-translate="9">Agendamento</a>
-                            </div>
-                        </li>
-                        <li><a class="item ${paginaAtual === 'sobre' ? 'paginaAtual' : ''}" href="sobre.html" data-translate="4">Sobre nós</a></li>
-                        <li><a class="item ${paginaAtual === 'contatos' ? 'paginaAtual' : ''}" href="contatos.html" data-translate="5">Contatos</a></li>
-                        <li class="dropdown">
-                            <p class="setaNav" data-translate="6" id="usuarioLogado">Usuário</p>
-                            <div class="drop-menu drop-m2">
-                                <a href="cadastro.html" id="link-cadastro" class="item">Cadastro</a>    
-                                <a href="entrar.html" id="link-login" class="item">Entrar</a>
-                                <a href="perfil.html" id="linkPerfil" class="item">Perfil</a>
-                            </div>
-                        </li>
-                    </ul>
-                </nav>
-                <div class="hamburgue" id="hamburgue"></div>
-            </section>
-        `;
-
-        const headerElement = document.querySelector('header');
-        if (headerElement) {
-            headerElement.innerHTML = headerHTML;
-        } else {
-            console.error("Elemento header não encontrado!");
-        }
+    if (path.includes("index.html")) {
+        paginaAtual = "index";
+    } else if (path.includes("imc.html")) {
+        paginaAtual = "imc";
+    } else if (path.includes("resumoConsulta.html")) {
+        paginaAtual = "resumo";
+    } else if (path.includes("metas.html")) {
+        paginaAtual = "metas";
+    } else if (path.includes("Cardapio.html")) {
+        paginaAtual = "cardapio";
+    } else if (path.includes("agendamento.html")) {
+        paginaAtual = "agendamento";
+    } else if (path.includes("sobre.html")) {
+        paginaAtual = "sobre";
+    } else if (path.includes("contatos.html")) {
+        paginaAtual = "contatos";
     }
+
+    const usuario = JSON.parse(localStorage.getItem('dadosUsuario'));
+    const nomeUsuario = usuario ? (usuario.nome_usuario || usuario.nome || 'Usuário') : null;
+    const inicialUsuario = nomeUsuario ? nomeUsuario.charAt(0).toUpperCase() : null;
+
+    const dropdownUsuario = usuario ? `
+        <li>
+            <div class="avatar-usuario-header" id="avatar-usuario" onclick="window.location.href='perfil.html'">${inicialUsuario}</div>
+        </li>
+    ` : `
+        <li class="dropdown">
+            <p class="setaNav" data-translate="6" id="usuarioLogado">Usuário</p>
+            <div class="drop-menu drop-m2">
+                <a href="cadastro.html" id="link-cadastro" class="item">Cadastro</a>    
+                <a href="entrar.html" id="link-login" class="item">Entrar</a>
+                <a href="perfil.html" id="linkPerfil" class="item">Perfil</a>
+            </div>
+        </li>
+    `;
+
+    const headerHTML = `
+        <a href="index.html"  style="height: 100%;">
+        <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+</a>
+        <section class="direito">
+            <nav class="menu">
+                <ul id="menu">
+                    <a href="index.html">
+        <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida"  style="height: 4rem;">
+</a>
+                    <li><a class="item ${paginaAtual === 'index' ? 'paginaAtual' : ''}" href="index.html" data-translate="1">Início</a></li>    
+                    <li class="dropdown">
+                        <p class="setaNav" data-translate="2">Serviços</p>
+                        <div class="drop-menu">
+                            <a class="item ${paginaAtual === 'imc' ? 'paginaAtual' : ''}" id="dropdown__link" href="imc.html" data-translate="8">Imc</a>
+                            <a class="item ${paginaAtual === 'dica' ? 'paginaAtual' : ''}" id="dropdown__link" href="dica.html" data-translate="8">Dicas</a>
+                            <a class="item ${paginaAtual === 'resumo' ? 'paginaAtual' : ''}" id="dropdown__link" href="resumoConsulta.html" data-translate="8">Resumo da consulta</a>
+                            <a class="item ${paginaAtual === 'metas' ? 'paginaAtual' : ''}" id="dropdown__link" href="metas.html" data-translate="8">Metas</a>
+                            <a class="item ${paginaAtual === 'cardapio' ? 'paginaAtual' : ''}" id="dropdown__link" href="opcoescardapio.html" data-translate="9">Cardápio Personalizado</a>
+                            <a class="item ${paginaAtual === 'agendamento' ? 'paginaAtual' : ''}" id="dropdown__link" href="agendamento.html" data-translate="9">Agendamento</a>
+                        </div>
+                    </li>
+                    <li><a class="item ${paginaAtual === 'sobre' ? 'paginaAtual' : ''}" href="sobre.html" data-translate="4">Sobre nós</a></li>
+                    <li><a class="item ${paginaAtual === 'contatos' ? 'paginaAtual' : ''}" href="contatos.html" data-translate="5">Contatos</a></li>
+                    ${dropdownUsuario}
+                </ul>
+            </nav>
+            <div class="hamburgue" id="hamburgue"></div>
+        </section>
+    `;
+
+    const headerElement = document.querySelector('header');
+    if (headerElement) {
+        headerElement.innerHTML = headerHTML;
+    } else {
+        console.error("Elemento header não encontrado!");
+    }
+}
 
     inserirHeader();
 
@@ -336,9 +355,6 @@ if (desligarFuncao) {
             </p>
             <div class="footer-social">
                 <a href="#" class="social-link" aria-label="Instagram"></a>
-                <a href="#" class="social-link" aria-label="Facebook"></a>
-                <a href="#" class="social-link" aria-label="Twitter"></a>
-                <a href="#" class="social-link" aria-label="YouTube"></a>
             </div>
         </div>
 
@@ -347,7 +363,6 @@ if (desligarFuncao) {
             <h3>Mapa do site</h3>
             <ul class="footer-links">
                 <li><a href="index.html">Início</a></li>
-                <li><a href="servico.html">Serviços</a></li>
                 <li><a href="imc.html">imc</a></li>
                 <li><a href="dicas.html">dica</a></li>
                 <li><a href="Cardapio.html">Cardápio</a></li>
@@ -361,9 +376,9 @@ if (desligarFuncao) {
         <div class="footer-section">
             <h3>Planos</h3>
             <ul class="footer-links">
-                <li><a href="#basico">Básicos</a></li>
-                <li><a href="#intermediario">Intermediários</a></li>
-                <li><a href="#premium">Premium</a></li>
+                <li><a href="#para-baixo">Básicos</a></li>
+                <li><a href="#para-baixo">Intermediários</a></li>
+                <li><a href="#para-baixo">Premium</a></li>
             </ul>
         </div>
 
@@ -391,11 +406,6 @@ if (desligarFuncao) {
             <span>•</span>
             <span>Todos os direitos reservados</span>
         </div>
-        <ul class="footer-links-bottom">
-            <li><a href="#privacidade">Privacidade</a></li>
-            <li><a href="#termos">Termos de Uso</a></li>
-            <li><a href="#cookies">Cookies</a></li>
-        </ul>
     </div>
   `;
 
@@ -407,7 +417,64 @@ if (desligarFuncao) {
         }
     }
 
+   async function verificarAcesso() {
+    const path = window.location.pathname;
+    const usuario = JSON.parse(localStorage.getItem("dadosUsuario"));
     
+    console.log("PATH:", path);
+    console.log("USUARIO:", usuario);
+
+    const paginasConsulta = ["resumoConsulta.html", "metas.html"];
+    const paginasPlano = ["opcoescardapio.html", "Cardapio.html"];
+
+    const paginaAtual = paginasConsulta.find(p => path.includes(p));
+    const paginaPlano = paginasPlano.find(p => path.includes(p));
+
+    console.log("PAGINA CONSULTA:", paginaAtual);
+    console.log("PAGINA PLANO:", paginaPlano);
+
+    // Verifica login
+    if ((paginaAtual || paginaPlano) && !usuario) {
+        window.location.href = "entrar.html";
+        return;
+    }
+
+    // Verifica consulta com nutricionista
+    if (paginaAtual && usuario) {
+        try {
+            const res = await fetch(`http://localhost:3000/agendamentos/usuario/${usuario.id}/tem-consulta`);
+            const dados = await res.json();
+            if (!dados.temConsulta) {
+                window.location.href = "entrar.html";
+                return;
+            }
+        } catch (err) {
+            console.error("Erro ao verificar consulta:", err);
+        }
+    }
+
+    // Verifica plano ativo
+    if (paginaPlano && usuario) {
+        try {
+            const res = await fetch(`http://localhost:3000/planos/${usuario.id}`);
+            if (!res.ok) {
+                window.location.href = "sobre.html#planos";
+                return;
+            }
+            const dados = await res.json();
+            if (dados.status !== 'ativo') {
+                window.location.href = "sobre.html#planos";
+                return;
+            }
+        } catch (err) {
+            console.error("Erro ao verificar plano:", err);
+            window.location.href = "sobre.html#planos";
+        }
+    }
+}
+
+// Chama ao carregar qualquer página
+document.addEventListener("DOMContentLoaded", verificarAcesso); 
 
 // Depois do inserirHeader e inserirBarraAcessibilidade
 inserirHeader();

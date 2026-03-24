@@ -48,8 +48,9 @@
     </div>
 
     <header >
+        <a href="index.html">
         <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
-
+</a>
            
 
         <section class="direito">
@@ -63,9 +64,6 @@
                 </p>
                 
                 <div class="drop-menu">
-                    <a class="item" id="dropdown__link" href="servico.html" data-translate="7">Nossos serviços</a>
-
-                    
                     <a class="item" id="dropdown__link" href="imc.html" data-translate="8">Imc</a>
                     <a class="item" id="dropdown__link" href="opcoesCardapio.html" data-translate="9">Cardápio Personalizado</a>
                     <a class="item" id="dropdown__link" href="agendamento.html" data-translate="9">Agendamento</a>
@@ -137,7 +135,7 @@
 
             <div class="card-interno">
 
-                <div class="card card1">
+                <div class="card card1" >
 
                     <h2 data-translate="11">Básico</h2>
                     <h3 data-translate="12">R$70,00</h3>
@@ -269,12 +267,28 @@
     </section>
   
 <!-- Adicione isso ao seu HTML para o modal de confirmação -->
-<div id="confirmacaoCompra">
-  <div class="modal-conteudo">
-    <p id="mensagemConfirmacao"></p>
-    <button id="btnSim">Sim</button>
-    <button id="btnCancelar">Cancelar</button>
-  </div>
+<div id="confirmacaoCompra" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px)">
+    <div style="background:linear-gradient(135deg,#0f172a,#1e293b);border:1px solid rgba(16,185,129,0.25);border-radius:24px;padding:2.5rem;max-width:400px;width:90%;text-align:center;box-shadow:0 25px 70px rgba(0,0,0,0.5);animation:surgir 0.25s ease">
+
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+                <path d="M12 6v6l4 2"/>
+            </svg>
+        </div>
+
+        <h3 style="font-size:1.1rem;font-weight:700;color:#e2e8f0;margin-bottom:0.5rem">Confirmar Compra</h3>
+        <p id="mensagemConfirmacao" style="font-size:0.88rem;color:#94a3b8;margin-bottom:1.8rem;line-height:1.6"></p>
+
+        <div style="display:flex;gap:0.8rem;justify-content:center">
+            <button id="btnCancelar" style="flex:1;padding:0.8rem 1.2rem;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#94a3b8;font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                Cancelar
+            </button>
+            <button id="btnSim" style="flex:1;padding:0.8rem 1.2rem;border-radius:12px;border:1px solid rgba(16,185,129,0.3);background:linear-gradient(135deg,#059669,#10b981);color:#fff;font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 15px rgba(16,185,129,0.3)" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                Confirmar
+            </button>
+        </div>
+    </div>
 </div>
 
 
@@ -623,9 +637,6 @@
             </p>
             <div class="footer-social">
                 <a href="#" class="social-link" aria-label="Instagram"></a>
-                <a href="#" class="social-link" aria-label="Facebook"></a>
-                <a href="#" class="social-link" aria-label="Twitter"></a>
-                <a href="#" class="social-link" aria-label="YouTube"></a>
             </div>
         </div>
 
@@ -634,7 +645,6 @@
             <h3>Mapa do site</h3>
             <ul class="footer-links">
                 <li><a href="index.html">Início</a></li>
-                <li><a href="servico.html">Serviços</a></li>
                 <li><a href="Cardapio.html">Cardápio</a></li>
                 <li><a href="agendamento.html">Agendamentos</a></li>
                 <li><a href="sobre.html">Sobre nós</a></li>
@@ -646,7 +656,7 @@
         <div class="footer-section">
             <h3>Planos</h3>
             <ul class="footer-links">
-                <li><a href="#basico">Básicos</a></li>
+                <li><a href="#para-baixo">Básicos</a></li>
                 <li><a href="#intermediario">Intermediários</a></li>
                 <li><a href="#premium">Premium</a></li>
             </ul>

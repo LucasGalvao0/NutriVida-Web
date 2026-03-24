@@ -25,6 +25,7 @@
             --blue: #3b82f6;
             --purple: #8b5cf6;
         }
+        
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -46,6 +47,11 @@
     z-index: -1;
     overflow: hidden;
     pointer-events: none;
+}
+
+@keyframes surgirModal {
+    from { opacity: 0; transform: scale(0.92); }
+    to   { opacity: 1; transform: scale(1); }
 }
 
 /* Blobs de gradiente animados */
@@ -707,7 +713,7 @@
         }
 
         .f-select option { background: #0f172a; }
-        .f-textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+        .f-textarea { resize: none; min-height: 80px; line-height: 1.5; }
 
         /* ── SEMIOLOGIA CHECKBOXES ── */
         .semi-section { margin-bottom: 1.5rem; }
@@ -901,7 +907,6 @@
             .main { padding-top: 4rem; }
         }
 
-        ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(16,185,129,0.25); border-radius: 4px; }
     </style>
@@ -1025,8 +1030,11 @@
                     <div class="page-sub" id="dataHoje">Quinta-feira, 26 de Fevereiro de 2026 &nbsp;·&nbsp; 3 consultas hoje</div>
                 </div>
                 <div class="page-actions">
-                    <button class="btn btn-ghost" onclick="goSection('alertas')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span> 5 Alertas</button>
-                    <button class="btn btn-primary" onclick="openPacDetail()">+ Novo Registro</button>
+                    <button class="btn btn-ghost" onclick="goSection('alertas')">
+                    <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+                    <span id="total-alertas-btn">0</span> Alertas
+                    </button>
+                    
                 </div>
             </div>
 
@@ -1048,19 +1056,25 @@
                     <div class="sc-label">Consultas Hoje</div>
                 </div>
                 <div class="stat-card sc-3">
-                    <div class="sc-top">
-                        <span class="sc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
-                        <span class="sc-badge badge-up">94%</span>
-                    </div>
-                    <div class="sc-num">31</div>
-                    <div class="sc-label">Metas Atingidas</div>
+                <div class="sc-top">
+                    <span class="sc-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="6"/>
+                            <circle cx="12" cy="12" r="2"/>
+                        </svg>
+                    </span>
+                    <span class="sc-badge badge-up" id="metas-atingidas-pct">—</span>
                 </div>
+                <div class="sc-num" id="metas-atingidas">—</div>
+                <div class="sc-label">Metas Atingidas</div>
+            </div>
                 <div class="stat-card sc-4">
                     <div class="sc-top">
                         <span class="sc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
                         <span class="sc-badge badge-down">Urgente</span>
                     </div>
-                    <div class="sc-num">5</div>
+                    <div class="sc-num" id="total-alertas-card">5</div>
                     <div class="sc-label">Alertas Ativos</div>
                 </div>
             </div>
@@ -1090,25 +1104,12 @@
                 <!-- Alertas + Progress -->
                 <div style="display:flex;flex-direction:column;gap:1.4rem">
                     <div class="glass-card">
-                        <div class="card-title"><span class="icon icon-alert" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span> Alertas Recentes</div>
-                        <div class="alert-card ac-crit" onclick="goSection('alertas')">
-                            <div class="alert-icon"><span class="icon icon-xl icon-alert" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span></div>
-                            <div>
-                                <div class="alert-title" style="color:var(--red)">Renata Oliveira</div>
-                                <div class="alert-desc">IMC 31,2 · Glicose em alta. Requer atenção imediata.</div>
-                                <div class="alert-meta">Hoje, 08:15</div>
-                            </div>
-                        </div>
-                        <div class="alert-card ac-warn" onclick="goSection('alertas')">
-                            <div class="alert-icon"><span class="icon icon-xl icon-warn" aria-hidden="true"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span></div>
-                            <div>
-                                <div class="alert-title" style="color:var(--accent)">Marcos Silva</div>
-                                <div class="alert-desc">3 dias sem registrar refeições no cardápio.</div>
-                                <div class="alert-meta">Ontem</div>
-                            </div>
-                        </div>
-                        <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:0.5rem" onclick="goSection('alertas')">Ver todos os alertas →</button>
+                    <div class="card-title">
+                        <span class="icon icon-alert" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span> Alertas Recentes
                     </div>
+                    <div id="alertas-recentes-lista"></div>
+                    <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:0.5rem" onclick="goSection('alertas')">Ver todos os alertas →</button>
+                </div>
 
                     <div class="glass-card">
                         <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span> Pacientes por Plano</div>
@@ -1142,10 +1143,7 @@
                     <div class="page-title">Pacientes</div>
                     <div class="page-sub">48 pacientes cadastrados · 5 com alertas</div>
                 </div>
-                <div class="page-actions">
-                    <button class="btn btn-outline"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span> Exportar</button>
-                    <button class="btn btn-primary" onclick="openPacDetail()">+ Novo Paciente</button>
-                </div>
+                
             </div>
 
             <div class="glass-card">
@@ -1172,60 +1170,7 @@
                     <span class="th" style="text-align:center">Status</span>
                 </div>
 
-                <div class="table-row pac-cols pac-row" data-filter="premium ok" onclick="openPacDetail()">
-                    <div class="pac-info"><div class="p-ava av-g">A</div><div><div class="p-nm">Ana Paula Ferreira</div><div class="p-meta">32 anos · (16) 99999-0001</div></div></div>
-                    <div class="imc-chip"><div class="imc-val" style="color:var(--primary)">23,4</div><div class="imc-cl">Normal</div></div>
-                    <div style="text-align:center"><span class="plano pl-prem">Premium</span></div>
-                    <div style="text-align:center;font-size:0.78rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace">26/02</div>
-                    <div style="text-align:center"><span class="status s-ok">92%</span></div>
-                    <div style="text-align:center"><span class="status s-ok">Ótimo</span></div>
                 </div>
-
-                <div class="table-row pac-cols pac-row row-alert" data-filter="premium alerta" onclick="openPacDetail()">
-                    <div class="pac-info"><div class="p-ava av-p">R</div><div><div class="p-nm">Renata Oliveira</div><div class="p-meta">37 anos · (16) 99999-0002</div></div></div>
-                    <div class="imc-chip"><div class="imc-val" style="color:var(--red)">31,2</div><div class="imc-cl">Obesidade I</div></div>
-                    <div style="text-align:center"><span class="plano pl-prem">Premium</span></div>
-                    <div style="text-align:center;font-size:0.78rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace">26/02</div>
-                    <div style="text-align:center"><span class="status s-alert">41%</span></div>
-                    <div style="text-align:center"><span class="status s-alert">Alerta</span></div>
-                </div>
-
-                <div class="table-row pac-cols pac-row row-warn" data-filter="intermediario alerta" onclick="openPacDetail()">
-                    <div class="pac-info"><div class="p-ava av-o">M</div><div><div class="p-nm">Marcos Silva</div><div class="p-meta">28 anos · (16) 99999-0003</div></div></div>
-                    <div class="imc-chip"><div class="imc-val" style="color:var(--accent)">27,1</div><div class="imc-cl">Sobrepeso</div></div>
-                    <div style="text-align:center"><span class="plano pl-int">Intermediário</span></div>
-                    <div style="text-align:center;font-size:0.78rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace">26/02</div>
-                    <div style="text-align:center"><span class="status s-warn">63%</span></div>
-                    <div style="text-align:center"><span class="status s-warn">Atenção</span></div>
-                </div>
-
-                <div class="table-row pac-cols pac-row" data-filter="basico ok" onclick="openPacDetail()">
-                    <div class="pac-info"><div class="p-ava av-b">J</div><div><div class="p-nm">João Santos</div><div class="p-meta">45 anos · (16) 99999-0004</div></div></div>
-                    <div class="imc-chip"><div class="imc-val" style="color:var(--primary)">24,8</div><div class="imc-cl">Normal</div></div>
-                    <div style="text-align:center"><span class="plano pl-bas">Básico</span></div>
-                    <div style="text-align:center;font-size:0.78rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace">01/03</div>
-                    <div style="text-align:center"><span class="status s-ok">88%</span></div>
-                    <div style="text-align:center"><span class="status s-ok">Ótimo</span></div>
-                </div>
-
-                <div class="table-row pac-cols pac-row" data-filter="intermediario novo" onclick="openPacDetail()">
-                    <div class="pac-info"><div class="p-ava av-t">L</div><div><div class="p-nm">Lucas Mendes</div><div class="p-meta">24 anos · (16) 99999-0005</div></div></div>
-                    <div class="imc-chip"><div class="imc-val" style="color:var(--primary)">22,0</div><div class="imc-cl">Normal</div></div>
-                    <div style="text-align:center"><span class="plano pl-int">Intermediário</span></div>
-                    <div style="text-align:center;font-size:0.78rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace">26/02</div>
-                    <div style="text-align:center"><span class="status s-new">—</span></div>
-                    <div style="text-align:center"><span class="status s-new">Novo</span></div>
-                </div>
-
-                <div class="table-row pac-cols pac-row" data-filter="premium ok" onclick="openPacDetail()">
-                    <div class="pac-info"><div class="p-ava av-g" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)">C</div><div><div class="p-nm">Carla Mendonça</div><div class="p-meta">31 anos · (16) 99999-0006</div></div></div>
-                    <div class="imc-chip"><div class="imc-val" style="color:var(--primary)">21,3</div><div class="imc-cl">Normal</div></div>
-                    <div style="text-align:center"><span class="plano pl-prem">Premium</span></div>
-                    <div style="text-align:center;font-size:0.78rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace">27/02</div>
-                    <div style="text-align:center"><span class="status s-ok">97%</span></div>
-                    <div style="text-align:center"><span class="status s-ok">Ótimo</span></div>
-                </div>
-            </div>
         </div>
 
         <!-- ══ AGENDA ══ -->
@@ -1235,10 +1180,7 @@
             <div class="page-title">Consultas</div>
             <div class="subAgenda" id="subAgenda">Fevereiro 2026 · 3 confirmadas hoje</div>
         </div>
-        <div class="page-actions">
-            <button class="btn btn-outline">◀ Fev</button>
-            <button class="btn btn-ghost">Mar ▶</button>
-        </div>
+      
     </div>
 
     <!-- Abas -->
@@ -1267,8 +1209,7 @@
                         <div class="ag-type">Retorno · Avaliação Nutricional · 50 min</div>
                     </div>
                     <span class="status s-ok">Confirmada</span>
-                    <button class="btn-check" onclick="toggleRealizada('ag0')">✓ Realizada</button>
-                    <button class="btn btn-ghost btn-sm" onclick="openPacDetail()">Abrir</button>
+                    <button class="btn-check" onclick="toggleRealizada('ag0')">✓ Realizada</button>             
                 </div>
 
                 <div class="section-div"></div>
@@ -1321,7 +1262,7 @@
     <div id="agenda-aba-historico" style="display:none">
         <div class="glass-card">
             <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:1.4rem;flex-wrap:wrap">
-                <select class="f-select" id="hist-pac" onchange="renderHistorico()" style="max-width:220px">
+                <select class="f-select" id="selectPaciente" style="max-width:280px" onchange="carregarCardapioPaciente()">
                     <option value="">Todos os pacientes</option>
                     <option value="Ana Paula Ferreira">Ana Paula Ferreira</option>
                     <option value="Lucas Mendes">Lucas Mendes</option>
@@ -1364,140 +1305,72 @@
                     <div class="page-title">Cardápios dos Pacientes</div>
                     <div class="page-sub">Veja e acompanhe o que seus pacientes estão usando no site</div>
                 </div>
-                <div class="page-actions">
-                    <div class="filter-tabs">
-                        <button class="ftab on" onclick="ftab(this)">Todos</button>
-                        <button class="ftab" onclick="ftab(this)">Em uso</button>
-                        <button class="ftab" onclick="ftab(this)">Revisão</button>
-                    </div>
-                </div>
+                
             </div>
 
             <div class="grid-main">
                 <div>
                     <!-- Seletor de Paciente -->
                     <div class="glass-card" style="margin-bottom:1.4rem">
-                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Paciente Selecionado</div>
-                        <div class="filter-bar" style="margin-bottom:0">
-                            <select class="f-select" style="max-width:280px">
-                                <option>Ana Paula Ferreira</option>
-                                <option>Marcos Silva</option>
-                                <option>João Santos</option>
-                                <option>Renata Oliveira</option>
-                            </select>
-                            <span class="plano pl-prem">Premium</span>
-                            <span class="status s-ok">Cardápio ativo</span>
-                            <span style="font-size:0.78rem;color:var(--text-muted)">Atualizado: 25/02/26</span>
-                        </div>
-                    </div>
+    <div class="card-title">
+        <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> 
+        Paciente Selecionado
+    </div>
+    <div class="filter-bar" style="margin-bottom:0">
+        <!-- 👇 SELECT DINÂMICO -->
+        <select class="f-select" id="selectPacienteCardapio" style="max-width:280px" onchange="carregarCardapioPaciente()">
+            <option value="">Selecione um paciente</option>
+        </select>
+        <span class="status s-ok" id="cardapio-status" style="display:none">Cardápio ativo</span>
+        <span style="font-size:0.78rem;color:var(--text-muted)" id="cardapio-atualizado"></span>
+    </div>
+</div>
 
                     <!-- Cardápio ativo -->
                     <div class="glass-card">
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
-                            <div class="card-title" style="margin-bottom:0"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span> Cardápio Atual — Ana Paula</div>
+                            <div class="card-title" style="margin-bottom:0" id="cardapio-titulo"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span> Cardápio Atual — Ana Paula</div>
+                            <div id="cardapio-nome-plano" style="font-size:0.78rem;color:var(--text-muted);margin-top:0.2rem"></div>
                             <div style="display:flex;gap:0.6rem">
                                 <button class="btn btn-ghost btn-sm" onclick="toast('Cardápio exportado!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span> Exportar</button>
                                 <button class="btn btn-primary btn-sm" onclick="toast('Observação enviada!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span> Comentar</button>
                             </div>
                         </div>
 
-                        <!-- Café da manhã -->
-                        <div class="refeicao-block">
-                            <div class="ref-header" onclick="toggleRef(this)">
-                                <div><div class="ref-name"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg></span> Café da Manhã</div></div>
-                                <div style="display:flex;gap:1rem;align-items:center">
-                                    <span class="ref-time">07:00</span>
-                                    <span class="ref-kcal">278 kcal</span>
-                                    <span style="color:var(--text-muted)">▼</span>
-                                </div>
-                            </div>
-                            <div class="ref-body">
-                                <div class="alimento-grid head"><span>Alimento</span><span>Medida</span><span>Kcal</span><span>Prot.</span><span>Carb.</span></div>
-                                <div class="alimento-grid"><span>Margarina light</span><span>2 col chá</span><span>20,57</span><span>0g</span><span>0g</span></div>
-                                <div class="alimento-grid"><span>Café c/ leite desc.</span><span>1 xícara</span><span>73,58</span><span>5,22g</span><span>12,86g</span></div>
-                                <div class="alimento-grid"><span>Pão francês</span><span>1 un. M</span><span>143,92</span><span>4,71g</span><span>28,4g</span></div>
-                                <div class="alimento-grid"><span>Melão</span><span>1 fatia G</span><span>40,38</span><span>0,71g</span><span>8,27g</span></div>
-                                <div class="macro-bar">
-                                    <div class="macro-item"><div class="macro-val" style="color:var(--primary)">278</div><div class="macro-lbl">Kcal</div></div>
-                                    <div class="macro-item"><div class="macro-val" style="color:var(--blue)">10,64g</div><div class="macro-lbl">Proteína</div></div>
-                                    <div class="macro-item"><div class="macro-val" style="color:var(--accent)">49,53g</div><div class="macro-lbl">Carb.</div></div>
-                                    <div class="macro-item"><div class="macro-val" style="color:var(--orange)">4,2g</div><div class="macro-lbl">Gordura</div></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Almoço -->
-                        <div class="refeicao-block">
-                            <div class="ref-header" onclick="toggleRef(this)">
-                                <div><div class="ref-name"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span> Almoço</div></div>
-                                <div style="display:flex;gap:1rem;align-items:center">
-                                    <span class="ref-time">12:30</span>
-                                    <span class="ref-kcal">620 kcal</span>
-                                    <span style="color:var(--text-muted)">▼</span>
-                                </div>
-                            </div>
-                            <div class="ref-body">
-                                <div class="alimento-grid head"><span>Alimento</span><span>Medida</span><span>Kcal</span><span>Prot.</span><span>Carb.</span></div>
-                                <div class="alimento-grid"><span>Arroz branco cozido</span><span>4 col sopa</span><span>188</span><span>3,8g</span><span>41g</span></div>
-                                <div class="alimento-grid"><span>Feijão carioca</span><span>1 concha</span><span>130</span><span>9g</span><span>22g</span></div>
-                                <div class="alimento-grid"><span>Frango grelhado</span><span>150g</span><span>210</span><span>32g</span><span>0g</span></div>
-                                <div class="alimento-grid"><span>Salada verde</span><span>1 prato</span><span>42</span><span>2g</span><span>5g</span></div>
-                                <div class="macro-bar">
-                                    <div class="macro-item"><div class="macro-val" style="color:var(--primary)">620</div><div class="macro-lbl">Kcal</div></div>
-                                    <div class="macro-item"><div class="macro-val" style="color:var(--blue)">46,8g</div><div class="macro-lbl">Proteína</div></div>
-                                    <div class="macro-item"><div class="macro-val" style="color:var(--accent)">68g</div><div class="macro-lbl">Carb.</div></div>
-                                    <div class="macro-item"><div class="macro-val" style="color:var(--orange)">8,4g</div><div class="macro-lbl">Gordura</div></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Jantar -->
-                        <div class="refeicao-block">
-                            <div class="ref-header" onclick="toggleRef(this)">
-                                <div><div class="ref-name"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span> Jantar</div></div>
-                                <div style="display:flex;gap:1rem;align-items:center">
-                                    <span class="ref-time">19:30</span>
-                                    <span class="ref-kcal">410 kcal</span>
-                                    <span style="color:var(--text-muted)">▼</span>
-                                </div>
-                            </div>
-                            <div class="ref-body">
-                                <div class="alimento-grid head"><span>Alimento</span><span>Medida</span><span>Kcal</span><span>Prot.</span><span>Carb.</span></div>
-                                <div class="alimento-grid"><span>Omelete de espinafre</span><span>2 ovos</span><span>200</span><span>14g</span><span>3g</span></div>
-                                <div class="alimento-grid"><span>Pão integral</span><span>2 fatias</span><span>150</span><span>6g</span><span>28g</span></div>
-                                <div class="alimento-grid"><span>Iogurte natural</span><span>1 pote 170g</span><span>60</span><span>8g</span><span>5g</span></div>
-                                <div class="macro-bar">
-                                    <div class="macro-item"><div class="macro-val" style="color:var(--primary)">410</div><div class="macro-lbl">Kcal</div></div>
-                                    <div class="macro-item"><div class="macro-val" style="color:var(--blue)">28g</div><div class="macro-lbl">Proteína</div></div>
-                                    <div class="macro-item"><div class="macro-val" style="color:var(--accent)">36g</div><div class="macro-lbl">Carb.</div></div>
-                                    <div class="macro-item"><div class="macro-val" style="color:var(--orange)">11g</div><div class="macro-lbl">Gordura</div></div>
-                                </div>
-                            </div>
-                        </div>
+                        <div id="cardapio-corpo">
+    <p style="opacity:.6;padding:2rem;text-align:center">Selecione um paciente para ver o cardápio.</p>
+</div>
                     </div>
                 </div>
 
                 <!-- Resumo diário -->
                 <div style="display:flex;flex-direction:column;gap:1.2rem">
                     <div class="glass-card">
-                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span> Total do Dia</div>
-                        <div style="text-align:center;margin-bottom:1rem">
-                            <div style="font-size:2.8rem;font-weight:900;font-family:'JetBrains Mono',monospace;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent">1.308</div>
-                            <div style="color:var(--text-muted);font-size:0.8rem">Kcal totais</div>
-                        </div>
-                        <div style="margin-bottom:0.8rem">
-                            <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:0.3rem"><span>Proteína</span><span style="color:var(--blue);font-weight:700">85,4g · 26%</span></div>
-                            <div class="prog-track"><div class="prog-fill" style="background:linear-gradient(90deg,var(--blue),var(--purple));width:0" data-w="26%"></div></div>
-                        </div>
-                        <div style="margin-bottom:0.8rem">
-                            <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:0.3rem"><span>Carboidratos</span><span style="color:var(--accent);font-weight:700">153,5g · 47%</span></div>
-                            <div class="prog-track"><div class="prog-fill pf-yellow" style="width:0" data-w="47%"></div></div>
-                        </div>
-                        <div>
-                            <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:0.3rem"><span>Gordura</span><span style="color:var(--orange);font-weight:700">23,6g · 27%</span></div>
-                            <div class="prog-track"><div class="prog-fill" style="background:linear-gradient(90deg,var(--orange),var(--accent));width:0" data-w="27%"></div></div>
-                        </div>
-                    </div>
+  <div class="card-title">
+    <span class="icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span> 
+    Totais do Cardápio
+  </div>
+
+  <!-- Total do dia -->
+  <div style="text-align:center;margin-bottom:0.6rem">
+    <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:0.2rem">Kcal do dia selecionado</div>
+    <div id="total-kcal-valor" style="font-size:2.4rem;font-weight:900;font-family:'JetBrains Mono',monospace;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent">—</div>
+  </div>
+
+  <div class="section-div"></div>
+
+  <!-- Total da semana -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-top:0.8rem">
+    <div style="text-align:center;padding:0.8rem;background:rgba(16,185,129,0.06);border-radius:12px;border:1px solid var(--border)">
+      <div id="total-semana-kcal" style="font-size:1.3rem;font-weight:900;color:var(--primary);font-family:'JetBrains Mono',monospace">—</div>
+      <div style="font-size:0.7rem;color:var(--text-muted)">Total semana</div>
+    </div>
+    <div style="text-align:center;padding:0.8rem;background:rgba(251,191,36,0.06);border-radius:12px;border:1px solid rgba(251,191,36,0.15)">
+      <div id="total-media-kcal" style="font-size:1.3rem;font-weight:900;color:var(--accent);font-family:'JetBrains Mono',monospace">—</div>
+      <div style="font-size:0.7rem;color:var(--text-muted)">Média diária</div>
+    </div>
+  </div>
+</div>
                     <div class="glass-card">
                         <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Observação do Nutricionista</div>
                         <textarea id="nota-cardapio" class="f-textarea" oninput="notaChanged('nota-cardapio-meta')" placeholder="Deixe um comentário ou orientação para este cardápio..."></textarea>
@@ -1512,115 +1385,118 @@
 
         <!-- ══ METAS ══ -->
         <div id="sec-metas" class="section">
-            <div class="page-header">
-                <div>
-                    <div class="page-title">Metas dos Pacientes</div>
-                    <div class="page-sub">Defina e acompanhe metas personalizadas</div>
-                </div>
-                <div class="page-actions">
-                    <select class="f-select" style="max-width:220px"><option>Ana Paula Ferreira</option><option>Marcos Silva</option><option>Renata Oliveira</option></select>
-                    <button class="btn btn-primary" onclick="toast('Meta criada com sucesso!')">+ Nova Meta</button>
-                </div>
-            </div>
+  <div class="page-header">
+    <div>
+      <div class="page-title">Metas dos Pacientes</div>
+      <div class="page-sub">Defina e acompanhe metas personalizadas</div>
+    </div>
+    <div class="page-actions">
+      <select class="f-select" id="select-paciente-metas" style="max-width:220px" onchange="carregarMetas()">
+        <option value="">Selecione um paciente</option>
+      </select>
+      <button class="btn btn-primary" onclick="abrirFormMeta()">+ Nova Meta</button>
+    </div>
+  </div>
 
-            <div class="grid-main">
-                <div>
-                    <div class="glass-card">
-                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> Metas Ativas — Ana Paula Ferreira</div>
-
-                        <div class="meta-card">
-                            <div class="meta-top">
-                                <div>
-                                    <div class="meta-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="21"/><path d="M3 9l9-6 9 6"/><path d="M3 15l9 6 9-6"/></svg></span> Meta de Peso</div>
-                                    <div style="font-size:0.75rem;color:var(--text-muted)">63,0 kg → 58,0 kg · Prazo: 30/06/26</div>
-                                </div>
-                                <div>
-                                    <div class="meta-pct" style="color:var(--primary)">68%</div>
-                                    <div style="font-size:0.65rem;color:var(--text-muted);text-align:right">-3,4 kg</div>
-                                </div>
-                            </div>
-                            <div class="prog-track"><div class="prog-fill pf-green" style="width:0" data-w="68%"></div></div>
-                            <div class="meta-footer"><span>Início: 01/01/26</span><span>Falta 2,6 kg</span></div>
-                            <div style="display:flex;gap:0.5rem;margin-top:0.8rem">
-                                <button class="btn btn-ghost btn-sm" onclick="toast('Meta editada!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span> Editar</button>
-                                <button class="btn btn-ghost btn-sm" onclick="toast('Registro adicionado!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V17z"/></svg></span> Progresso</button>
-                            </div>
-                        </div>
-
-                        <div class="meta-card">
-                            <div class="meta-top">
-                                <div>
-                                    <div class="meta-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span> Gordura Corporal</div>
-                                    <div style="font-size:0.75rem;color:var(--text-muted)">14,21% → 11,0% · Prazo: 30/06/26</div>
-                                </div>
-                                <div>
-                                    <div class="meta-pct" style="color:var(--accent)">45%</div>
-                                    <div style="font-size:0.65rem;color:var(--text-muted);text-align:right">-1,44%</div>
-                                </div>
-                            </div>
-                            <div class="prog-track"><div class="prog-fill pf-yellow" style="width:0" data-w="45%"></div></div>
-                            <div class="meta-footer"><span>Em progresso</span><span>Falta 3,21%</span></div>
-                        </div>
-
-                        <div class="meta-card">
-                            <div class="meta-top">
-                                <div>
-                                    <div class="meta-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> Adesão ao Cardápio</div>
-                                    <div style="font-size:0.75rem;color:var(--text-muted)">Meta: 85% adesão semanal</div>
-                                </div>
-                                <div>
-                                    <div class="meta-pct" style="color:var(--primary)">92%</div>
-                                    <div style="font-size:0.65rem;color:var(--text-muted);text-align:right">Meta atingida</div>
-                                </div>
-                            </div>
-                            <div class="prog-track"><div class="prog-fill pf-green" style="width:0" data-w="92%"></div></div>
-                            <div class="meta-footer"><span>Esta semana</span><span style="color:var(--primary)">Parabéns!</span></div>
-                        </div>
-
-                        <div class="meta-card">
-                            <div class="meta-top">
-                                <div>
-                                    <div class="meta-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></span> Consumo de Água</div>
-                                    <div style="font-size:0.75rem;color:var(--text-muted)">Meta: 2,5L por dia</div>
-                                </div>
-                                <div>
-                                    <div class="meta-pct" style="color:var(--red)">58%</div>
-                                    <div style="font-size:0.65rem;color:var(--text-muted);text-align:right">1,45L</div>
-                                </div>
-                            </div>
-                            <div class="prog-track"><div class="prog-fill pf-red" style="width:0" data-w="58%"></div></div>
-                            <div class="meta-footer"><span>Hoje</span><span style="color:var(--red)">Abaixo do ideal</span></div>
-                        </div>
-
-                        <button class="btn btn-primary" style="width:100%;margin-top:0.5rem" onclick="toast('Nova meta criada!')">+ Adicionar Meta Personalizada</button>
-                    </div>
-                </div>
-
-                <div style="display:flex;flex-direction:column;gap:1.2rem">
-                    <div class="glass-card">
-                        <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Nova Meta</div>
-                        <div class="form-g">
-                            <label class="f-label">Tipo de Meta</label>
-                            <select class="f-select">
-                                <option>Peso corporal</option>
-                                <option>% Gordura</option>
-                                <option>Consumo de água</option>
-                                <option>Adesão ao cardápio</option>
-                                <option>Atividade física</option>
-                                <option>Personalizada</option>
-                            </select>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-g"><label class="f-label">Valor Atual</label><input class="f-input" type="number" placeholder="0"></div>
-                            <div class="form-g"><label class="f-label">Valor Meta</label><input class="f-input" type="number" placeholder="0"></div>
-                        </div>
-                        <div class="form-g"><label class="f-label">Prazo</label><input class="f-input" type="date" value="2026-06-30"></div>
-                        <div class="form-g"><label class="f-label">Observação</label><textarea class="f-textarea" placeholder="Orientações para o paciente..."></textarea></div>
-                        <button class="btn btn-primary" style="width:100%" onclick="toast('Meta salva e enviada!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> Salvar Meta</button>
-                    </div>
-                </div>
-            </div>
+  <div class="grid-main">
+    <div>
+      <div class="glass-card">
+        <div class="card-title" id="metas-titulo">
+          <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
+          Metas Ativas
         </div>
+        <div id="metas-lista">
+          <p style="opacity:.6;padding:2rem;text-align:center">Selecione um paciente para ver as metas.</p>
+        </div>
+        <button class="btn btn-primary" style="width:100%;margin-top:0.5rem" onclick="abrirFormMeta()">+ Adicionar Meta</button>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1.2rem">
+      <div class="glass-card" id="form-meta-card">
+        <div class="card-title">
+          <span class="icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+          Nova Meta
+        </div>
+        <div class="form-g">
+          <label class="f-label">Tipo de Meta</label>
+          <select class="f-select" id="meta-tipo" onchange="atualizarUnidade()">
+            <option value="Peso corporal">Peso corporal</option>
+            <option value="% Gordura">% Gordura</option>
+            <option value="Consumo de água">Consumo de água</option>
+            <option value="Adesão ao cardápio">Adesão ao cardápio</option>
+            <option value="Atividade física">Atividade física</option>
+            <option value="Personalizada">Personalizada</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-g">
+            <label class="f-label">Valor Atual</label>
+            <input class="f-input" id="meta-valor-atual" type="number" step="1" min="0" placeholder="0">
+          </div>
+          <div class="form-g">
+            <label class="f-label">Valor Meta</label>
+            <input class="f-input" id="meta-valor-meta" type="number" step="1" min="0" placeholder="0">
+          </div>
+        </div>
+        <div class="form-g" id="campo-unidade">
+        <label class="f-label">Unidade</label>
+        <select class="f-select" id="meta-unidade">
+            <option value="kg">kg</option>
+        </select>
+        </div>
+        <!-- Campo especial para atividade física -->
+<div id="campo-atividade" style="display:none">
+  <div class="form-row">
+    <div class="form-g">
+      <label class="f-label">Dias por semana (meta)</label>
+      <input class="f-input" id="meta-dias-semana" type="number" min="1" max="7" step="1" placeholder="Ex: 3">
+    </div>
+    <div class="form-g">
+      <label class="f-label">Tipo de atividade</label>
+      <select class="f-select" id="meta-tipo-atividade">
+        <option value="Musculação">Musculação</option>
+        <option value="Caminhada">Caminhada</option>
+        <option value="Corrida">Corrida</option>
+        <option value="Natação">Natação</option>
+        <option value="Ciclismo">Ciclismo</option>
+        <option value="Yoga">Yoga</option>
+        <option value="Funcional">Funcional</option>
+        <option value="Outro">Outro</option>
+      </select>
+    </div>
+  </div>
+</div>
+        <div class="form-g">
+          <label class="f-label">Prazo</label>
+          <input class="f-input" id="meta-prazo" type="date" value="2026-06-30">
+        </div>
+        <div class="form-g">
+          <label class="f-label">Observação</label>
+          <textarea class="f-textarea" id="meta-obs" placeholder="Orientações para o paciente..."></textarea>
+        </div>
+        <button class="btn btn-primary" style="width:100%" onclick="salvarMeta()">
+          <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
+          Salvar Meta
+        </button>
+      </div>
+
+      <!-- Card de progresso (aparece ao clicar em Progresso) -->
+      <div class="glass-card" id="form-progresso-card" style="display:none">
+        <div class="card-title">Atualizar Progresso</div>
+        <input type="hidden" id="progresso-meta-id">
+        <div class="form-g">
+          <label class="f-label" id="progresso-label">Valor Atual</label>
+          <input class="f-input" id="progresso-valor" type="number" step="1" min="0" placeholder="0">
+        </div>
+        <div style="display:flex;gap:0.6rem">
+          <button class="btn btn-primary" style="flex:1" onclick="salvarProgresso()">Salvar</button>
+          <button class="btn btn-ghost" onclick="fecharProgresso()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
         <!-- ══ ALERTAS ══ -->
         <div id="sec-alertas" class="section">
@@ -1638,75 +1514,14 @@
                 <div>
                     <div class="glass-card">
                         <div class="filter-tabs" style="margin-bottom:1.2rem">
-                            <button class="ftab on" onclick="filterAlertas(this,'all')">Todos (5)</button>
+                            <button class="ftab on" id="ftab-todos" onclick="filterAlertas(this,'all')">Todos (5)</button>
                             <button class="ftab" onclick="filterAlertas(this,'crit')"><span class="icon icon-alert" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span> Críticos (2)</button>
                             <button class="ftab" onclick="filterAlertas(this,'warn')"><span class="icon icon-warn" aria-hidden="true"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span> Atenção (2)</button>
                             <button class="ftab" onclick="filterAlertas(this,'info')"><span class="icon icon-blue" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span> Info (1)</button>
                         </div>
 
-                        <div class="alert-card ac-crit alerta-item alerta-crit" onclick="openPacDetail()">
-                            <div class="alert-icon"><span class="icon icon-xl icon-alert" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span></div>
-                            <div style="flex:1">
-                                <div class="alert-title" style="color:var(--red)">Renata Oliveira — Risco Alto</div>
-                                <div class="alert-desc">IMC 31,2 (Obesidade Grau I). Glicose em 118 mg/dL (acima do ref.). Pressão arterial elevada registrada. Requer consulta urgente e revisão do plano alimentar.</div>
-                                <div class="alert-meta">⏰ Hoje, 08:15 · Gerado automaticamente pelo sistema</div>
-                            </div>
-                            <div style="display:flex;flex-direction:column;gap:0.4rem;flex-shrink:0">
-                                <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();toast('Consulta agendada!')">Agendar</button>
-                                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();resolverAlerta(this)">Resolver</button>
-                            </div>
-                        </div>
+                        <div id="lista-alertas-dinamicos"></div>
 
-                        <div class="alert-card ac-crit alerta-item alerta-crit" onclick="openPacDetail()">
-                            <div class="alert-icon"><span class="icon icon-xl icon-alert" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span></div>
-                            <div style="flex:1">
-                                <div class="alert-title" style="color:var(--red)">Marcos Silva — Ausência no Cardápio</div>
-                                <div class="alert-desc">3 dias consecutivos sem registrar refeições. Última atividade em 23/02. Possível abandono do plano. Recomendado contato imediato.</div>
-                                <div class="alert-meta">⏰ Ontem, 18:00 · Baseado em inatividade do paciente</div>
-                            </div>
-                            <div style="display:flex;flex-direction:column;gap:0.4rem;flex-shrink:0">
-                                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();toast('Mensagem enviada!')">Contatar</button>
-                                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();resolverAlerta(this)">Resolver</button>
-                            </div>
-                        </div>
-
-                        <div class="alert-card ac-warn alerta-item alerta-warn" onclick="openPacDetail()">
-                            <div class="alert-icon"><span class="icon icon-xl icon-warn" aria-hidden="true"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span></div>
-                            <div style="flex:1">
-                                <div class="alert-title" style="color:var(--accent)">João Santos — Consulta Atrasada</div>
-                                <div class="alert-desc">Consulta de retorno estava marcada para 15/02 e não foi realizada. Última consulta há 45 dias.</div>
-                                <div class="alert-meta">⏰ 15/02/26 · Retorno em aberto</div>
-                            </div>
-                            <div style="display:flex;flex-direction:column;gap:0.4rem;flex-shrink:0">
-                                <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();toast('Consulta reagendada!')">Reagendar</button>
-                                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();resolverAlerta(this)">Resolver</button>
-                            </div>
-                        </div>
-
-                        <div class="alert-card ac-warn alerta-item alerta-warn" onclick="openPacDetail()">
-                            <div class="alert-icon"><span class="icon icon-xl icon-warn" aria-hidden="true"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span></div>
-                            <div style="flex:1">
-                                <div class="alert-title" style="color:var(--accent)">Ana Paula — Meta Hídrica</div>
-                                <div class="alert-desc">Consumo de água 58% da meta nos últimos 5 dias (meta: 2,5L). Risco de desidratação.</div>
-                                <div class="alert-meta">⏰ Hoje, 06:00 · Monitoramento diário</div>
-                            </div>
-                            <div style="flex-shrink:0;display:flex;flex-direction:column;gap:0.4rem">
-                                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();toast('Lembrete enviado!')">Lembrar</button>
-                                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();resolverAlerta(this)">Resolver</button>
-                            </div>
-                        </div>
-
-                        <div class="alert-card ac-info alerta-item alerta-info" onclick="openPacDetail()">
-                            <div class="alert-icon"><span class="icon icon-xl icon-blue" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span></div>
-                            <div style="flex:1">
-                                <div class="alert-title" style="color:var(--blue)">Lucas Mendes — Novo Paciente</div>
-                                <div class="alert-desc">Paciente agendou 1ª consulta para hoje às 14:00. Plano Intermediário ativado. Anamnese ainda não preenchida.</div>
-                                <div class="alert-meta">⏰ Hoje, 00:00 · Novo cadastro</div>
-                            </div>
-                            <div style="flex-shrink:0">
-                                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();resolverAlerta(this)">Lido</button>
-                            </div>
-                        </div>
 
                         <div id="alertas-vazio" style="display:none;text-align:center;padding:2rem;color:var(--text-muted)">
                             <div style="margin-bottom:0.5rem;color:var(--primary)"><span class="icon icon-xl" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span></div>
@@ -1744,336 +1559,259 @@
 
         <!-- ══ PRONTUÁRIO ══ -->
         <div id="sec-prontuario" class="section">
-            <div class="page-header">
-                <div>
-                    <div class="page-title">Prontuário</div>
-                    <div class="page-sub" id="pront-sub">Ana Paula Ferreira · Última edição: 20/02/2026</div>
-                </div>
-                <div class="page-actions">
-                    <select class="f-select" id="pront-pac-select" style="max-width:240px" onchange="prontTrocarPac(this.value)">
-                        <option value="ana">Ana Paula Ferreira</option>
-                        <option value="lucas">Lucas Mendes (novo)</option>
-                        <option value="renata">Renata Oliveira</option>
-                        <option value="marcos">Marcos Silva</option>
-                    </select>
-                    <button class="btn btn-outline" onclick="exportarAnamnese()"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span> Exportar ficha</button>
-                    <button class="btn btn-primary" onclick="salvarAnamnese()"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Salvar</button>
-                </div>
-            </div>
+    <div class="page-header">
+        <div>
+            <div class="page-title">Prontuário</div>
+            <div class="page-sub" id="pront-sub">Selecione um paciente</div>
+        </div>
+        <div class="page-actions">
+            <select class="f-select" id="pront-pac-select" style="max-width:240px" >
+                <option value="">Selecione um paciente</option>
+            </select>
+            <button class="btn btn-outline" onclick="exportarAnamnese()"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span> Exportar ficha</button>
+            <button class="btn btn-primary" onclick="salvarAnamnese()"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Salvar</button>
+        </div>
+    </div>
 
-            <!-- abas -->
-            <div class="filter-tabs" style="margin-bottom:1.5rem">
-                <button class="ftab on" id="ptab-clinico" onclick="prontAba(this,'clinico')">
-                    <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Dados Clínicos
-                </button>
-                <button class="ftab" id="ptab-exames" onclick="prontAba(this,'exames')">
-                    <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3h6M9 3v8l-4 9h14l-4-9V3"/></svg></span> Exames
-                </button>
-                <button class="ftab" id="ptab-paciente" onclick="prontAba(this,'paciente')">
-                    <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Para o Paciente
-                    <span class="nav-badge green" id="ptab-badge" style="display:none">✓</span>
-                </button>
-            </div>
+    <!-- abas -->
+    <div class="filter-tabs" style="margin-bottom:1.5rem">
+        <button class="ftab on" id="ptab-clinico" onclick="prontAba(this,'clinico')">
+            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Dados Clínicos
+        </button>
+        <button class="ftab" id="ptab-exames" onclick="prontAba(this,'exames')">
+            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3h6M9 3v8l-4 9h14l-4-9V3"/></svg></span> Exames
+        </button>
+        <button class="ftab" id="ptab-paciente" onclick="prontAba(this,'paciente')">
+            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Para o Paciente
+            <span class="nav-badge green" id="ptab-badge" style="display:none">✓</span>
+        </button>
+    </div>
 
-            <!-- ═══ ABA: DADOS CLÍNICOS ═══ -->
-            <div id="pront-aba-clinico" class="pront-aba">
-                <div class="grid-main">
-                    <div>
-                        <div class="glass-card" style="margin-bottom:1.4rem">
-                            <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Dados Pessoais</div>
-                            <div class="form-row">
-                                <div class="form-g"><label class="f-label">Nome Completo</label><input class="f-input" id="an-nome"></div>
-                                <div class="form-g"><label class="f-label">Data de Nascimento</label><input class="f-input" id="an-nasc" type="date"></div>
-                            </div>
-                            <div class="form-row-3">
-                                <div class="form-g"><label class="f-label">Sexo</label>
-                                    <select class="f-select" id="an-sexo"><option>Feminino</option><option>Masculino</option><option>Outro</option></select>
-                                </div>
-                                <div class="form-g"><label class="f-label">Estado Civil</label>
-                                    <select class="f-select" id="an-civil"><option>Solteiro(a)</option><option>Casado(a)</option><option>Divorciado(a)</option><option>Viúvo(a)</option></select>
-                                </div>
-                                <div class="form-g"><label class="f-label">Escolaridade</label>
-                                    <select class="f-select" id="an-escolaridade"><option>Ensino Fundamental</option><option>Ensino Médio</option><option>Superior</option><option>Pós-graduação</option></select>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-g"><label class="f-label">Profissão</label><input class="f-input" id="an-profissao"></div>
-                                <div class="form-g"><label class="f-label">Telefone</label><input class="f-input" id="an-tel"></div>
-                            </div>
-                        </div>
-                        <div class="glass-card" style="margin-bottom:1.4rem">
-                            <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 2a2 2 0 0 0-2 2v7H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h5v5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-5h5a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-5V4a2 2 0 0 0-2-2h-2z"/></svg></span> Queixa Principal &amp; Histórico</div>
-                            <div class="form-g"><label class="f-label">Motivo da Consulta</label><textarea class="f-textarea" id="an-motivo"></textarea></div>
-                            <div class="form-g"><label class="f-label">Histórico de Doenças</label>
-                                <select class="f-select" id="an-doencas"><option value="">Nenhuma</option><option>Diabetes tipo 2</option><option>Hipertensão</option><option>Dislipidemia</option><option>Hipotireoidismo</option><option>SOP</option></select>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-g"><label class="f-label">Medicamentos em Uso</label><input class="f-input" id="an-medicamentos" placeholder="Ex: metformina, levotiroxina..."></div>
-                                <div class="form-g"><label class="f-label">Suplementos</label><input class="f-input" id="an-suplementos"></div>
-                            </div>
-                            <div class="form-g"><label class="f-label">Alergias e Intolerâncias</label><input class="f-input" id="an-alergias"></div>
-                            <div class="form-g"><label class="f-label">Cirurgias Anteriores</label><textarea class="f-textarea" id="an-cirurgias" style="min-height:50px"></textarea></div>
-                        </div>
-                        <div class="glass-card" style="margin-bottom:1.4rem">
-                            <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span> Hábitos Alimentares</div>
-                            <div class="form-row-3">
-                                <div class="form-g"><label class="f-label">Nº Refeições/dia</label>
-                                    <select class="f-select" id="an-refeicoes"><option>2</option><option>3</option><option>4-5</option><option>6+</option></select>
-                                </div>
-                                <div class="form-g"><label class="f-label">Apetite</label>
-                                    <select class="f-select" id="an-apetite"><option>Diminuído</option><option>Normal</option><option>Aumentado</option></select>
-                                </div>
-                                <div class="form-g"><label class="f-label">Mastigação</label>
-                                    <select class="f-select" id="an-mastigacao"><option>Rápida</option><option>Normal</option><option>Lenta</option></select>
-                                </div>
-                            </div>
-                            <div class="form-g"><label class="f-label">Alimentos que Gosta</label><textarea class="f-textarea" id="an-gosta" style="min-height:55px"></textarea></div>
-                            <div class="form-g"><label class="f-label">Alimentos que Não Gosta / Restringe</label><textarea class="f-textarea" id="an-naogosta" style="min-height:55px"></textarea></div>
-                            <div class="form-row">
-                                <div class="form-g"><label class="f-label">Consumo de Água (L/dia)</label><input class="f-input" id="an-agua" type="number" step="0.1"></div>
-                                <div class="form-g"><label class="f-label">Consome Álcool?</label>
-                                    <select class="f-select" id="an-alcool"><option>Não</option><option>Ocasionalmente</option><option>Sim, regularmente</option></select>
-                                </div>
-                            </div>
-                            <div class="form-g"><label class="f-label">Come Fora de Casa?</label><input class="f-input" id="an-foracasa"></div>
-                        </div>
-                        <div class="glass-card">
-                            <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span> Atividade Física &amp; Sono</div>
-                            <div class="form-row">
-                                <div class="form-g"><label class="f-label">Pratica Atividade Física?</label>
-                                    <select class="f-select" id="an-atividade"><option>Não</option><option>Sim</option></select>
-                                </div>
-                                <div class="form-g"><label class="f-label">Frequência</label>
-                                    <select class="f-select" id="an-freq"><option>1x/semana</option><option>2-3x/semana</option><option>4-5x/semana</option><option>Diariamente</option></select>
-                                </div>
-                            </div>
-                            <div class="form-g"><label class="f-label">Tipo de Atividade</label><input class="f-input" id="an-tipoativ"></div>
-                            <div class="form-row">
-                                <div class="form-g"><label class="f-label">Horas de Sono/noite</label><input class="f-input" id="an-sono" type="number"></div>
-                                <div class="form-g"><label class="f-label">Qualidade do Sono</label>
-                                    <select class="f-select" id="an-qualidadesono"><option>Ruim</option><option>Regular</option><option>Boa</option><option>Excelente</option></select>
-                                </div>
-                            </div>
-                            <div class="form-g"><label class="f-label">Nível de Estresse</label>
-                                <select class="f-select" id="an-estresse"><option>Baixo</option><option>Moderado</option><option>Alto</option><option>Muito alto</option></select>
-                            </div>
-                            <div class="form-g"><label class="f-label">Observações Clínicas <small style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">(uso interno)</small></label>
-                                <textarea id="nota-anamnese" class="f-textarea" oninput="notaChanged('nota-anamnese-meta')"></textarea>
-                            </div>
-                            <div id="nota-anamnese-meta" style="font-size:0.7rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-bottom:0.8rem"></div>
-                        </div>
+    <!-- ═══ ABA: DADOS CLÍNICOS ═══ -->
+    <div id="pront-aba-clinico" class="pront-aba">
+        <div class="grid-main">
+            <div>
+                <!-- Dados Pessoais -->
+                <div class="glass-card" style="margin-bottom:1.4rem">
+                    <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Dados Pessoais</div>
+                    <div class="form-row">
+                        <div class="form-g"><label class="f-label">Nome Completo</label><input class="f-input" id="an-nome"></div>
+                        <div class="form-g"><label class="f-label">Data de Nascimento</label><input class="f-input" id="an-nasc" type="date"></div>
                     </div>
-                    <div style="display:flex;flex-direction:column;gap:1.2rem">
-                        <div class="glass-card">
-                            <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 6.5l-2-2-15 15 2 2z"/></svg></span> Dados Antropométricos</div>
-                            <div class="form-row">
-                                <div class="form-g"><label class="f-label">Peso Atual (kg)</label><input class="f-input" id="an-peso" type="number" step="0.1" oninput="calcIMC()"></div>
-                                <div class="form-g"><label class="f-label">Estatura (m)</label><input class="f-input" id="an-altura" type="number" step="0.01" oninput="calcIMC()"></div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-g"><label class="f-label">Peso Usual (kg)</label><input class="f-input" id="an-pesousal" type="number"></div>
-                                <div class="form-g"><label class="f-label">Peso Meta (kg)</label><input class="f-input" id="an-pesometa" type="number"></div>
-                            </div>
-                            <div style="background:rgba(16,185,129,0.07);border-radius:12px;padding:1rem;border:1px solid var(--border);margin-top:0.5rem">
-                                <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;font-size:0.82rem"><span>IMC Atual</span><span id="an-imc-val" style="font-weight:900;color:var(--primary);font-family:'JetBrains Mono',monospace">—</span></div>
-                                <div style="display:flex;justify-content:space-between;font-size:0.82rem"><span>Classificação</span><span id="an-imc-cls" class="status s-ok">—</span></div>
-                            </div>
+                    <div class="form-row">
+                        <div class="form-g"><label class="f-label">Sexo</label>
+                            <select class="f-select" id="an-sexo"><option>Feminino</option><option>Masculino</option><option>Outro</option></select>
                         </div>
-                        <div class="glass-card">
-                            <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> Objetivo e Plano</div>
-                            <div class="form-g"><label class="f-label">Objetivo Principal</label>
-                                <select class="f-select" id="an-objetivo"><option>Emagrecimento</option><option>Ganho de Massa</option><option>Manutenção</option><option>Saúde Geral</option><option>Performance Esportiva</option></select>
-                            </div>
-                            <div class="form-g"><label class="f-label">Prazo Desejado</label>
-                                <select class="f-select" id="an-prazo"><option>1 mês</option><option>3 meses</option><option>6 meses</option><option>12 meses</option></select>
-                            </div>
-                            <div class="form-g"><label class="f-label">Plano NutriVida</label>
-                                <select class="f-select" id="an-plano"><option>Básico</option><option>Intermediário</option><option>Premium</option></select>
-                            </div>
-                            <div class="form-g"><label class="f-label">Conduta <small style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">(uso interno)</small></label>
-                                <textarea class="f-textarea" id="an-obsnutri"></textarea>
-                            </div>
-                        </div>
+                        <div class="form-g"><label class="f-label">Profissão</label><input class="f-input" id="an-profissao"></div>
+                        <div class="form-g"><label class="f-label">Telefone</label><input class="f-input" id="an-tel"></div>
                     </div>
+                </div>
+
+                <!-- Queixa Principal -->
+                <div class="glass-card" style="margin-bottom:1.4rem">
+                    <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 2a2 2 0 0 0-2 2v7H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h5v5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-5h5a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-5V4a2 2 0 0 0-2-2h-2z"/></svg></span> Queixa Principal &amp; Histórico</div>
+                    <div class="form-g"><label class="f-label">Motivo da Consulta</label><textarea class="f-textarea" id="an-motivo"></textarea></div>
+                    <div class="form-g"><label class="f-label">Histórico de Doenças</label>
+                        <select class="f-select" id="an-doencas"><option value="">Nenhuma</option><option>Diabetes tipo 2</option><option>Hipertensão</option><option>Dislipidemia</option><option>Hipotireoidismo</option><option>SOP</option></select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-g"><label class="f-label">Medicamentos em Uso</label><input class="f-input" id="an-medicamentos" placeholder="Ex: metformina, levotiroxina..."></div>
+                        <div class="form-g"><label class="f-label">Suplementos</label><input class="f-input" id="an-suplementos"></div>
+                    </div>
+                    <div class="form-g"><label class="f-label">Alergias e Intolerâncias</label><input class="f-input" id="an-alergias"></div>
+                </div>
+
+                <!-- Hábitos Alimentares -->
+                <div class="glass-card" style="margin-bottom:1.4rem">
+                    <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span> Hábitos Alimentares</div>
+                    <div class="form-g"><label class="f-label">Alimentos que Gosta</label><textarea class="f-textarea" id="an-gosta" style="min-height:55px"></textarea></div>
+                    <div class="form-g"><label class="f-label">Alimentos que Não Gosta / Restringe</label><textarea class="f-textarea" id="an-naogosta" style="min-height:55px"></textarea></div>
+                </div>
+
+                <!-- Atividade Física & Observações -->
+                <div class="glass-card">
+                    <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span> Atividade Física</div>
+                    <div class="form-g"><label class="f-label">Pratica Atividade Física?</label>
+                        <select class="f-select" id="an-atividade"><option>Não</option><option>Sim</option></select>
+                    </div>
+                    <div class="form-g"><label class="f-label">Observações Clínicas <small style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">(uso interno)</small></label>
+                        <textarea id="nota-anamnese" class="f-textarea" oninput="notaChanged('nota-anamnese-meta')"></textarea>
+                    </div>
+                    <div id="nota-anamnese-meta" style="font-size:0.7rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-bottom:0.8rem"></div>
                 </div>
             </div>
 
-            <!-- ═══ ABA: EXAMES ═══ -->
-            <div id="pront-aba-exames" class="pront-aba" style="display:none">
-                <div class="grid-main">
-                    <div>
-                        <div class="glass-card" style="margin-bottom:1.4rem">
-                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:0.6rem">
-                                <div class="card-title" style="margin-bottom:0"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3h6M9 3v8l-4 9h14l-4-9V3"/></svg></span> Resultados Laboratoriais</div>
-                                <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
-                                    <button class="btn btn-ghost btn-sm exame-cat-btn" onclick="filterExames(this,'all')">Todos</button>
-                                    <button class="btn btn-primary btn-sm exame-cat-btn" onclick="filterExames(this,'bioquimica')">Bioquímica</button>
-                                    <button class="btn btn-ghost btn-sm exame-cat-btn" onclick="filterExames(this,'hemograma')">Hemograma</button>
-                                    <button class="btn btn-ghost btn-sm exame-cat-btn" onclick="filterExames(this,'lipidios')">Lipídios</button>
-                                    <button class="btn btn-ghost btn-sm exame-cat-btn" onclick="filterExames(this,'hormonal')">Hormonal</button>
-                                </div>
-                            </div>
-                            <div style="display:grid;grid-template-columns:2fr 0.9fr 0.9fr 0.6fr 0.7fr;gap:0.5rem;padding:0.4rem 0.8rem;margin-bottom:0.3rem">
-                                <span class="th">Exame</span><span class="th" style="text-align:right">Resultado</span><span class="th" style="text-align:right">Referência</span><span class="th" style="text-align:center">Status</span><span class="th" style="text-align:center">Ações</span>
-                            </div>
-                            <div id="exames-lista"></div>
-                        </div>
-                        <div class="glass-card">
-                            <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span> Enviar Laudo Completo</div>
-                            <div class="upload-zone" onclick="toast('Arquivo selecionado!')">
-                                <div class="upload-icon"><span class="icon icon-xl" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span></div>
-                                <div class="upload-text">Clique para enviar o laudo completo</div>
-                                <div class="upload-sub">PDF, JPG ou PNG · Máx. 10MB</div>
-                            </div>
-                        </div>
+            <div style="display:flex;flex-direction:column;gap:1.2rem">
+                <!-- Dados Antropométricos -->
+                <div class="glass-card">
+                    <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 6.5l-2-2-15 15 2 2z"/></svg></span> Dados Antropométricos</div>
+                    <div class="form-row">
+                        <div class="form-g"><label class="f-label">Peso Atual (kg)</label><input class="f-input" id="an-peso" type="number" step="0.1" min="0" oninput="calcIMC()"></div>
+                        <div class="form-g"><label class="f-label">Estatura (m)</label><input class="f-input" id="an-altura" type="number" step="0.01" min="0" oninput="calcIMC()"></div>
                     </div>
-                    <div style="display:flex;flex-direction:column;gap:1.2rem">
-                        <div class="glass-card">
-                            <div class="card-title" id="exame-form-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span> Registrar Resultado</div>
-                            <input type="hidden" id="exame-edit-idx" value="">
-                            <div class="form-g"><label class="f-label">Nome do Exame</label><input class="f-input" id="ef-nome" type="text" placeholder="Ex: Hemoglobina, Ferritina..."></div>
-                            <div class="form-row">
-                                <div class="form-g"><label class="f-label">Valor</label><input class="f-input" id="ef-valor" type="text" placeholder="00,0"></div>
-                                <div class="form-g"><label class="f-label">Unidade</label><input class="f-input" id="ef-unidade" type="text" placeholder="mg/dL"></div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-g"><label class="f-label">Ref. Mín.</label><input class="f-input" id="ef-refmin" type="text" placeholder="0"></div>
-                                <div class="form-g"><label class="f-label">Ref. Máx.</label><input class="f-input" id="ef-refmax" type="text" placeholder="0"></div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-g"><label class="f-label">Categoria</label>
-                                    <select class="f-select" id="ef-cat">
-                                        <option value="bioquimica">Bioquímica</option>
-                                        <option value="hemograma">Hemograma</option>
-                                        <option value="lipidios">Lipídios</option>
-                                        <option value="hormonal">Hormonal</option>
-                                    </select>
-                                </div>
-                                <div class="form-g"><label class="f-label">Data</label><input class="f-input" id="ef-data" type="date" value="2026-02-26"></div>
-                            </div>
-                            <div class="form-g"><label class="f-label">Obs. clínica <small style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">(uso interno)</small></label>
-                                <textarea class="f-textarea" id="ef-obs" placeholder="Interpretação técnica..."></textarea>
-                            </div>
-                            <div id="exame-form-meta" style="font-size:0.72rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-bottom:0.6rem;display:none"></div>
-                            <div style="display:flex;gap:0.6rem">
-                                <button class="btn btn-primary" style="flex:1" onclick="salvarExame()"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Salvar Resultado</button>
-                                <button class="btn btn-ghost btn-sm" id="exame-cancel-btn" style="display:none" onclick="cancelarEditarExame()">Cancelar</button>
-                            </div>
-                        </div>
-                        <div class="glass-card" id="exames-alertas-box">
-                            <div class="card-title"><span class="icon icon-warn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span> Valores Alterados</div>
-                            <div id="exames-alertas-lista"></div>
-                        </div>
+                    <div class="form-g"><label class="f-label">Peso Meta (kg)</label><input class="f-input" id="an-pesometa" type="number"></div>
+                    <div style="background:rgba(16,185,129,0.07);border-radius:12px;padding:1rem;border:1px solid var(--border);margin-top:0.5rem">
+                        <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;font-size:0.82rem"><span>IMC Atual</span><span id="an-imc-val" style="font-weight:900;color:var(--primary);font-family:'JetBrains Mono',monospace">—</span></div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.82rem"><span>Classificação</span><span id="an-imc-cls" class="status s-ok">—</span></div>
+                    </div>
+                </div>
+
+                <!-- Objetivo e Plano -->
+                <div class="glass-card">
+                    <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> Objetivo e Plano</div>
+                    <div class="form-g"><label class="f-label">Objetivo Principal</label>
+                        <select class="f-select" id="an-objetivo"><option>Emagrecimento</option><option>Ganho de Massa</option><option>Manutenção</option><option>Saúde Geral</option><option>Performance Esportiva</option></select>
+                    </div>
+                    <div class="form-g"><label class="f-label">Conduta <small style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">(uso interno)</small></label>
+                        <textarea class="f-textarea" id="an-obsnutri"></textarea>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- ═══ ABA: PARA O PACIENTE ═══ -->
-            <div id="pront-aba-paciente" class="pront-aba" style="display:none">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.4rem">
-
-                    <!-- coluna esquerda: nutricionista preenche -->
-                    <div style="display:flex;flex-direction:column;gap:1.2rem">
-
-                        <div style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:14px;padding:1rem 1.2rem;font-size:0.82rem;color:var(--text-dim);line-height:1.6">
-                            <strong style="color:var(--primary)">Como funciona:</strong> Preencha os campos abaixo como se estivesse <em>conversando</em> com o paciente — sem termos médicos, sem siglas. O sistema monta a tela que o paciente vai ver com tudo organizado e bonito.
-                        </div>
-
-                        <!-- bloco 1: situação geral -->
-                        <div class="glass-card">
-                            <div class="card-title">
-                                <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
-                                1. Situação geral
-                            </div>
-                            <div class="form-g">
-                                <label class="f-label">Como o paciente está no geral <small style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">— escreva como falaria pessoalmente</small></label>
-                                <textarea class="f-textarea" id="pac-situacao" style="min-height:90px" oninput="prontPrevia()" placeholder="Ex: De forma geral, você está indo muito bem! Seus exames mostram que seu corpo está respondendo bem às mudanças que fizemos juntos. Tem algumas coisinhas que vamos ajustar, mas nada para se preocupar."></textarea>
-                            </div>
-                        </div>
-
-                        <!-- bloco 2: exames em linguagem simples -->
-                        <div class="glass-card">
-                            <div class="card-title">
-                                <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3h6M9 3v8l-4 9h14l-4-9V3"/></svg></span>
-                                2. O que os exames dizem
-                            </div>
-                            <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.6">Para cada exame abaixo, escreva o que significa para o paciente. Foque no impacto no dia a dia, não nos números.</p>
-                            <div id="pac-exames-campos"></div>
-                        </div>
-
-                        <!-- bloco 3: hábitos -->
-                        <div class="glass-card">
-                            <div class="card-title">
-                                <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span>
-                                3. Hábitos e estilo de vida
-                            </div>
-                            <div class="form-g">
-                                <label class="f-label">Alimentação <small style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">— o que está bom e o que pode melhorar</small></label>
-                                <textarea class="f-textarea" id="pac-habitos-ali" style="min-height:75px" oninput="prontPrevia()" placeholder="Ex: Você tem feito boas escolhas nas refeições principais! O que ainda pode melhorar é reduzir um pouco os doces nos finais de semana e aumentar as verduras no almoço."></textarea>
-                            </div>
-                            <div class="form-g">
-                                <label class="f-label">Água e hidratação</label>
-                                <textarea class="f-textarea" id="pac-habitos-agua" style="min-height:55px" oninput="prontPrevia()" placeholder="Ex: Você ainda está bebendo pouco líquido — em torno de 1,5L por dia. O ideal para você seria chegar a 2,5L. Uma dica: deixe uma garrafinha sempre à vista!"></textarea>
-                            </div>
-                            <div class="form-g">
-                                <label class="f-label">Atividade física e sono</label>
-                                <textarea class="f-textarea" id="pac-habitos-ativ" style="min-height:55px" oninput="prontPrevia()" placeholder="Ex: Que ótimo que você voltou a caminhar! Seu sono ainda está irregular — tente manter um horário fixo para dormir, isso faz diferença no metabolismo."></textarea>
-                            </div>
-                        </div>
-
-                        <!-- bloco 4: orientações -->
-                        <div class="glass-card">
-                            <div class="card-title">
-                                <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
-                                4. O que fazer a partir de agora
-                            </div>
-                            <div class="form-g">
-                                <label class="f-label">Próximos passos <small style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">— liste de forma simples, uma coisa por vez</small></label>
-                                <textarea class="f-textarea" id="pac-passos" style="min-height:110px" oninput="prontPrevia()" placeholder="Ex:&#10;· Tomar 1 cápsula de Vitamina D todo dia com o almoço&#10;· Beber pelo menos 2,5L de água por dia&#10;· Trocar o arroz branco pelo integral aos poucos&#10;· Continuar com as caminhadas 3x por semana&#10;· Retornar em 60 dias com novo exame de glicose"></textarea>
-                            </div>
-                            <div class="form-g">
-                                <label class="f-label">Mensagem de encorajamento <small style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">(opcional)</small></label>
-                                <textarea class="f-textarea" id="pac-encoraja" style="min-height:55px" oninput="prontPrevia()" placeholder="Ex: Você está indo muito bem! Cada pequeno passo conta. Pode contar comigo em toda a jornada."></textarea>
-                            </div>
-                        </div>
-
-                        <div style="display:flex;gap:0.8rem">
-                            <button class="btn btn-outline" style="flex:1" onclick="prontPrevia()">
-                                <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span> Atualizar prévia
-                            </button>
-                            <button class="btn btn-primary" style="flex:1" onclick="abrirTelaPaciente()">
-                                <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></span> Ver tela do paciente
-                            </button>
+    <!-- ═══ ABA: EXAMES ═══ -->
+    <div id="pront-aba-exames" class="pront-aba" style="display:none">
+        <div class="grid-main">
+            <div>
+                <div class="glass-card" style="margin-bottom:1.4rem">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:0.6rem">
+                        <div class="card-title" style="margin-bottom:0"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3h6M9 3v8l-4 9h14l-4-9V3"/></svg></span> Resultados Laboratoriais</div>
+                        <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+                            <button class="btn btn-ghost btn-sm exame-cat-btn" onclick="filterExames(this,'all')">Todos</button>
+                            <button class="btn btn-primary btn-sm exame-cat-btn" onclick="filterExames(this,'bioquimica')">Bioquímica</button>
+                            <button class="btn btn-ghost btn-sm exame-cat-btn" onclick="filterExames(this,'hemograma')">Hemograma</button>
+                            <button class="btn btn-ghost btn-sm exame-cat-btn" onclick="filterExames(this,'lipidios')">Lipídios</button>
+                            <button class="btn btn-ghost btn-sm exame-cat-btn" onclick="filterExames(this,'hormonal')">Hormonal</button>
                         </div>
                     </div>
+                    <div style="display:grid;grid-template-columns:2fr 0.9fr 0.9fr 0.6fr 0.7fr;gap:0.5rem;padding:0.4rem 0.8rem;margin-bottom:0.3rem">
+                        <span class="th">Exame</span><span class="th" style="text-align:right">Resultado</span><span class="th" style="text-align:right">Referência</span><span class="th" style="text-align:center">Status</span><span class="th" style="text-align:center">Ações</span>
+                    </div>
+                    <div id="exames-lista"></div>
+                </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:1.2rem">
+                <div class="glass-card">
+                    <div class="card-title" id="exame-form-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span> Registrar Resultado</div>
+                    <input type="hidden" id="exame-edit-idx" value="">
+                    <div class="form-g"><label class="f-label">Nome do Exame</label><input class="f-input" id="ef-nome" type="text" placeholder="Ex: Hemoglobina, Ferritina..."></div>
+                    <div class="form-row">
+                        <div class="form-g"><label class="f-label">Valor</label><input class="f-input" id="ef-valor" type="text" placeholder="00,0"></div>
+                        <div class="form-g"><label class="f-label">Unidade</label><input class="f-input" id="ef-unidade" type="text" placeholder="mg/dL"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-g"><label class="f-label">Ref. Mín.</label><input class="f-input" id="ef-refmin" type="text" placeholder="0"></div>
+                        <div class="form-g"><label class="f-label">Ref. Máx.</label><input class="f-input" id="ef-refmax" type="text" placeholder="0"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-g"><label class="f-label">Categoria</label>
+                            <select class="f-select" id="ef-cat">
+                                <option value="bioquimica">Bioquímica</option>
+                                <option value="hemograma">Hemograma</option>
+                                <option value="lipidios">Lipídios</option>
+                                <option value="hormonal">Hormonal</option>
+                            </select>
+                        </div>
+                        <div class="form-g"><label class="f-label">Data</label><input class="f-input" id="ef-data" type="date"></div>
+                    </div>
+                    <div id="exame-form-meta" style="font-size:0.72rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-bottom:0.6rem;display:none"></div>
+                    <div style="display:flex;gap:0.6rem">
+                        <button class="btn btn-primary" style="flex:1" onclick="salvarExame()"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Salvar Resultado</button>
+                        <button class="btn btn-ghost btn-sm" id="exame-cancel-btn" style="display:none" onclick="cancelarEditarExame()">Cancelar</button>
+                    </div>
+                </div>
+                <div class="glass-card" id="exames-alertas-box">
+                    <div class="card-title"><span class="icon icon-warn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span> Valores Alterados</div>
+                    <div id="exames-alertas-lista"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    <!-- coluna direita: prévia -->
-                    <div style="position:sticky;top:1rem;align-self:start">
-                        <div class="glass-card" style="border-color:rgba(16,185,129,0.35)">
-                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-                                <div class="card-title" style="margin-bottom:0">
-                                    <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
-                                    Prévia — como o paciente verá
-                                </div>
-                                <span style="font-size:0.68rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace">atualiza ao digitar</span>
-                            </div>
+    <!-- ═══ ABA: PARA O PACIENTE ═══ -->
+    <div id="pront-aba-paciente" class="pront-aba" style="display:none">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.4rem">
+            <div style="display:flex;flex-direction:column;gap:1.2rem">
 
-                            <!-- mini-tela do paciente -->
-                            <div id="pront-previa-box" style="background:#0d1f1b;border-radius:12px;overflow:hidden;min-height:300px;max-height:600px;overflow-y:auto">
-                                <div style="background:linear-gradient(135deg,#059669,#047857);padding:1.2rem 1.4rem">
-                                    <div style="font-size:0.68rem;opacity:.7;letter-spacing:1px;text-transform:uppercase;margin-bottom:0.2rem">NutriVida · Resumo da Consulta</div>
-                                    <div id="prev-nome" style="font-size:1.1rem;font-weight:800;color:#fff">Ana Paula Ferreira</div>
-                                    <div id="prev-data" style="font-size:0.75rem;opacity:.8;color:#d1fae5;margin-top:0.1rem"></div>
-                                </div>
-                                <div id="prev-corpo" style="padding:1.2rem 1.4rem;font-size:0.82rem;line-height:1.7;color:#c8ddd8">
-                                    <p style="color:#5a7a74;font-style:italic;text-align:center;padding:2rem 0">Preencha os campos ao lado para ver a prévia...</p>
-                                </div>
-                            </div>
+                <div style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:14px;padding:1rem 1.2rem;font-size:0.82rem;color:var(--text-dim);line-height:1.6">
+                    <strong style="color:var(--primary)">Como funciona:</strong> Preencha os campos abaixo como se estivesse <em>conversando</em> com o paciente — sem termos médicos, sem siglas. O sistema monta a tela que o paciente vai ver com tudo organizado e bonito.
+                </div>
+
+                <!-- 1. Situação geral -->
+                <div class="glass-card">
+                    <div class="card-title">
+                        <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+                        1. Situação geral
+                    </div>
+                    <div class="form-g">
+                        <label class="f-label">Como o paciente está no geral</label>
+                        <textarea class="f-textarea" id="pac-situacao" style="min-height:90px" oninput="prontPrevia()" placeholder="Ex: De forma geral, você está indo muito bem!..."></textarea>
+                    </div>
+                </div>
+
+                <!-- 2. Resumo dos exames -->
+                <div class="glass-card">
+                    <div class="card-title">
+                        <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3h6M9 3v8l-4 9h14l-4-9V3"/></svg></span>
+                        2. Resumo dos exames
+                    </div>
+                    <div class="form-g">
+                        <label class="f-label">O que os exames mostram <small style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">— em linguagem simples, sem números</small></label>
+                        <textarea class="f-textarea" id="pac-exames-resumo" style="min-height:100px" oninput="prontPrevia()" placeholder="Ex: Seus exames de sangue vieram bem! Só a vitamina D está um pouco baixa — vamos corrigir isso com suplementação. A glicose está no limite, então vale ficar de olho nos doces."></textarea>
+                    </div>
+                </div>
+
+                <!-- 3. Próximos passos -->
+                <div class="glass-card">
+                    <div class="card-title">
+                        <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+                        3. O que fazer a partir de agora
+                    </div>
+                    <div class="form-g">
+                        <label class="f-label">Próximos passos <small style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">— liste de forma simples, uma coisa por vez</small></label>
+                        <textarea class="f-textarea" id="pac-passos" style="min-height:110px" oninput="prontPrevia()" placeholder="Ex:&#10;· Tomar 1 cápsula de Vitamina D todo dia com o almoço&#10;· Beber pelo menos 2,5L de água por dia&#10;· Retornar em 60 dias com novo exame de glicose"></textarea>
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:0.8rem">
+                    <button class="btn btn-outline" style="flex:1" onclick="prontPrevia()">
+                        <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span> Atualizar prévia
+                    </button>
+                    <button class="btn btn-primary" style="flex:1" onclick="abrirTelaPaciente()">
+                        <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></span> Ver tela do paciente
+                    </button>
+                    <button class="btn btn-primary" style="flex:1" onclick="enviarParaPaciente()">
+                    <span class="icon"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span> Enviar ao paciente
+                    </button>
+                </div>
+            </div>
+
+            <!-- Prévia -->
+            <div style="position:sticky;top:1rem;align-self:start">
+                <div class="glass-card" style="border-color:rgba(16,185,129,0.35)">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+                        <div class="card-title" style="margin-bottom:0">
+                            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
+                            Prévia — como o paciente verá
+                        </div>
+                        <span style="font-size:0.68rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace">atualiza ao digitar</span>
+                    </div>
+                    <div id="pront-previa-box" style="background:#0d1f1b;border-radius:12px;overflow:hidden;min-height:300px;max-height:600px;overflow-y:auto">
+                        <div style="background:linear-gradient(135deg,#059669,#047857);padding:1.2rem 1.4rem">
+                            <div style="font-size:0.68rem;opacity:.7;letter-spacing:1px;text-transform:uppercase;margin-bottom:0.2rem">NutriVida · Resumo da Consulta</div>
+                            <div id="prev-nome" style="font-size:1.1rem;font-weight:800;color:#fff">—</div>
+                            <div id="prev-data" style="font-size:0.75rem;opacity:.8;color:#d1fae5;margin-top:0.1rem"></div>
+                        </div>
+                        <div id="prev-corpo" style="padding:1.2rem 1.4rem;font-size:0.82rem;line-height:1.7;color:#c8ddd8">
+                            <p style="color:#5a7a74;font-style:italic;text-align:center;padding:2rem 0">Preencha os campos ao lado para ver a prévia...</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
         <!-- ═══ TELA DO PACIENTE (fullscreen overlay) ═══ -->
         <div id="tela-paciente" style="display:none;position:fixed;inset:0;z-index:9999;overflow-y:auto;background:#0a1a16">
@@ -2097,94 +1835,96 @@
 
         <!-- ══ CONFIG ══ -->
         <div id="sec-config" class="section">
-            <div class="page-header">
-                <div><div class="page-title">Configurações</div><div class="page-sub">Gerencie sua conta e preferências</div></div>
+    <div class="page-header">
+        <div>
+            <div class="page-title">Configurações</div>
+            <div class="page-sub">Gerencie sua conta</div>
+        </div>
+    </div>
+    <div class="grid-2">
+        <!-- Perfil Profissional -->
+        <div class="glass-card">
+            <div class="card-title">
+                <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                Perfil Profissional
             </div>
-            <div class="grid-2">
-                <div class="glass-card">
-                    <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Perfil Profissional</div>
-                    <div class="form-row"><div class="form-g"><label class="f-label">Nome</label><input class="f-input" value="Dra. Camila Rocha"></div><div class="form-g"><label class="f-label">CRN</label><input class="f-input" value="CRN-3 12345"></div></div>
-                    <div class="form-g"><label class="f-label">Especialidade</label><input class="f-input" value="Nutrição Clínica e Esportiva"></div>
-                    <div class="form-g"><label class="f-label">Bio</label><textarea class="f-textarea">Nutricionista com 8 anos de experiência em nutrição clínica funcional e emagrecimento.</textarea></div>
-                    <button class="btn btn-primary" onclick="toast('Perfil salvo!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Salvar Perfil</button>
+            <div class="form-row">
+                <div class="form-g">
+                    <label class="f-label">Nome</label>
+                    <input class="f-input" id="config-nome" placeholder="Seu nome completo">
                 </div>
-                <div class="glass-card">
-                    <div class="card-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Preferências de Alertas</div>
-                    <div style="display:flex;flex-direction:column;gap:0.8rem;font-size:0.88rem">
-                        <label style="display:flex;align-items:center;gap:0.8rem;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--primary)"><div><div style="font-weight:600">Alertas por e-mail</div><div style="font-size:0.72rem;color:var(--text-muted)">Receba alertas críticos no e-mail</div></div></label>
-                        <label style="display:flex;align-items:center;gap:0.8rem;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--primary)"><div><div style="font-weight:600">Lembretes de consulta</div><div style="font-size:0.72rem;color:var(--text-muted)">1h antes da consulta</div></div></label>
-                        <label style="display:flex;align-items:center;gap:0.8rem;cursor:pointer"><input type="checkbox" style="accent-color:var(--primary)"><div><div style="font-weight:600">Resumo semanal</div><div style="font-size:0.72rem;color:var(--text-muted)">Todo domingo às 09:00</div></div></label>
-                        <label style="display:flex;align-items:center;gap:0.8rem;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--primary)"><div><div style="font-weight:600">Alerta de inatividade</div><div style="font-size:0.72rem;color:var(--text-muted)">Paciente sem registrar por 2+ dias</div></div></label>
-                    </div>
-                    <button class="btn btn-primary" style="margin-top:1rem" onclick="toast('Preferências salvas!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Salvar</button>
+                <div class="form-g">
+                    <label class="f-label">CRN</label>
+                    <input class="f-input" id="config-crn" placeholder="CRN-3 00000">
                 </div>
+            </div>
+            <div class="form-g">
+                <label class="f-label">Especialidade</label>
+                <input class="f-input" id="config-especialidade" placeholder="Ex: Nutrição Clínica e Esportiva">
+            </div>
+            <div class="form-g">
+                <label class="f-label">Bio</label>
+                <textarea class="f-textarea" id="config-bio" placeholder="Fale um pouco sobre você..."></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="salvarPerfil()">
+                <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span>
+                Salvar Perfil
+            </button>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:1rem">
+            <!-- Sair da Conta -->
+            <div class="glass-card" style="border-color:rgba(239,68,68,0.2)">
+                <div class="card-title" style="color:var(--red)">
+                    <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+                    Sair da Conta
+                </div>
+                <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem">
+                    Ao sair, você será redirecionado para a tela de login. Seus dados permanecem salvos.
+                </p>
+                <button class="btn" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#f87171" onclick="sairDaConta()">
+                    <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+                    Sair da Conta
+                </button>
             </div>
         </div>
+    </div>
+</div>
 
     </main>
 </div>
 
-<!-- DETALHE PACIENTE (SLIDE) -->
-<div class="overlay" id="overlay" onclick="closePacDetail()"></div>
-<div class="pac-detail" id="pacDetail">
-    <button style="position:absolute;top:1.5rem;right:1.5rem;background:rgba(16,185,129,0.1);border:1px solid var(--border);color:var(--text);border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center" onclick="closePacDetail()"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></button>
 
-    <div style="display:flex;align-items:center;gap:1.2rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)">
-        <div style="width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#f43f5e);display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:900;box-shadow:0 0 25px rgba(236,72,153,0.3)">A</div>
-        <div>
-            <div style="font-size:1.2rem;font-weight:900">Ana Paula Ferreira</div>
-            <div style="color:var(--text-dim);font-size:0.82rem">32 anos · Feminino · Taquaritinga-SP</div>
-            <span class="plano pl-prem" style="margin-top:0.3rem;display:inline-block">Premium</span>
-        </div>
-    </div>
 
-    <div class="detail-tabs">
-        <button class="dt-tab on" onclick="dtTab(this,'dt-dados')">Dados</button>
-        <button class="dt-tab" onclick="dtTab(this,'dt-metas')">Metas</button>
-        <button class="dt-tab" onclick="dtTab(this,'dt-exames')">Exames</button>
-        <button class="dt-tab" onclick="dtTab(this,'dt-notas')">Notas</button>
-    </div>
-
-    <div id="dt-dados">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1.2rem">
-            <div style="text-align:center;padding:0.8rem;background:rgba(16,185,129,0.07);border-radius:12px;border:1px solid var(--border)"><div style="font-size:1.4rem;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--primary)">63,0</div><div style="font-size:0.7rem;color:var(--text-muted)">Peso (kg)</div></div>
-            <div style="text-align:center;padding:0.8rem;background:rgba(16,185,129,0.07);border-radius:12px;border:1px solid var(--border)"><div style="font-size:1.4rem;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--primary)">23,4</div><div style="font-size:0.7rem;color:var(--text-muted)">IMC</div></div>
-            <div style="text-align:center;padding:0.8rem;background:rgba(16,185,129,0.07);border-radius:12px;border:1px solid var(--border)"><div style="font-size:1.4rem;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--primary)">14,2%</div><div style="font-size:0.7rem;color:var(--text-muted)">% Gordura</div></div>
-            <div style="text-align:center;padding:0.8rem;background:rgba(16,185,129,0.07);border-radius:12px;border:1px solid var(--border)"><div style="font-size:1.4rem;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--accent)">92%</div><div style="font-size:0.7rem;color:var(--text-muted)">Adesão</div></div>
-        </div>
-        <div class="form-g"><label class="f-label">Próxima Consulta</label><input class="f-input" type="datetime-local" value="2026-02-26T09:00"></div>
-        <div class="form-g"><label class="f-label">Observação rápida</label><textarea class="f-textarea" placeholder="Anotação rápida sobre o paciente..."></textarea></div>
-        <button class="btn btn-primary" style="width:100%" onclick="toast('Dados salvos!'); closePacDetail()"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Salvar</button>
-    </div>
-
-    <div id="dt-metas" style="display:none">
-        <div class="meta-card"><div class="meta-top"><div><div class="meta-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="21"/><path d="M3 9l9-6 9 6"/><path d="M3 15l9 6 9-6"/></svg></span> Meta de Peso</div><div style="font-size:0.72rem;color:var(--text-muted)">63 → 58 kg</div></div><div class="meta-pct" style="color:var(--primary)">68%</div></div><div class="prog-track"><div class="prog-fill pf-green" style="width:68%"></div></div></div>
-        <div class="meta-card"><div class="meta-top"><div><div class="meta-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> Adesão ao Cardápio</div><div style="font-size:0.72rem;color:var(--text-muted)">Meta: 85%</div></div><div class="meta-pct" style="color:var(--primary)">92%</div></div><div class="prog-track"><div class="prog-fill pf-green" style="width:92%"></div></div></div>
-        <div class="meta-card"><div class="meta-top"><div><div class="meta-title"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></span> Hidratação</div><div style="font-size:0.72rem;color:var(--text-muted)">Meta: 2,5L</div></div><div class="meta-pct" style="color:var(--red)">58%</div></div><div class="prog-track"><div class="prog-fill pf-red" style="width:58%"></div></div></div>
-    </div>
-
-    <div id="dt-exames" style="display:none">
-        <div class="exame-row"><div><div class="ex-name">Ácido Úrico</div><div class="ex-date">11/08/2019</div></div><div style="text-align:right"><div class="ex-val ev-bad">7,2 mg/dL</div><div class="ex-ref">Ref: 2,4-6,0</div></div></div>
-        <div class="exame-row"><div><div class="ex-name">Vitamina D</div><div class="ex-date">11/08/2019</div></div><div style="text-align:right"><div class="ex-val ev-warn">22 ng/mL</div><div class="ex-ref">Ref: 30-100</div></div></div>
-        <div class="exame-row"><div><div class="ex-name">Glicose</div><div class="ex-date">11/08/2019</div></div><div style="text-align:right"><div class="ex-val ev-ok">100 mg/dL</div><div class="ex-ref">Ref: 70-99</div></div></div>
-    </div>
-
-    <div id="dt-notas" style="display:none">
-        <div class="form-g">
-            <label class="f-label">Notas da Consulta</label>
-            <textarea id="nota-pac-textarea" class="f-textarea" style="min-height:180px" oninput="notaChanged('nota-pac-meta')">26/02/26 — Retorno. Paciente evoluiu bem. Reduziu 2kg desde a última consulta. Relata dificuldade com hidratação. Ajustar lembrete no app.</textarea>
-        </div>
-        <div id="nota-pac-meta" style="font-size:0.7rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-bottom:0.7rem">
-            Criada: 26/02/2026 às 09:42 &nbsp;·&nbsp; Editada: 26/02/2026 às 09:42
-        </div>
-        <button class="btn btn-primary" style="width:100%" onclick="salvarNota('nota-pac-meta'); toast('Nota salva!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Salvar Nota</button>
-    </div>
-</div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
+
+async function iniciar() {
+    const usuario = JSON.parse(localStorage.getItem('dadosUsuario'));
+    if (!usuario) { window.location.href = 'login.html'; return; }
+
+    const nome = usuario.nome_usuario || usuario.nome || 'Paciente';
+    const nomeCurto = nome.split(' ')[0];
+
+    // Se for prévia do nutricionista, carrega do localStorage
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('previa') === 'true') {
+        const previa = JSON.parse(localStorage.getItem('previa_resumo'));
+        if (previa) {
+            document.getElementById('apresentacao').style.display = 'block';
+            document.getElementById('titulo-saudacao').textContent = `Prévia — Como o paciente verá`;
+            document.getElementById('data-atualizacao').textContent = 'Visualização prévia — ainda não enviado';
+            exibirResumo(previa);
+            return;
+        }
+    }
+
+    await carregarResumo(usuario, nomeCurto);
+}
+
 async function carregarPacientes() {
     const container = document.querySelector("#sec-pacientes .glass-card");
 
@@ -2255,30 +1995,30 @@ async function carregarDadosNutricionista() {
 
         const dados = await res.json();
 
-        document.getElementById("nutriNome").textContent =
-            `Dr. ${dados.nome}`;
+        document.getElementById("nutriNome").textContent = `Dr. ${dados.nome}`;
+        document.getElementById("nutriCrn").textContent = `CRN-3 · ${dados.crn}`;
+        document.getElementById("tituloNutri").textContent = `Olá, Dr. ${dados.nome}`;
 
-        document.getElementById("nutriCrn").textContent =
-            `CRN-3 · ${dados.crn}`;
+        // Preenche campos do perfil em configurações
+        const configNome = document.getElementById("config-nome");
+        const configCrn  = document.getElementById("config-crn");
+        const configEsp  = document.getElementById("config-especialidade");
+        const configBio  = document.getElementById("config-bio");
 
-         document.getElementById("tituloNutri").textContent =
-            `Olá, Dr. ${dados.nome}`;
+        if (configNome) configNome.value = dados.nome || "";
+        if (configCrn)  configCrn.value  = dados.crn  || "";
+        if (configEsp)  configEsp.value  = dados.especialidade || "";
+        if (configBio)  configBio.value  = dados.bio || "";
 
-       
-
-        // data atual
+        // Data atual
         const hoje = new Date();
-
         const dataFormatada = hoje.toLocaleDateString("pt-BR", {
             weekday: "long",
             day: "2-digit",
             month: "long",
             year: "numeric"
         });
-
-        // deixa primeira letra maiúscula
-        const dataFinal =
-            dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1);
+        const dataFinal = dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1);
 
     } catch (erro) {
         console.error("Erro:", erro);
@@ -2314,27 +2054,32 @@ async function carregarTotalPacientes() {
 }
 
 async function carregarConsultasHoje() {
-
     const usuario = JSON.parse(localStorage.getItem("dadosUsuario"));
-
-    if (!usuario) {
-        console.error("Usuário não encontrado");
-        return;
-    }
-
+    if (!usuario) return;
+    
     const nutricionistaId = usuario.id;
 
     try {
-
         const res = await fetch(`http://localhost:3000/agendamentos/nutricionista/${nutricionistaId}/consultas-hoje`);
         const dados = await res.json();
-
-        document.getElementById("consultasHoje").textContent = dados.total;
-
+        
+        console.log("Consultas hoje:", dados);
+        document.getElementById("consultasHoje").textContent = dados.total || 0;
+          const dataHoje = document.getElementById("dataHoje");
+        if (dataHoje) {
+            const hoje = new Date();
+            const dataFormatada = hoje.toLocaleDateString("pt-BR", {
+                weekday: "long",
+                day: "2-digit",
+                month: "long",
+                year: "numeric"
+            });
+            const dataFinal = dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1);
+            dataHoje.innerHTML = `${dataFinal} &nbsp;·&nbsp; ${dados.total || 0} consultas hoje`;
+        }
     } catch (erro) {
         console.error("Erro ao carregar consultas:", erro);
     }
-
 }
 
 async function carregarAgendaHoje() {
@@ -2582,7 +2327,7 @@ async function carregarResumoMes(){
 
     const res = await fetch(`http://localhost:3000/agendamentos/nutricionista/${nutricionistaId}/resumo-mes`);
     const dados = await res.json();
-
+    console.log("Resumo mês:", dados);
     const realizadas = document.getElementById("consultasRealizadas");
     const pendentes = document.getElementById("consultasPendentes");
 
@@ -2672,15 +2417,1284 @@ async function carregarHistorico() {
     renderHistorico();
 }
 
+async function carregarSelectPacientes() {
+  const usuario = JSON.parse(localStorage.getItem("dadosUsuario"));
+  if (!usuario) return;
 
+  const res = await fetch(`http://localhost:3000/api/${usuario.id}/pacientes`);
+  const pacientes = await res.json();
 
+  // Popula o select da seção de cardápios
+  const selectCardapio = document.getElementById("selectPacienteCardapio");
+  if (selectCardapio) {
+    selectCardapio.innerHTML = '<option value="">Selecione um paciente</option>';
+    pacientes.forEach(p => {
+      const opt = document.createElement("option");
+      opt.value = p.usuario_id;
+      opt.dataset.nome = p.paciente_nome;
+      opt.textContent = p.paciente_nome;
+      selectCardapio.appendChild(opt);
+    });
+  }
 
+  // Popula o select do histórico (se existir)
+  const selectHistorico = document.getElementById("selectPaciente");
+  if (selectHistorico) {
+    selectHistorico.innerHTML = '<option value="">Todos os pacientes</option>';
+    pacientes.forEach(p => {
+      const opt = document.createElement("option");
+      opt.value = p.usuario_id;
+      opt.dataset.nome = p.paciente_nome;
+      opt.textContent = p.paciente_nome;
+      selectHistorico.appendChild(opt);
+    });
+  }
+
+  const selectMetas = document.getElementById("select-paciente-metas");
+    if (selectMetas) {
+    selectMetas.innerHTML = '<option value="">Selecione um paciente</option>';
+    pacientes.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p.usuario_id;
+        opt.textContent = p.paciente_nome;
+        selectMetas.appendChild(opt);
+    });
+}
+
+  const selectPront = document.getElementById("pront-pac-select");
+     if (selectPront) {
+    selectPront.innerHTML = '<option value="">Selecione um paciente</option>';
+    pacientes.forEach(p => {
+      const opt = document.createElement("option");
+      opt.value = p.usuario_id;
+      opt.dataset.nome = p.paciente_nome;
+      opt.textContent = p.paciente_nome;
+      selectPront.appendChild(opt);
+    });
+
+    selectPront.addEventListener("change", async function() {
+    const usuarioId = this.value;
+
+    // Limpa tudo sempre
+    ["an-nome","an-nasc","an-profissao","an-tel","an-motivo",
+     "an-medicamentos","an-suplementos","an-alergias","an-gosta","an-naogosta",
+     "nota-anamnese","an-peso","an-altura","an-pesometa","an-obsnutri",
+     "pac-situacao","pac-exames-resumo","pac-passos"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
+    });
+    ["an-sexo","an-doencas","an-atividade","an-objetivo"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.selectedIndex = 0;
+    });
+    document.getElementById("pront-sub").textContent = "Selecione um paciente";
+    document.getElementById("an-imc-val").textContent = "—";
+    document.getElementById("an-imc-cls").textContent = "—";
+    prontuarioSnapshot = null;
+
+    if (!usuarioId) return;
+
+    const usuario = JSON.parse(localStorage.getItem("dadosUsuario"));
+
+    // Tenta carregar prontuário salvo primeiro
+    const resPront = await fetch(`http://localhost:3000/prontuarios/${usuarioId}/${usuario.id}`);
+
+    if (resPront.ok) {
+        const d = await resPront.json();
+        document.getElementById("an-nome").value = d.nome || "";
+        document.getElementById("an-nasc").value = d.data_nascimento?.split("T")[0] || "";
+        document.getElementById("an-sexo").value = d.sexo || "";
+        document.getElementById("an-profissao").value = d.profissao || "";
+        document.getElementById("an-tel").value = d.telefone || "";
+        document.getElementById("an-motivo").value = d.motivo_consulta || "";
+        document.getElementById("an-doencas").value = d.historico_doencas || "";
+        document.getElementById("an-medicamentos").value = d.medicamentos || "";
+        document.getElementById("an-suplementos").value = d.suplementos || "";
+        document.getElementById("an-alergias").value = d.alergias || "";
+        document.getElementById("an-gosta").value = d.alimentos_gosta || "";
+        document.getElementById("an-naogosta").value = d.alimentos_naogosta || "";
+        document.getElementById("an-atividade").value = d.atividade_fisica || "";
+        document.getElementById("nota-anamnese").value = d.obs_clinicas || "";
+        document.getElementById("an-peso").value = d.peso || "";
+        document.getElementById("an-altura").value = d.altura || "";
+        document.getElementById("an-pesometa").value = d.peso_meta || "";
+        document.getElementById("an-objetivo").value = d.objetivo || "";
+        document.getElementById("an-obsnutri").value = d.conduta || "";
+        document.getElementById("pac-situacao").value = d.pac_situacao || "";
+        document.getElementById("pac-exames-resumo").value = d.pac_exames_resumo || "";
+        document.getElementById("pac-passos").value = d.pac_passos || "";
+
+        const nomePac = this.options[this.selectedIndex]?.dataset.nome || "";
+        const atualizado = d.atualizado_em ? new Date(d.atualizado_em).toLocaleDateString("pt-BR") : "—";
+        document.getElementById("pront-sub").textContent = `${nomePac} · Última edição: ${atualizado}`;
+
+        // 👇 Salva snapshot após carregar prontuário existente
+        prontuarioSnapshot = {
+            nome: d.nome || "", nasc: d.data_nascimento?.split("T")[0] || "",
+            sexo: d.sexo || "", profissao: d.profissao || "",
+            tel: d.telefone || "", motivo: d.motivo_consulta || "",
+            doencas: d.historico_doencas || "", medicamentos: d.medicamentos || "",
+            suplementos: d.suplementos || "", alergias: d.alergias || "",
+            gosta: d.alimentos_gosta || "", naogosta: d.alimentos_naogosta || "",
+            atividade: d.atividade_fisica || "", obs: d.obs_clinicas || "",
+            peso: String(d.peso || ""), altura: String(d.altura || ""),
+            pesometa: String(d.peso_meta || ""), objetivo: d.objetivo || "",
+            conduta: d.conduta || "", situacao: d.pac_situacao || "",
+            exames: d.pac_exames_resumo || "", passos: d.pac_passos || ""
+        };
+
+    } else {
+        const res2 = await fetch(`http://localhost:3000/prontuarios/${usuarioId}/dados-completos`);
+        const dados = await res2.json();
+
+        document.getElementById("an-nome").value = dados.paciente?.nome_usuario || "";
+        document.getElementById("an-tel").value = dados.paciente?.telefone || "";
+        document.getElementById("an-peso").value = dados.paciente?.peso || "";
+        document.getElementById("an-altura").value = dados.paciente?.altura || "";
+        document.getElementById("an-alergias").value = dados.formulario?.alergia || "";
+        document.getElementById("an-gosta").value = dados.formulario?.alimentosFavoritos || "";
+
+        const objetivoMap = {
+            "perder peso": "Emagrecimento",
+            "ganhar massa": "Ganho de Massa",
+            "manutenção": "Manutenção"
+        };
+        const obj = objetivoMap[dados.formulario?.objective?.toLowerCase()] || dados.formulario?.objective || "";
+        if (obj) document.getElementById("an-objetivo").value = obj;
+
+        const nomePac = this.options[this.selectedIndex]?.dataset.nome || "";
+        document.getElementById("pront-sub").textContent = `${nomePac} · Sem prontuário salvo`;
+
+        // 👇 Sem prontuário — snapshot fica null para permitir primeiro save
+        prontuarioSnapshot = null;
+    }
+
+    calcIMC();
+    carregarExames();
+});
+  } 
+
+}
+
+async function carregarCardapioPaciente() {
+  const select = document.getElementById("selectPacienteCardapio");
+  const usuarioId = select.value;
+  const nomePaciente = select.options[select.selectedIndex]?.dataset.nome || "";
+  const corpo = document.getElementById("cardapio-corpo");
+  const titulo = document.getElementById("cardapio-titulo");
+  const atualizado = document.getElementById("cardapio-atualizado");
+  const nomePlanoEl = document.getElementById("cardapio-nome-plano");
+  const statusEl = document.getElementById("cardapio-status");
+
+  // Remove select de cardápios anterior se existir
+  const selectAnterior = document.getElementById("selectCardapioPaciente");
+  if (selectAnterior) selectAnterior.remove();
+
+  if (!usuarioId) {
+    corpo.innerHTML = `<p style="opacity:.6;padding:2rem;text-align:center">Selecione um paciente para ver o cardápio.</p>`;
+    return;
+  }
+
+  titulo.innerHTML = `<span class="icon"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span> Cardápio Atual — ${nomePaciente}`;
+  corpo.innerHTML = `<p style="opacity:.6;padding:2rem;text-align:center">Carregando...</p>`;
+
+  try {
+    const res = await fetch(`http://localhost:3000/api/paciente/${usuarioId}/cardapio`);
+
+    if (!res.ok) {
+      corpo.innerHTML = `<p style="opacity:.6;padding:2rem;text-align:center">Este paciente ainda não gerou nenhum cardápio.</p>`;
+      if (statusEl) statusEl.style.display = "none";
+      if (atualizado) atualizado.textContent = "";
+      if (nomePlanoEl) nomePlanoEl.textContent = "";
+      return;
+    }
+
+    const cardapios = await res.json();
+
+    // 👇 SE TEM MAIS DE UM CARDÁPIO, CRIA UM SELECT
+    if (cardapios.length > 1) {
+      const filterBar = document.querySelector("#sec-cardapio .filter-bar");
+      const novoSelect = document.createElement("select");
+      novoSelect.className = "f-select";
+      novoSelect.id = "selectCardapioPaciente";
+      novoSelect.style.maxWidth = "260px";
+      novoSelect.onchange = () => renderizarCardapio(cardapios[novoSelect.selectedIndex], atualizado, nomePlanoEl, statusEl, corpo);
+
+      cardapios.forEach((c, i) => {
+        const opt = document.createElement("option");
+        const data = c.criado_em ? new Date(c.criado_em).toLocaleDateString("pt-BR") : `Plano ${i + 1}`;
+        opt.value = i;
+        opt.textContent = `${c.nome_cardapio || `Plano ${i + 1}`} • ${data}`;
+        novoSelect.appendChild(opt);
+      });
+
+      filterBar.appendChild(novoSelect);
+    }
+
+    // Renderiza o mais recente por padrão
+    renderizarCardapio(cardapios[0], atualizado, nomePlanoEl, statusEl, corpo);
+
+  } catch (err) {
+    console.error("Erro ao carregar cardápio:", err);
+    corpo.innerHTML = `<p style="opacity:.6;padding:2rem;text-align:center">Erro ao carregar cardápio.</p>`;
+  }
+}
+
+// FUNÇÃO SEPARADA PARA RENDERIZAR O CARDÁPIO SELECIONADO
+// Estado global
+let diaAtualCardapio = 0;
+let dadosCardapioAtual = null;
+
+function renderizarCardapio(cardapio, atualizado, nomePlanoEl, statusEl, corpo) {
+  dadosCardapioAtual = typeof cardapio.cardapio_texto === "string"
+    ? JSON.parse(cardapio.cardapio_texto)
+    : cardapio.cardapio_texto;
+
+  if (atualizado) atualizado.textContent = cardapio.criado_em
+    ? `Atualizado: ${new Date(cardapio.criado_em).toLocaleDateString("pt-BR")}` : "";
+  if (nomePlanoEl) nomePlanoEl.textContent = cardapio.nome_cardapio || "";
+  if (statusEl) statusEl.style.display = "inline";
+
+  diaAtualCardapio = 0;
+  renderizarDiaCardapio(corpo);
+  atualizarTotalSemana();
+}
+
+function renderizarDiaCardapio(corpo) {
+  if (!dadosCardapioAtual) return;
+  corpo = corpo || document.getElementById("cardapio-corpo");
+
+  const refeicoes = dadosCardapioAtual.refeicoes || [];
+  if (!refeicoes.length) {
+    corpo.innerHTML = `<p style="opacity:.6;padding:2rem;text-align:center">Nenhuma refeição encontrada.</p>`;
+    return;
+  }
+
+  const dia = refeicoes[diaAtualCardapio];
+  const totalDia = dia.refeicoes.reduce((s, r) => s + (r.calorias || 0), 0);
+  const diasNomes = refeicoes.map(d => d.nome);
+
+  corpo.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;gap:0.5rem;flex-wrap:wrap">
+      <button onclick="mudarDiaCardapio(-1)" class="btn btn-ghost btn-sm" ${diaAtualCardapio === 0 ? 'disabled' : ''}>‹ Anterior</button>
+      <div style="display:flex;gap:0.3rem;flex-wrap:wrap;justify-content:center">
+        ${diasNomes.map((nome, i) => `
+          <button onclick="mudarDiaCardapio(${i - diaAtualCardapio})"
+            style="padding:0.3rem 0.6rem;border-radius:6px;border:1px solid var(--border);
+            background:${i === diaAtualCardapio ? 'var(--primary)' : 'transparent'};
+            color:${i === diaAtualCardapio ? '#000' : 'var(--text-dim)'};
+            cursor:pointer;font-size:0.72rem;font-weight:${i === diaAtualCardapio ? '700' : '400'}">
+            ${nome}
+          </button>`).join('')}
+      </div>
+      <button onclick="mudarDiaCardapio(1)" class="btn btn-ghost btn-sm" ${diaAtualCardapio === refeicoes.length - 1 ? 'disabled' : ''}>Próximo ›</button>
+    </div>
+    <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:1rem;text-align:center">
+      ${dia.nome} · <strong style="color:var(--primary)">${totalDia} kcal no dia</strong>
+    </div>`;
+
+  dia.refeicoes.forEach(ref => {
+    corpo.innerHTML += `
+      <div class="refeicao-block">
+        <div class="ref-header" onclick="toggleRef(this)">
+          <div><div class="ref-name">${ref.nome}</div></div>
+          <div style="display:flex;gap:1rem;align-items:center">
+            <span class="ref-time">${ref.horario || "--"}</span>
+            <span class="ref-kcal">${ref.calorias || 0} kcal</span>
+            <span style="color:var(--text-muted)">▼</span>
+          </div>
+        </div>
+        <div class="ref-body">
+          <div class="alimento-grid head"><span>Alimento</span></div>
+          ${ref.alimentos.map(a => `<div class="alimento-grid"><span>${a}</span></div>`).join("")}
+        </div>
+      </div>`;
+  });
+
+  atualizarTotalDia(totalDia);
+}
+
+function mudarDiaCardapio(dir) {
+  if (!dadosCardapioAtual) return;
+  const total = dadosCardapioAtual.refeicoes?.length || 0;
+  const novo = diaAtualCardapio + dir;
+  if (novo < 0 || novo >= total) return;
+  diaAtualCardapio = novo;
+  renderizarDiaCardapio();
+}
+
+function atualizarTotalDia(totalKcal) {
+  const el = document.getElementById("total-kcal-valor");
+  if (el) el.textContent = totalKcal.toLocaleString("pt-BR");
+}
+
+function atualizarTotalSemana() {
+  if (!dadosCardapioAtual) return;
+  const refeicoes = dadosCardapioAtual.refeicoes || [];
+  const totalSemana = refeicoes.reduce((s, dia) =>
+    s + dia.refeicoes.reduce((ss, r) => ss + (r.calorias || 0), 0), 0);
+  const mediaKcal = refeicoes.length ? Math.round(totalSemana / refeicoes.length) : 0;
+
+  const elTotal = document.getElementById("total-semana-kcal");
+  const elMedia = document.getElementById("total-media-kcal");
+  if (elTotal) elTotal.textContent = totalSemana.toLocaleString("pt-BR");
+  if (elMedia) elMedia.textContent = mediaKcal.toLocaleString("pt-BR");
+}
+
+async function carregarAlertas() {
+  const usuario = JSON.parse(localStorage.getItem("dadosUsuario"));
+  if (!usuario) return;
+
+  const res = await fetch(`http://localhost:3000/alertas/nutricionista/${usuario.id}`);
+  const alertas = await res.json();
+
+  const container = document.querySelector("#sec-alertas .glass-card .filter-tabs + div") 
+    || document.getElementById("lista-alertas");
+
+  // Atualiza badges
+  const total = alertas.length;
+  const nCrit = alertas.filter(a => a.tipo === 'crit').length;
+  const nWarn = alertas.filter(a => a.tipo === 'warn').length;
+  document.getElementById("badge-crit").textContent = nCrit;
+  document.getElementById("badge-warn").textContent = nWarn;
+  const nInfo = alertas.filter(a => a.tipo === 'info').length;
+
+  // Atualiza os botões de filtro
+  const btnTodos = document.getElementById("ftab-todos");
+  const btnCrit = document.querySelector(".ftab[onclick*=\"'crit'\"]");
+  const btnWarn = document.querySelector(".ftab[onclick*=\"'warn'\"]");
+  const btnInfo = document.querySelector(".ftab[onclick*=\"'info'\"]");
+  
+  if (btnTodos) btnTodos.textContent = `Todos (${total})`;
+  if (btnCrit) btnCrit.innerHTML = `<span class="icon icon-alert"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span> Críticos (${nCrit})`;
+  if (btnWarn) btnWarn.innerHTML = `<span class="icon icon-warn"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span> Atenção (${nWarn})`;
+  if (btnInfo) btnInfo.innerHTML = `<span class="icon icon-blue"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span> Info (${nInfo})`;
+
+  const pageSub = document.querySelector("#sec-alertas .page-sub");
+if (pageSub) pageSub.textContent = `${total} alertas ativos · ${nCrit} críticos`;
+
+const navBadge = document.querySelector(".nav-btn[onclick*=\"alertas\"] .nav-badge");
+if (navBadge) navBadge.textContent = total;
+
+const btnAlertas = document.getElementById("total-alertas-btn");
+if (btnAlertas) btnAlertas.textContent = total;
+
+const cardAlertas = document.getElementById("total-alertas-card");
+if (cardAlertas) cardAlertas.textContent = total;
+
+const badgeCrit = document.getElementById("badge-crit");
+const badgeWarn = document.getElementById("badge-warn");
+const badgeInfo = document.getElementById("badge-info");
+
+if (badgeCrit) badgeCrit.textContent = nCrit;
+if (badgeWarn) badgeWarn.textContent = nWarn;
+if (badgeInfo) badgeInfo.textContent = nInfo;
+
+const listaRecentes = document.getElementById("alertas-recentes-lista");
+if (listaRecentes) {
+  listaRecentes.innerHTML = "";
+
+  if (alertas.length === 0) {
+    listaRecentes.innerHTML = `<p style="opacity:.6;font-size:0.82rem;padding:0.5rem 0">Nenhum alerta no momento</p>`;
+  } else {
+    alertas.slice(0, 2).forEach(a => {
+      const cor = a.tipo === 'crit' ? 'var(--red)' : 'var(--accent)';
+      const classe = a.tipo === 'crit' ? 'ac-crit' : 'ac-warn';
+      const svgIcon = a.tipo === 'crit'
+        ? `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
+        : `<svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
+
+      listaRecentes.innerHTML += `
+        <div class="alert-card ${classe}" onclick="goSection('alertas')">
+          <div class="alert-icon">
+            <span class="icon icon-xl icon-${a.tipo === 'crit' ? 'alert' : 'warn'}">${svgIcon}</span>
+          </div>
+          <div>
+            <div class="alert-title" style="color:${cor}">${a.titulo}</div>
+            <div class="alert-desc">${a.descricao}</div>
+            <div class="alert-meta">${a.meta}</div>
+          </div>
+        </div>`;
+    });
+  }
+}
+
+  // Renderiza alertas
+  const lista = document.getElementById("lista-alertas-dinamicos");
+  if (!lista) return;
+  lista.innerHTML = "";
+
+  if (alertas.length === 0) {
+    lista.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-muted)">Nenhum alerta no momento</div>`;
+    return;
+  }
+
+  alertas.forEach(a => {
+    const cor = a.tipo === 'crit' ? 'var(--red)' : 'var(--accent)';
+    const classe = a.tipo === 'crit' ? 'ac-crit' : 'ac-warn';
+    lista.innerHTML += `
+      <div class="alert-card ${classe} alerta-item alerta-${a.tipo}">
+        <div class="alert-icon">
+          <span class="icon icon-xl icon-${a.tipo === 'crit' ? 'alert' : 'warn'}">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </span>
+        </div>
+        <div style="flex:1">
+          <div class="alert-title" style="color:${cor}">${a.titulo}</div>
+          <div class="alert-desc">${a.descricao}</div>
+          <div class="alert-meta"> ${a.meta}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;flex-shrink:0">
+          ${a.acoes.map(acao => `<button class="btn btn-ghost btn-sm" onclick="toast('${acao} realizado!')">${acao}</button>`).join('')}
+          <button class="btn btn-ghost btn-sm" onclick="resolverAlerta(this)">Resolver</button>
+        </div>
+      </div>`;
+  });
+}
+
+function atualizarUnidade() {
+  const tipo = document.getElementById("meta-tipo").value;
+  const inputMeta = document.getElementById("meta-valor-meta");  
+  const semValorAtual = ["Adesão ao cardápio", "Atividade física"];
+  const stepInteiro = ["Atividade física"];
+
+   // Reaplica validação sem decimais
+   const novoAtual = document.getElementById("meta-valor-atual");
+   const novoMeta = document.getElementById("meta-valor-meta");
+   if (novoAtual) { novoAtual.step = "1"; novoAtual.min = "0"; }
+   if (novoMeta) { novoMeta.step = "1"; novoMeta.min = tipo === "Atividade física" ? "1" : "0"; novoMeta.max = tipo === "Atividade física" ? "7" : "999"; }
+
+  // Limpa os campos
+  document.getElementById("meta-valor-atual").value = "";
+  document.getElementById("meta-valor-meta").value = "";
+
+  // Atualiza opções de unidade
+  const unidadesOpcoes = {
+    "Peso corporal": ["kg", "lb"],
+    "% Gordura": ["%"],
+    "Consumo de água": ["L", "ml"],
+    "Adesão ao cardápio": ["%"],
+    "Atividade física": ["1 mês", "2 meses", "3 meses", "4 meses", "5 meses", "6 meses", "7 meses"],
+    "Personalizada": ["kg", "%", "L", "unidades", "horas"]
+  };
+
+  const selectUnidade = document.getElementById("meta-unidade");
+  const opcoes = unidadesOpcoes[tipo] || [""];
+  selectUnidade.innerHTML = opcoes.map(o => `<option value="${o}">${o}</option>`).join("");
+
+  // Esconde campo unidade para adesão (sempre %)
+  const campoUnidade = document.getElementById("campo-unidade");
+  if (campoUnidade) campoUnidade.style.display = tipo === "Adesão ao cardápio" ? "none" : "block";
+
+  // Esconde valor atual para tipos que não precisam
+  const campoAtual = document.getElementById("meta-valor-atual").closest(".form-g");
+  if (semValorAtual.includes(tipo)) {
+    campoAtual.style.display = "none";
+    document.getElementById("meta-valor-atual").value = 0;
+  } else {
+    campoAtual.style.display = "block";
+  }
+
+  
+
+  // Para atividade física mostra campos especiais e esconde valor meta
+const campoAtividade = document.getElementById("campo-atividade");
+const campoMeta = inputMeta.closest(".form-g");
+
+if (tipo === "Atividade física") {
+  campoMeta.style.display = "none";
+  campoAtividade.style.display = "block";
+  inputMeta.value = 0;
+} else {
+  campoMeta.style.display = "block";
+  campoAtividade.style.display = "none";
+}
+}
+
+function validarCampoNumerico(inputId, inteiro = false) {
+  const el = document.getElementById(inputId);
+  
+  el.addEventListener("input", function() {
+    let val = this.value;
+    
+    if (inteiro) {
+      // Só permite inteiros
+      this.value = val.replace(/[^0-9]/g, "");
+      if (parseInt(this.value) < 1) this.value = 1;
+      return;
+    }
+    
+    // Remove tudo que não é número ou ponto
+    val = val.replace(/[^0-9.]/g, "");
+    
+    // Permite só um ponto
+    const partes = val.split(".");
+    if (partes.length > 2) val = partes[0] + "." + partes[1];
+    
+    // Limita a 1 casa decimal
+    if (partes[1] && partes[1].length > 1) {
+      val = partes[0] + "." + partes[1].substring(0, 1);
+    }
+    
+    // Bloqueia negativo
+    if (parseFloat(val) < 0) val = "0";
+    
+    this.value = val;
+  });
+}
 
 document.addEventListener("DOMContentLoaded", () => {
+  validarCampoNumerico("meta-valor-atual");
+  validarCampoNumerico("meta-valor-meta");
+});
 
+async function carregarMetas() {
+  const select = document.getElementById("select-paciente-metas");
+  const usuarioId = select.value;
+  const nomePaciente = select.options[select.selectedIndex]?.text || "";
+  const lista = document.getElementById("metas-lista");
+  const titulo = document.getElementById("metas-titulo");
+
+  if (!usuarioId) {
+    lista.innerHTML = `<p style="opacity:.6;padding:2rem;text-align:center">Selecione um paciente.</p>`;
+    return;
+  }
+
+  titulo.innerHTML = `<span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> Metas Ativas — ${nomePaciente}`;
+  lista.innerHTML = `<p style="opacity:.6;padding:1rem;text-align:center">Carregando...</p>`;
+
+  try {
+    const res = await fetch(`http://localhost:3000/metas/paciente/${usuarioId}`);
+    const metas = await res.json();
+
+    if (!metas.length) {
+      lista.innerHTML = `<p style="opacity:.6;padding:2rem;text-align:center">Nenhuma meta cadastrada.</p>`;
+      return;
+    }
+
+    lista.innerHTML = "";
+    metas.forEach(m => {
+      const pct = Math.min(Math.round((m.valor_atual / m.valor_meta) * 100), 100);
+      const cor = pct >= 80 ? 'var(--primary)' : pct >= 50 ? 'var(--accent)' : 'var(--red)';
+      const pfClass = pct >= 80 ? 'pf-green' : pct >= 50 ? 'pf-yellow' : 'pf-red';
+      const prazo = m.prazo ? new Date(m.prazo).toLocaleDateString("pt-BR") : "—";
+      const falta = (m.valor_meta - m.valor_atual).toFixed(1);
+
+      lista.innerHTML += `
+        <div class="meta-card">
+          <div class="meta-top">
+            <div>
+              <div class="meta-title">${m.tipo}</div>
+              <div style="font-size:0.75rem;color:var(--text-muted)">
+                ${m.valor_atual} → ${m.valor_meta} ${m.unidade || ''} · Prazo: ${prazo}
+              </div>
+            </div>
+            <div>
+              <div class="meta-pct" style="color:${cor}">${pct}%</div>
+              <div style="font-size:0.65rem;color:var(--text-muted);text-align:right">${m.valor_atual} ${m.unidade || ''}</div>
+            </div>
+          </div>
+          <div class="prog-track">
+            <div class="prog-fill ${pfClass}" style="width:${pct}%"></div>
+          </div>
+          <div class="meta-footer">
+            <span>${m.observacao || '—'}</span>
+            <span>Falta ${falta} ${m.unidade || ''}</span>
+          </div>
+          <div style="display:flex;gap:0.5rem;margin-top:0.8rem">
+            <button class="btn btn-ghost btn-sm" onclick="abrirProgresso(${m.id}, '${m.tipo}', ${m.valor_atual})">
+              <span class="icon"><svg viewBox="0 0 24 24"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V17z"/></svg></span> Progresso
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="deletarMeta(${m.id})" style="color:var(--red)">
+              Remover
+            </button>
+          </div>
+        </div>`;
+    });
+  } catch (err) {
+    console.error(err);
+    lista.innerHTML = `<p style="opacity:.6;padding:2rem;text-align:center">Erro ao carregar metas.</p>`;
+  }
+}
+
+async function salvarMeta() {
+  const select = document.getElementById("select-paciente-metas");
+  const usuarioId = select.value;
+  if (!usuarioId) { toast("Selecione um paciente primeiro!"); return; }
+
+  const usuario = JSON.parse(localStorage.getItem("dadosUsuario"));
+
+  const body = {
+    usuario_id: usuarioId,
+    nutricionista_id: usuario.id,
+    tipo: document.getElementById("meta-tipo").value,
+    valor_atual: parseFloat(document.getElementById("meta-valor-atual").value),
+    valor_meta: parseFloat(document.getElementById("meta-valor-meta").value),
+    unidade: document.getElementById("meta-unidade").value,
+    prazo: document.getElementById("meta-prazo").value,
+    observacao: document.getElementById("meta-obs").value
+  };
+
+  if (!body.valor_atual || !body.valor_meta) { toast("Preencha os valores!"); return; }
+
+  try {
+    const res = await fetch(`http://localhost:3000/metas`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error();
+    toast("Meta salva com sucesso!");
+    carregarMetas();
+  } catch (err) {
+    toast("Erro ao salvar meta.");
+  }
+}
+
+function abrirProgresso(id, tipo, valorAtual) {
+  document.getElementById("progresso-meta-id").value = id;
+  document.getElementById("progresso-label").textContent = `Novo valor atual (${tipo})`;
+  document.getElementById("progresso-valor").value = valorAtual;
+  document.getElementById("form-progresso-card").style.display = "block";
+  document.getElementById("form-progresso-card").scrollIntoView({ behavior: "smooth" });
+}
+
+function fecharProgresso() {
+  document.getElementById("form-progresso-card").style.display = "none";
+}
+
+async function salvarProgresso() {
+  const id = document.getElementById("progresso-meta-id").value;
+  const valor = parseFloat(document.getElementById("progresso-valor").value);
+
+  try {
+    await fetch(`http://localhost:3000/metas/${id}/progresso`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ valor_atual: valor })
+    });
+    toast("Progresso atualizado!");
+    fecharProgresso();
+    carregarMetas();
+  } catch (err) {
+    toast("Erro ao atualizar progresso.");
+  }
+}
+
+async function deletarMeta(id) {
+  if (!confirm("Remover esta meta?")) return;
+  try {
+    await fetch(`http://localhost:3000/metas/${id}`, { method: "DELETE" });
+    toast("Meta removida!");
+    carregarMetas();
+  } catch (err) {
+    toast("Erro ao remover meta.");
+  }
+}
+
+function abrirFormMeta() {
+  document.getElementById("form-meta-card").scrollIntoView({ behavior: "smooth" });
+}
+
+let prontuarioSnapshot = null;
+async function salvarAnamnese() {
+
+  // Validação — todos os campos visíveis obrigatórios
+  const camposObrigatorios = [
+    { id: "an-nome", label: "Nome Completo" },
+    { id: "an-nasc", label: "Data de Nascimento" },
+    { id: "an-profissao", label: "Profissão" },
+    { id: "an-tel", label: "Telefone" },
+    { id: "an-motivo", label: "Motivo da Consulta" },
+    { id: "an-alergias", label: "Alergias e Intolerâncias" },
+    { id: "an-gosta", label: "Alimentos que Gosta" },
+    { id: "an-naogosta", label: "Alimentos que Não Gosta" },
+    { id: "an-peso", label: "Peso Atual" },
+    { id: "an-altura", label: "Estatura" },
+    { id: "an-pesometa", label: "Peso Meta" },
+    { id: "an-obsnutri", label: "Conduta" }
+  ];
+
+  const vazio = camposObrigatorios.find(c => {
+    const el = document.getElementById(c.id);
+    return !el || !el.value.trim();
+  });
+
+  if (vazio) {
+    toast(`Preencha o campo: ${vazio.label}`, 'error');
+    document.getElementById(vazio.id)?.focus();
+    return;
+  }
+
+  const get = (id) => { const el = document.getElementById(id); return el ? el.value : ""; };
+
+  // Verifica se houve alteração
+  if (prontuarioSnapshot) {
+    const atual = {
+      nome: get("an-nome"), nasc: get("an-nasc"), sexo: get("an-sexo"),
+      profissao: get("an-profissao"), tel: get("an-tel"), motivo: get("an-motivo"),
+      doencas: get("an-doencas"), medicamentos: get("an-medicamentos"),
+      suplementos: get("an-suplementos"), alergias: get("an-alergias"),
+      gosta: get("an-gosta"), naogosta: get("an-naogosta"),
+      atividade: get("an-atividade"), obs: get("nota-anamnese"),
+      peso: get("an-peso"), altura: get("an-altura"), pesometa: get("an-pesometa"),
+      objetivo: get("an-objetivo"), conduta: get("an-obsnutri"),
+      situacao: get("pac-situacao"), exames: get("pac-exames-resumo"),
+      passos: get("pac-passos")
+    };
+
+    const semAlteracao = Object.keys(atual).every(k => atual[k] === prontuarioSnapshot[k]);
+
+    if (semAlteracao) {
+      toast("Nenhuma alteração detectada!", "error");
+      return;
+    }
+  }
+
+  // ── parte nova (banco) ──
+  const select = document.getElementById("pront-pac-select");
+  const usuarioId = select.value;
+  if (!usuarioId) { toast("Selecione um paciente!", "error"); return; }
+
+  const usuario = JSON.parse(localStorage.getItem("dadosUsuario"));
+
+  const body = {
+    usuario_id: usuarioId,
+    nutricionista_id: usuario.id,
+    nome: get("an-nome"),
+    data_nascimento: get("an-nasc") || null,
+    sexo: get("an-sexo"),
+    profissao: get("an-profissao"),
+    telefone: get("an-tel"),
+    motivo_consulta: get("an-motivo"),
+    historico_doencas: get("an-doencas"),
+    medicamentos: get("an-medicamentos"),
+    suplementos: get("an-suplementos"),
+    alergias: get("an-alergias"),
+    alimentos_gosta: get("an-gosta"),
+    alimentos_naogosta: get("an-naogosta"),
+    atividade_fisica: get("an-atividade"),
+    obs_clinicas: get("nota-anamnese"),
+    peso: parseFloat(get("an-peso")) || null,
+    altura: parseFloat(get("an-altura")) || null,
+    peso_meta: parseFloat(get("an-pesometa")) || null,
+    objetivo: get("an-objetivo"),
+    conduta: get("an-obsnutri"),
+    pac_situacao: get("pac-situacao"),
+    pac_exames_resumo: get("pac-exames-resumo"),
+    pac_passos: get("pac-passos")
+  };
+
+  try {
+    const res = await fetch("http://localhost:3000/prontuarios", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error();
+
+    // 👇 Atualiza snapshot ANTES do toast
+    prontuarioSnapshot = {
+      nome: get("an-nome"), nasc: get("an-nasc"), sexo: get("an-sexo"),
+      profissao: get("an-profissao"), tel: get("an-tel"), motivo: get("an-motivo"),
+      doencas: get("an-doencas"), medicamentos: get("an-medicamentos"),
+      suplementos: get("an-suplementos"), alergias: get("an-alergias"),
+      gosta: get("an-gosta"), naogosta: get("an-naogosta"),
+      atividade: get("an-atividade"), obs: get("nota-anamnese"),
+      peso: get("an-peso"), altura: get("an-altura"), pesometa: get("an-pesometa"),
+      objetivo: get("an-objetivo"), conduta: get("an-obsnutri"),
+      situacao: get("pac-situacao"), exames: get("pac-exames-resumo"),
+      passos: get("pac-passos")
+    };
+
+    toast("Prontuário salvo!");
+
+  } catch (err) {
+    toast("Erro ao salvar.", "error");
+  }
+}
+
+async function prontTrocarPac(usuarioId) {
+  console.log("1 - inicio");
+  if (!usuarioId) { console.log("2 - vazio"); return; }
+  console.log("3 - usuario id:", usuarioId);
+  
+  const usuario = JSON.parse(localStorage.getItem("dadosUsuario"));
+  console.log("4 - nutricionista:", usuario?.id);
+
+  const select = document.getElementById("pront-pac-select");
+  const nomePac = select.options[select.selectedIndex]?.dataset.nome || "";
+
+  try {
+    console.log("5 - fazendo fetch prontuarios");
+    const res = await fetch(`http://localhost:3000/prontuarios/${usuarioId}/${usuario.id}`);
+    console.log("6 - status prontuario:", res.status);
+
+    if (!res.ok) {
+      console.log("7 - sem prontuario, buscando dados-completos");
+      const res2 = await fetch(`http://localhost:3000/prontuarios/${usuarioId}/dados-completos`);
+      console.log("8 - status dados-completos:", res2.status);
+      
+      const res2json = await res2.json();
+      console.log("9 - resposta dados-completos:", res2json);
+
+      if (res2.ok) {
+        const { paciente, formulario } = res2json;
+        console.log("10 - paciente:", paciente);
+        console.log("11 - formulario:", formulario);
+
+        const set = (id, val) => {
+          const el = document.getElementById(id);
+          console.log(`set ${id}: el=${!!el}, val=${val}`);
+          if (el && val) el.value = val;
+        };
+
+        set("an-nome", paciente.nome_usuario);
+        set("an-tel", paciente.telefone);
+        set("an-peso", paciente.peso);
+        set("an-altura", paciente.altura);
+        set("an-alergias", formulario?.alergia);
+        set("an-gosta", formulario?.alimentosFavoritos);
+        calcIMC();
+      }
+
+      document.getElementById("pront-sub").textContent = `${nomePac} · Sem prontuário salvo`;
+      return;
+    }
+
+    console.log("12 - tem prontuario, carregando");
+    const d = await res.json();
+    console.log("13 - dados prontuario:", d);
+
+    const set = (id, val) => {
+      const el = document.getElementById(id);
+      if (el && val !== null && val !== undefined) el.value = val;
+    };
+
+    set("an-nome", d.nome);
+    set("an-nasc", d.data_nascimento?.split("T")[0]);
+    set("an-sexo", d.sexo);
+    set("an-profissao", d.profissao);
+    set("an-tel", d.telefone);
+    set("an-motivo", d.motivo_consulta);
+    set("an-doencas", d.historico_doencas);
+    set("an-medicamentos", d.medicamentos);
+    set("an-suplementos", d.suplementos);
+    set("an-alergias", d.alergias);
+    set("an-gosta", d.alimentos_gosta);
+    set("an-naogosta", d.alimentos_naogosta);
+    set("an-atividade", d.atividade_fisica);
+    set("nota-anamnese", d.obs_clinicas);
+    set("an-peso", d.peso);
+    set("an-altura", d.altura);
+    set("an-pesometa", d.peso_meta);
+    set("an-objetivo", d.objetivo);
+    set("an-obsnutri", d.conduta);
+    set("pac-situacao", d.pac_situacao);
+    set("pac-exames-resumo", d.pac_exames_resumo);
+    set("pac-passos", d.pac_passos);
+
+    const atualizado = d.atualizado_em
+      ? new Date(d.atualizado_em).toLocaleDateString("pt-BR")
+      : "—";
+    document.getElementById("pront-sub").textContent = `${nomePac} · Última edição: ${atualizado}`;
+    calcIMC();
+
+  } catch (err) {
+    console.error("ERRO CATCH:", err);
+    console.error("ERRO STACK:", err.stack);
+  }
+}
+
+
+
+function toast(msg, tipo = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast' + (tipo ? ' ' + tipo : '');
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+} 
+
+
+
+async function carregarExames() {
+  const usuario = JSON.parse(localStorage.getItem("dadosUsuario"));
+  const select = document.getElementById("pront-pac-select");
+  const usuarioId = select?.value;
+  
+
+  if (!usuarioId) {
+    examesData = [];
+    renderExames();
+    return;
+  }
+
+  try {
+    const res = await fetch(`http://localhost:3000/exames/paciente/${usuarioId}/${usuario.id}`);
+    examesData = await res.json();
+    renderExames();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function salvarExame() {
+  const usuario = JSON.parse(localStorage.getItem("dadosUsuario"));
+  const select = document.getElementById("pront-pac-select");
+  const usuarioId = select?.value;
+
+  if (!usuarioId) { toast("Selecione um paciente primeiro!", "error"); return; }
+
+  const nome = document.getElementById("ef-nome").value.trim();
+  const valor = document.getElementById("ef-valor").value.trim();
+  if (!nome || !valor) { toast("Preencha nome e valor!", "error"); return; }
+
+  const body = {
+    usuario_id: usuarioId,
+    nutricionista_id: usuario.id,
+    nome,
+    valor,
+    unidade: document.getElementById("ef-unidade").value.trim(),
+    ref_min: document.getElementById("ef-refmin").value.trim(),
+    ref_max: document.getElementById("ef-refmax").value.trim(),
+    categoria: document.getElementById("ef-cat").value,
+    data: document.getElementById("ef-data").value,
+    obs: ""
+  };
+
+  try {
+    if (exameEditandoId) {
+      await fetch(`http://localhost:3000/exames/${exameEditandoId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      toast("Exame atualizado!");
+    } else {
+      await fetch(`http://localhost:3000/exames`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      toast("Exame registrado!");
+    }
+    cancelarEditarExame();
+    carregarExames();
+  } catch (err) {
+    toast("Erro ao salvar exame.", "error");
+  }
+}
+
+function editarExame(id) {
+  const ex = examesData.find(e => e.id === id);
+  if (!ex) return;
+  exameEditandoId = id;
+  document.getElementById("ef-nome").value = ex.nome;
+  document.getElementById("ef-valor").value = ex.valor;
+  document.getElementById("ef-unidade").value = ex.unidade || "";
+  document.getElementById("ef-refmin").value = ex.ref_min || "";
+  document.getElementById("ef-refmax").value = ex.ref_max || "";
+  document.getElementById("ef-cat").value = ex.categoria || "bioquimica";
+  document.getElementById("ef-data").value = ex.data?.split("T")[0] || "";
+  document.getElementById("exame-form-title").innerHTML = `<span class="icon">...</span> Editar Exame`;
+  document.getElementById("exame-cancel-btn").style.display = "inline-flex";
+  document.getElementById("ef-nome").scrollIntoView({ behavior: "smooth" });
+}
+
+function cancelarEditarExame() {
+  exameEditandoId = null;
+  ["ef-nome","ef-valor","ef-unidade","ef-refmin","ef-refmax"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+  document.getElementById("ef-cat").selectedIndex = 0;
+  document.getElementById("exame-form-title").innerHTML = `<span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span> Registrar Resultado`;
+  document.getElementById("exame-cancel-btn").style.display = "none";
+}
+
+async function excluirExame(id) {
+  if (!confirm("Remover este exame?")) return;
+  try {
+    await fetch(`http://localhost:3000/exames/${id}`, { method: "DELETE" });
+    toast("Exame removido!");
+    carregarExames();
+  } catch (err) {
+    toast("Erro ao remover.", "error");
+  }
+}
+
+function getStatus(ex) {
+  const v = parseFloat(String(ex.valor).replace(",", ".")),
+        mn = parseFloat(ex.ref_min || ex.refMin),
+        mx = parseFloat(ex.ref_max || ex.refMax);
+  if (isNaN(v) || isNaN(mn) || isNaN(mx)) return "ok";
+  if (v < mn || v > mx) return "bad";
+  const m = (mx - mn) * 0.15;
+  if (v < mn + m || v > mx - m) return "warn";
+  return "ok";
+}
+
+function statusIcon(s) {
+  return s === "bad"
+    ? { flag: "ef-bad", icon: "!", valClass: "ev-bad" }
+    : s === "warn"
+    ? { flag: "ef-warn", icon: "~", valClass: "ev-warn" }
+    : { flag: "ef-ok", icon: "ok", valClass: "ev-ok" };
+}
+
+function renderExames() {
+  const lista = document.getElementById("exames-lista");
+  const alertasLista = document.getElementById("exames-alertas-lista");
+  const alertasBox = document.getElementById("exames-alertas-box");
+  if (!lista) return;
+
+  const filtered = examesFiltro === "all"
+    ? examesData
+    : examesData.filter(ex => ex.categoria === examesFiltro);
+
+  if (!filtered.length) {
+    lista.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-muted)">Nenhum exame nesta categoria</div>`;
+    if (alertasBox) alertasBox.style.display = "none";
+    return;
+  }
+
+  lista.innerHTML = filtered.map(ex => {
+    const st = getStatus(ex), si = statusIcon(st);
+    const data = ex.data ? new Date(ex.data).toLocaleDateString("pt-BR") : "—";
+    const criado = ex.criado_em ? new Date(ex.criado_em).toLocaleDateString("pt-BR") + " às " + new Date(ex.criado_em).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "—";
+    const refStr = ex.ref_min && ex.ref_max ? `${ex.ref_min} – ${ex.ref_max}` : "—";
+
+    return `<div class="exame-row" style="display:grid;grid-template-columns:2fr 0.9fr 0.9fr 0.6fr 0.7fr;align-items:center">
+      <div>
+        <div class="ex-name">${ex.nome}</div>
+        <div class="ex-date">${data} · Criado: ${criado}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="ex-val ${si.valClass}">${ex.valor} ${ex.unidade || ""}</div>
+        <div class="ex-ref">${refStr}</div>
+      </div>
+      <div style="text-align:right;font-size:0.75rem;color:var(--text-muted)">${ex.unidade || ""}</div>
+      <div style="display:flex;justify-content:center">
+        <div class="ex-flag ${si.flag}">${si.icon}</div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:0.3rem">
+        <button class="btn btn-ghost btn-sm" style="padding:0.3rem 0.6rem" onclick="editarExame(${ex.id})">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <button class="btn btn-danger btn-sm" style="padding:0.3rem 0.6rem" onclick="excluirExame(${ex.id})">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
+      </div>
+    </div>`;
+  }).join("");
+
+  const alertados = examesData.filter(ex => getStatus(ex) !== "ok");
+  if (alertasLista) {
+    alertasLista.innerHTML = alertados.length === 0
+      ? `<div style="color:var(--primary);font-size:0.82rem">Todos os valores dentro do referencial</div>`
+      : alertados.map(ex => {
+          const st = getStatus(ex), cls = st === "bad" ? "ac-crit" : "ac-warn";
+          const cor = st === "bad" ? "var(--red)" : "var(--accent)";
+          const icon = st === "bad" ? "crit" : "warn";
+          const v = parseFloat(String(ex.valor).replace(",", "."));
+          const mx = parseFloat(ex.ref_max);
+          const dir = v > mx ? "ALTO" : "BAIXO";
+          return `<div class="alert-card ${cls}" style="margin-bottom:0.5rem">
+            <div class="alert-icon">${icon}</div>
+            <div>
+              <div class="alert-title" style="color:${cor};font-size:0.82rem">${ex.nome} — ${dir}</div>
+              <div class="alert-desc" style="font-size:0.72rem">${ex.valor} ${ex.unidade || ""} (Ref: ${ex.ref_min}–${ex.ref_max})</div>
+            </div>
+          </div>`;
+        }).join("");
+    if (alertasBox) alertasBox.style.display = alertados.length ? "block" : "none";
+  }
+}
+
+function filterExames(btn, cat) {
+  examesFiltro = cat;
+  document.querySelectorAll(".exame-cat-btn").forEach(b => b.className = "btn btn-ghost btn-sm exame-cat-btn");
+  btn.className = "btn btn-primary btn-sm exame-cat-btn";
+  renderExames();
+}
+
+async function enviarParaPaciente() {
+    const select = document.getElementById("pront-pac-select");
+    const usuarioId = select.value;
+    if (!usuarioId) { toast("Selecione um paciente!", "error"); return; }
+
+    const sit  = document.getElementById("pac-situacao")?.value.trim();
+    const exam = document.getElementById("pac-exames-resumo")?.value.trim();
+    const pass = document.getElementById("pac-passos")?.value.trim();
+
+    if (!sit && !exam && !pass) {
+        toast("Preencha pelo menos um campo antes de enviar!", "error");
+        return;
+    }
+
+    if (!confirm("Enviar resumo para o paciente? Ele poderá ver na área dele.")) return;
+
+    // Salva o prontuário completo com os campos do paciente
+    const usuario = JSON.parse(localStorage.getItem("dadosUsuario"));
+    const get = (id) => { const el = document.getElementById(id); return el ? el.value : ""; };
+
+    const body = {
+        usuario_id: usuarioId,
+        nutricionista_id: usuario.id,
+        nome: get("an-nome"),
+        data_nascimento: get("an-nasc") || null,
+        sexo: get("an-sexo"),
+        profissao: get("an-profissao"),
+        telefone: get("an-tel"),
+        motivo_consulta: get("an-motivo"),
+        historico_doencas: get("an-doencas"),
+        medicamentos: get("an-medicamentos"),
+        suplementos: get("an-suplementos"),
+        alergias: get("an-alergias"),
+        alimentos_gosta: get("an-gosta"),
+        alimentos_naogosta: get("an-naogosta"),
+        atividade_fisica: get("an-atividade"),
+        obs_clinicas: get("nota-anamnese"),
+        peso: parseFloat(get("an-peso")) || null,
+        altura: parseFloat(get("an-altura")) || null,
+        peso_meta: parseFloat(get("an-pesometa")) || null,
+        objetivo: get("an-objetivo"),
+        conduta: get("an-obsnutri"),
+        pac_situacao: sit,
+        pac_exames_resumo: exam,
+        pac_passos: pass
+    };
+
+    try {
+        const res = await fetch("http://localhost:3000/prontuarios/enviar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error();
+        toast("Resumo enviado ao paciente! ✓");
+
+        // Atualiza snapshot
+        prontuarioSnapshot = {
+            ...prontuarioSnapshot,
+            situacao: sit,
+            exames: exam,
+            passos: pass
+        };
+
+    } catch (err) {
+        toast("Erro ao enviar.", "error");
+    }
+}
+
+async function salvarPerfil() {
+    const usuario = JSON.parse(localStorage.getItem("dadosUsuario"));
+    if (!usuario) return;
+
+    const nome = document.getElementById("config-nome")?.value.trim();
+    const crn  = document.getElementById("config-crn")?.value.trim();
+
+    if (!nome || !crn) { toast("Preencha nome e CRN!", "error"); return; }
+
+    try {
+        const res = await fetch(`http://localhost:3000/nutricionistas/${usuario.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                nome,
+                crn,
+                especialidade: document.getElementById("config-especialidade")?.value.trim(),
+                bio: document.getElementById("config-bio")?.value.trim()
+            })
+        });
+        if (!res.ok) throw new Error();
+        toast("Perfil salvo!");
+
+        // Atualiza nome na sidebar
+        document.getElementById("nutriNome").textContent = `Dr. ${nome}`;
+        document.getElementById("nutriCrn").textContent  = `CRN-3 · ${crn}`;
+
+    } catch (err) {
+        toast("Erro ao salvar perfil.", "error");
+    }
+}
+
+
+
+function sairDaConta() {
+    document.getElementById('modal-sair').style.display = 'flex';
+}
+
+function fecharModalSair() {
+    document.getElementById('modal-sair').style.display = 'none';
+}
+
+function confirmarSaida() {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = 'entrar.html';
+}
+
+async function carregarMetasAtingidas() {
+  const usuario = JSON.parse(localStorage.getItem("dadosUsuario"));
+  if (!usuario) return;
+
+  try {
+    const res = await fetch(`http://localhost:3000/metas/nutricionista/${usuario.id}/atingidas`);
+    const dados = await res.json();
+
+    const el = document.getElementById("metas-atingidas");
+    if (el) el.textContent = dados.total || 0;
+
+    // Atualiza o badge de porcentagem
+    const badge = document.getElementById("metas-atingidas-pct");
+    if (badge) {
+      // Busca total de metas para calcular %
+      const resTotal = await fetch(`http://localhost:3000/metas/nutricionista/${usuario.id}/total`);
+      if (resTotal.ok) {
+        const dadosTotal = await resTotal.json();
+        const pct = dadosTotal.total > 0
+          ? Math.round((dados.total / dadosTotal.total) * 100)
+          : 0;
+        badge.textContent = pct + '%';
+      }
+    }
+  } catch (err) {
+    console.error("Erro ao carregar metas atingidas:", err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", carregarMetasAtingidas);
+
+document.addEventListener("DOMContentLoaded", carregarSelectPacientes);
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await carregarAlertas();
     carregarAgenda();
     carregarResumoMes();
 
+      const camposPront = [
+      "an-nome","an-nasc","an-profissao","an-tel","an-motivo",
+      "an-medicamentos","an-suplementos","an-alergias","an-gosta","an-naogosta",
+      "nota-anamnese","an-peso","an-altura","an-pesometa","an-obsnutri",
+      "pac-situacao","pac-exames-resumo","pac-passos",
+      "an-sexo","an-doencas","an-atividade","an-objetivo"
+    ];
+
+    camposPront.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener("focus", function() {
+          const select = document.getElementById("pront-pac-select");
+          if (!select.value) {
+            toast("Selecione um paciente primeiro!", "error");
+            this.blur();
+          }
+        });
+      }
+    });
+   
 });
 
 document.addEventListener("DOMContentLoaded", carregarAgenda);
@@ -2701,5 +3715,26 @@ document.addEventListener("DOMContentLoaded", carregarDadosNutricionista);
 document.addEventListener("DOMContentLoaded", carregarPacientes);
 </script>
 
+<div id="modal-sair" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px)">
+    <div style="background:linear-gradient(135deg,#0f172a,#1e293b);border:1px solid rgba(239,68,68,0.25);border-radius:24px;padding:2.5rem;max-width:400px;width:90%;text-align:center;box-shadow:0 25px 70px rgba(0,0,0,0.5);animation:surgirModal 0.25s ease">
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#f87171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+        </div>
+        <h3 style="font-size:1.1rem;font-weight:700;color:#e2e8f0;margin-bottom:0.5rem">Sair da conta?</h3>
+        <p style="font-size:0.85rem;color:#94a3b8;margin-bottom:1.8rem">Você será redirecionado para a tela de login. Seus dados permanecem salvos.</p>
+        <div style="display:flex;gap:0.8rem;justify-content:center">
+            <button onclick="fecharModalSair()" style="flex:1;padding:0.8rem 1.2rem;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#94a3b8;font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                Cancelar
+            </button>
+            <button onclick="confirmarSaida()" style="flex:1;padding:0.8rem 1.2rem;border-radius:12px;border:1px solid rgba(239,68,68,0.3);background:rgba(239,68,68,0.1);color:#f87171;font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background='rgba(239,68,68,0.2)'" onmouseout="this.style.background='rgba(239,68,68,0.1)'">
+                Sim, sair
+            </button>
+        </div>
+    </div>
+</div>
 </body>
 </html>

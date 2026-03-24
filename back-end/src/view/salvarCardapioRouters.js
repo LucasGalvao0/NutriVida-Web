@@ -19,13 +19,9 @@ function gerarHashUnico(data) {
 // SIMILARIDADE COM LEVENSHTEIN
 // =========================================
 function calcularSimilaridade(a, b) {
-    // Usa distância de Levenshtein normalizada
     const distance = natural.LevenshteinDistance(a, b);
     const maxLength = Math.max(a.length, b.length);
-    
-    // Retorna similaridade entre 0 e 1 (1 = idêntico, 0 = totalmente diferente)
     const similarity = 1 - (distance / maxLength);
-    
     return similarity;
 }
 
@@ -34,11 +30,13 @@ function calcularSimilaridade(a, b) {
 // =========================================
 router.post("/", async (req, res) => {
     try {
-        let { usuario_id, respostas_id, hash_respostas, cardapio_texto, respostas_formulario } = req.body;
+        // 👇 ADICIONA nome_cardapio aqui
+        let { usuario_id, respostas_id, hash_respostas, cardapio_texto, respostas_formulario, nome_cardapio } = req.body;
 
         console.log("📥 Dados recebidos:", {
             usuario_id,
             respostas_id,
+            nome_cardapio,
             cardapio_texto_type: typeof cardapio_texto,
             cardapio_texto_vazio: !cardapio_texto || cardapio_texto === "{}",
             respostas_formulario_type: typeof respostas_formulario
@@ -160,7 +158,6 @@ router.post("/", async (req, res) => {
                 melhorSimilaridade = similaridade;
             }
 
-            // ✅ LIMITE DE 95% (0.95) - RECOMENDADO
             if (similaridade > 0.95) {
                 const [cardapioSalvo] = await banco.query(
                     "SELECT * FROM cardapio WHERE usuario_id = ? ORDER BY id DESC LIMIT 1",
@@ -183,13 +180,14 @@ router.post("/", async (req, res) => {
         console.log("✅ Nenhuma similaridade alta encontrada, criando novo cardápio...");
 
         // ======================================================
-        // 6️⃣ SALVAR NOVO CARDÁPIO
+        // 6️⃣ SALVAR NOVO CARDÁPIO — 👇 PASSA nome_cardapio aqui
         // ======================================================
         const novoCardapio = await salvarCardapioService.salvarCardapio(
             usuario_id,
             respostas_id || null,
             hash_respostas,
-            cardapio_texto
+            cardapio_texto,
+            nome_cardapio || "Meu Plano Nutricional"
         );
 
         console.log("✅ Novo cardápio salvo com ID:", novoCardapio.id);
@@ -213,23 +211,21 @@ router.post("/", async (req, res) => {
     }
 });
 
-    // ==========================================
+// ==========================================
 // GET /cardapio/usuario/:usuarioId
 // ==========================================
 router.get("/usuario/:usuarioId", async (req, res) => {
   try {
     const usuarioId = req.params.usuarioId;
 
-    // Busca todos os cardápios do usuário (mais recentes primeiro)
     const cardapios = await salvarCardapioService.buscarPorUsuarioId(usuarioId);
 
     if (!cardapios || cardapios.length === 0) {
       return res.status(404).json({ erro: "Cardápio não encontrado para este usuário" });
     }
 
-    const cardapioMaisRecente = cardapios[0]; // pega o mais recente
+    const cardapioMaisRecente = cardapios[0];
 
-    // Retorna as refeições já parseadas
     let cardapioJSON = {};
     try {
       cardapioJSON = JSON.parse(cardapioMaisRecente.cardapio_texto);
@@ -238,6 +234,7 @@ router.get("/usuario/:usuarioId", async (req, res) => {
     }
 
     res.json({
+      nome_cardapio: cardapioMaisRecente.nome_cardapio || "Meu Plano Nutricional",
       refeicoes: cardapioJSON.refeicoes || [],
       grafico: cardapioJSON.grafico || []
     });
@@ -248,5 +245,31 @@ router.get("/usuario/:usuarioId", async (req, res) => {
   }
 });
 
+// GET /salvarCardapio/usuario/:usuarioId/todos
+router.get("/usuario/:usuarioId/todos", async (req, res) => {
+  try {
+    const usuarioId = req.params.usuarioId;
+    const cardapios = await salvarCardapioService.buscarPorUsuarioId(usuarioId);
+
+    if (!cardapios || cardapios.length === 0) {
+      return res.status(404).json({ erro: "Nenhum cardápio encontrado" });
+    }
+
+    // Retorna todos com cardapio_texto parseado
+    const resultado = cardapios.map(c => ({
+      id: c.id,
+      nome_cardapio: c.nome_cardapio || "Meu Plano Nutricional",
+      criado_em: c.criado_em,
+      cardapio_texto: typeof c.cardapio_texto === 'string'
+        ? c.cardapio_texto
+        : JSON.stringify(c.cardapio_texto)
+    }));
+
+    res.json(resultado);
+  } catch (error) {
+    console.error("Erro ao buscar todos os cardápios:", error);
+    res.status(500).json({ erro: "Erro interno" });
+  }
+});
 
 module.exports = router;
