@@ -376,9 +376,9 @@ if (desligarFuncao) {
         <div class="footer-section">
             <h3>Planos</h3>
             <ul class="footer-links">
-                <li><a href="#para-baixo">Básicos</a></li>
-                <li><a href="#para-baixo">Intermediários</a></li>
-                <li><a href="#para-baixo">Premium</a></li>
+                <li><a href="index.html#para-baixo">Básicos</a></li>
+                <li><a href="index.html#para-baixo">Intermediários</a></li>
+                <li><a href="index.html#para-baixo">Premium</a></li>
             </ul>
         </div>
 
@@ -427,7 +427,6 @@ if (desligarFuncao) {
     const paginasConsulta = ["resumoConsulta.html", "metas.html"];
     const paginasPlano = ["opcoescardapio.html", "Cardapio.html"];
 
-    const paginaAtual = paginasConsulta.find(p => path.includes(p));
     const paginaPlano = paginasPlano.find(p => path.includes(p));
 
     console.log("PAGINA CONSULTA:", paginaAtual);
@@ -458,17 +457,17 @@ if (desligarFuncao) {
         try {
             const res = await fetch(`http://localhost:3000/planos/${usuario.id}`);
             if (!res.ok) {
-                window.location.href = "sobre.html#planos";
+                window.location.href = "index.html#planos";
                 return;
             }
             const dados = await res.json();
             if (dados.status !== 'ativo') {
-                window.location.href = "sobre.html#planos";
+                window.location.href = "index.html#planos";
                 return;
             }
         } catch (err) {
             console.error("Erro ao verificar plano:", err);
-            window.location.href = "sobre.html#planos";
+            window.location.href = "index.html#planos";
         }
     }
 }

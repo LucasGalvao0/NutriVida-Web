@@ -528,15 +528,18 @@ async function carregarMetas() {
     }
 
     // Verifica se tem consulta com nutricionista
-    try {
-        const res = await fetch(`http://localhost:3000/agendamentos/usuario/${usuario.id}/tem-consulta`);
-        const dados = await res.json();
-        if (!dados.temConsulta) {
-            toast('Você precisa ter pelo menos uma consulta com um nutricionista!', 'var(--red)');
-            setTimeout(() => { window.location.href = 'index.html'; }, 2500);
-            return;
-        }
-    } catch (err) {
+        try {
+    const res = await fetch(`http://localhost:3000/agendamentos/usuario/${usuario.id }`);
+    const dados = await res.json();
+
+    const fezConsulta = dados.some(c => c.status === 'concluida');
+
+    if (!fezConsulta) {
+        toast('Você precisa ter feito pelo menos uma consulta com um nutricionista!', 'var(--red)');
+        setTimeout(() => { window.location.href = 'index.html'; }, 2500);
+        return;
+    }
+} catch (err) {
         console.error("Erro ao verificar consulta:", err);
     }
 

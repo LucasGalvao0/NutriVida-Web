@@ -1,36 +1,56 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 class CreateNutritionService {
-  async getModel(genAI) {
-    const modelos = [
-      "gemini-2.5-flash",
-      "gemini-2.5-flash-preview-05-20",
-      "gemini-2.0-flash",
-      "gemini-2.0-flash-lite",
-      "gemini-1.5-flash-latest",
-      "gemini-1.5-pro-latest",
-    ];
+async getModelWithKey(apiKey) {
+  const genAI = new GoogleGenerativeAI(apiKey);
 
-    for (const nomeModelo of modelos) {
-      try {
-        const model = genAI.getGenerativeModel({ model: nomeModelo });
-        await model.generateContent("ok");
-        console.log(`Modelo selecionado: ${nomeModelo}`);
-        return model;
-      } catch (err) {
-        console.warn(`Modelo "${nomeModelo}" indisponível. Tentando próximo...`);
-      }
+  const modelos = [
+    "gemini-2.5-flash",
+    "gemini-2.5-flash-preview-05-20",
+    "gemini-2.0-flash",
+    "gemini-2.0-flash-lite",
+    "gemini-1.5-flash-latest",
+    "gemini-1.5-pro-latest",
+  ];
+
+  for (const nomeModelo of modelos) {
+    try {
+      const model = genAI.getGenerativeModel({ model: nomeModelo });
+      await model.generateContent("ok");
+      console.log(`Modelo ${nomeModelo} OK com chave`);
+      return model;
+    } catch (err) {
+      console.warn(`Modelo ${nomeModelo} falhou nessa chave`);
     }
-
-    throw new Error("Nenhum modelo Gemini disponível. Verifique sua API Key ou tente mais tarde.");
   }
+
+  throw new Error("Nenhum modelo disponível com essa chave.");
+}
+
+async getModelWithFallback() {
+  const apiKeys = [
+    process.env.API_KEY,
+    process.env.API_KEY2,
+  ].filter(Boolean);
+
+  for (const key of apiKeys) {
+    try {
+      console.log("Tentando chave...");
+      const model = await this.getModelWithKey(key);
+      return model;
+    } catch (err) {
+      console.warn("Chave falhou, tentando próxima...");
+    }
+  }
+
+  throw new Error("Nenhuma API key funcionou.");
+}
 
   async execute(data) {
     const { name, weight, height, age, gender, objective, level, imc, alergia, alimentosFavoritos, trabalho, esporte, dietaAtual, rotina, tempoPreparo } = data;
 
     try {
-      const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-      const model = await this.getModel(genAI);
+    const model = await this.getModelWithFallback();
 
       const alergiaTexto = alergia
         ? `a pessoa possui a seguinte alergia: ${alergia}. O cardapio deve ser feito evitando essa alergia e o campo alergia no json deve conter exatamente esse valor: "${alergia}".`

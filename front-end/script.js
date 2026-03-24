@@ -250,7 +250,7 @@ if (formCadastro) {
 
                     mostrarMensagem("Usuário cadastrado com sucesso!", "sucesso");
                     setTimeout(() => {
-                        window.location.href = "index.html";
+                        window.location.href = "entrar.html";
                     }, 2000);
                 } else if (resposta.status === 409) {
                     const erro = await resposta.json();
