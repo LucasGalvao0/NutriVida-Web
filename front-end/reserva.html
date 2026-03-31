@@ -1012,59 +1012,74 @@
             botoesHorario.forEach(btn => btn.classList.remove('ativo'));
         }
         
-        function renderizarCalendario(data) {
-            diasContainer.innerHTML = '';
-            const ano = data.getFullYear();
-            const mes = data.getMonth();
-            const primeiroDia = new Date(ano, mes, 1).getDay();
-            const diasNoMes = new Date(ano, mes + 1, 0).getDate();
-            const nomesMeses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-            
-            mesAno.textContent = `${nomesMeses[mes]} ${ano}`;
-            
-            const hoje = new Date();
-            hoje.setHours(0, 0, 0, 0);
-            
-            for (let i = 0; i < primeiroDia; i++) {
-                diasContainer.innerHTML += `<div></div>`;
-            }
-            
-            for (let dia = 1; dia <= diasNoMes; dia++) {
-                const btn = document.createElement('button');
-                btn.textContent = dia;
-                const dataBtn = new Date(ano, mes, dia);
-                dataBtn.setHours(0, 0, 0, 0);
-                
-                if (
-                    dia === hoje.getDate() &&
-                    mes === hoje.getMonth() &&
-                    ano === hoje.getFullYear()
-                ) {
-                    btn.classList.add('hoje');
-                }
-                
-                if (dataBtn < hoje) {
-                    btn.style.opacity = '0.5';
-                    btn.style.cursor = 'not-allowed';
-                }
-                
-                btn.addEventListener('click', () => {
-                    if (dataBtn < hoje) {
-                        mostrarMensagem("Data indisponível: dia já passou.", 'erro');
-                        return;
-                    }
-                    
-                    dataSelecionada = dataBtn;
-                    document.querySelectorAll('#dias-mes button').forEach(b => b.classList.remove('ativo'));
-                    btn.classList.add('ativo');
-                    
-                    mostrarConsultaCompleta();
-                });
-                
-                diasContainer.appendChild(btn);
-            }
+function renderizarCalendario(data) {
+    diasContainer.innerHTML = '';
+    const ano = data.getFullYear();
+    const mes = data.getMonth();
+    const primeiroDia = new Date(ano, mes, 1).getDay();
+    const diasNoMes = new Date(ano, mes + 1, 0).getDate();
+
+    const nomesMeses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+    mesAno.textContent = `${nomesMeses[mes]} ${ano}`;
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    for (let i = 0; i < primeiroDia; i++) {
+        diasContainer.innerHTML += `<div></div>`;
+    }
+
+    for (let dia = 1; dia <= diasNoMes; dia++) {
+        const btn = document.createElement('button');
+        btn.textContent = dia;
+
+        const dataBtn = new Date(ano, mes, dia);
+        dataBtn.setHours(0, 0, 0, 0);
+
+        const diffDias = (dataBtn - hoje) / (1000 * 60 * 60 * 24);
+
+        // HOJE
+        if (
+            dia === hoje.getDate() &&
+            mes === hoje.getMonth() &&
+            ano === hoje.getFullYear()
+        ) {
+            btn.classList.add('hoje');
         }
+
+        // ❌ BLOQUEIOS
+        if (dataBtn < hoje || diffDias < 3) {
+            btn.style.opacity = '0.3';
+            btn.style.cursor = 'not-allowed';
+        }
+
+        btn.addEventListener('click', () => {
+
+            if (dataBtn < hoje) {
+                mostrarMensagem("Data já passou.", 'erro');
+                return;
+            }
+
+            if (diffDias < 3) {
+                mostrarMensagem("Reserve com pelo menos 3 dias de antecedência.", 'erro');
+                return;
+            }
+
+            dataSelecionada = dataBtn;
+
+            document.querySelectorAll('#dias-mes button')
+                .forEach(b => b.classList.remove('ativo'));
+
+            btn.classList.add('ativo');
+
+            mostrarConsultaCompleta();
+        });
+
+        diasContainer.appendChild(btn);
+    }
+}
         
         function horarioParaMinutos(horarioStr) {
             const [hora, minuto] = horarioStr.split(':').map(Number);
@@ -1121,31 +1136,36 @@
             });
         }
         
-        botoesHorario.forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (!dataSelecionada) {
-                    mostrarMensagem("Selecione um dia antes de escolher um horário.", 'erro');
-                    return;
-                }
-                
-                const hoje = new Date();
-                hoje.setHours(0, 0, 0, 0);
-                const selecionadoEhHoje = dataSelecionada.getTime() === hoje.getTime();
-                const agora = getHorarioAtualEmMinutos();
-                const horarioBtnEmMinutos = horarioParaMinutos(btn.textContent.trim());
-                
-                if (selecionadoEhHoje && horarioBtnEmMinutos < agora) {
-                    mostrarMensagem("Horário indisponível: horário já passou.", 'erro');
-                    return;
-                }
-                
-                limparSelecaoHorarios();
-                btn.classList.add('ativo');
-                horarioSelecionado = btn.textContent.trim();
-                
-                mostrarConsultaCompleta();
-            });
-        });
+      botoesHorario.forEach(btn => {
+    btn.addEventListener('click', () => {
+
+        if (!dataSelecionada) {
+            mostrarMensagem("Selecione um dia primeiro.", 'erro');
+            return;
+        }
+
+        const hoje = new Date();
+        hoje.setHours(0,0,0,0);
+
+        const agora = new Date();
+        const minutosAgora = agora.getHours() * 60 + agora.getMinutes();
+
+        const [h, m] = btn.textContent.trim().split(':').map(Number);
+        const minutosBtn = h * 60 + m;
+
+        // se for hoje → bloqueia horário passado
+        if (dataSelecionada.getTime() === hoje.getTime() && minutosBtn <= minutosAgora) {
+            mostrarMensagem("Esse horário já passou.", 'erro');
+            return;
+        }
+
+        limparSelecaoHorarios();
+        btn.classList.add('ativo');
+        horarioSelecionado = btn.textContent.trim();
+
+        mostrarConsultaCompleta();
+    });
+});
         
         seta.addEventListener('click', () => {
             const scrollDistancia = 200;
@@ -1741,6 +1761,8 @@ function montarDataISO(dia) {
   return `${ano}-${mesStr}-${diaStr}`;
 }
 
+
+
 document.getElementById('confirmarReservaBtn').addEventListener('click', async () => {
   try {
     const usuarioRaw = localStorage.getItem("dadosUsuario");
@@ -1766,6 +1788,8 @@ document.getElementById('confirmarReservaBtn').addEventListener('click', async (
       mostrarMensagem('Erro ao verificar reservas existentes', 'erro');
       return;
     }
+    
+    
 
     const agendamentos = await checkRes.json();
     const agendamentoExistente = agendamentos.find(a => a.usuario_id === usuario.id);

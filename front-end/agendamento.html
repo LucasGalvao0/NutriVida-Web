@@ -933,7 +933,9 @@ window.onload = async () => {
     let agendamentoUsuario = null;
 
     if (Array.isArray(agendamentos)) {
-      agendamentoUsuario = agendamentos.find(a => a.usuario_id === usuario.id);
+      agendamentoUsuario = agendamentos.find(a => 
+  a.usuario_id === usuario.id && a.status !== "realizada"
+);
 
       if (agendamentoUsuario) {
         const card = document.querySelector('.cardAgendamento');
