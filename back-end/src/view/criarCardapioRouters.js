@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const CreateNutritionController = require('../model/criarCardapioService');
-
+const service = new CreateNutritionController();
 // ======================================================
 //  POST - GERAR CARDÁPIO
 // ======================================================
@@ -123,4 +123,12 @@ router.get("/CardapioTeste", async (req, res) => {
   }
 });
 
+router.post("/substituir-alimento", async (req, res) => {
+  try {
+    const resultado = await service.substituirAlimento(req.body);
+    res.json(resultado);
+  } catch (error) {
+    res.status(500).json({ erro: error.message });
+  }
+});
 module.exports = router;

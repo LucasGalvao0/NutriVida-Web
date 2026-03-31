@@ -7,3 +7,4 @@ Accept: application/json
 
 ### Teste de total de pacientes do nutricionista de id 4
 GET http://localhost:3000/api/4/total
+

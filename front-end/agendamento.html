@@ -1221,6 +1221,65 @@ function configurarCarrossel(containerSelector, cardSelector, btnId, qtdVisiveis
 
 <footer></footer>
 
+<script>
+    document.getElementById('btn-pesquisa').addEventListener('click', function(e) {
+    e.preventDefault();
+    buscarConsultorios();
+});
+
+document.getElementById('pesquisa').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        buscarConsultorios();
+    }
+});
+
+function buscarConsultorios() {
+    const termo = document.getElementById('pesquisa').value.trim().toLowerCase();
+    
+    if (!termo) {
+        // Se vazio, mostra todos novamente
+        document.querySelectorAll('.cardCarrossel, .cardVisitado').forEach(card => {
+            card.style.display = '';
+        });
+        return;
+    }
+
+    // Busca nos cards existentes por nome ou endereço
+    let encontrados = 0;
+    const todosCards = document.querySelectorAll('.cardCarrossel, .cardVisitado');
+
+    todosCards.forEach(card => {
+        const nome = card.querySelector('h3')?.textContent.toLowerCase() || '';
+        const endereco = card.querySelector('p')?.textContent.toLowerCase() || '';
+
+        if (nome.includes(termo) || endereco.includes(termo)) {
+            card.style.display = '';
+            card.style.opacity = '1';
+            card.style.position = 'relative';
+            card.style.pointerEvents = 'auto';
+            encontrados++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    if (encontrados === 0) {
+        mostrarMensagem('Nenhum consultório encontrado para "' + termo + '"', 'erro');
+    } else {
+        mostrarMensagem(`${encontrados} consultório(s) encontrado(s)!`);
+    }
+}
+
+// Limpa busca ao apagar o campo
+document.getElementById('pesquisa').addEventListener('input', function() {
+    if (this.value.trim() === '') {
+        document.querySelectorAll('.cardCarrossel, .cardVisitado').forEach(card => {
+            card.style.display = '';
+        });
+    }
+});
+</script>
 
 </body>
 

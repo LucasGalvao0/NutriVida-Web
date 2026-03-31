@@ -710,7 +710,40 @@
               if (alimento.toLowerCase().startsWith("tempero:")) {
                 li.innerHTML = `<span class="destaqueTempero">${alimento}</span>`;
               } else {
-                li.textContent = alimento;
+                dia.refeicoes.forEach(ref => {
+  const h4 = document.createElement("h4");
+  h4.textContent = `${ref.nome} (${formatarHorario(ref.horario)})`;
+  diaContainer.appendChild(h4);
+
+  const ul = document.createElement("ul");
+  if (Array.isArray(ref.alimentos) && ref.alimentos.length) {
+    ref.alimentos.forEach((alimento, aIdx) => {
+      const li = document.createElement("li");
+      li.style.cssText = "display:flex;align-items:center;justify-content:space-between;gap:0.5rem";
+
+      const span = document.createElement("span");
+      if (alimento.toLowerCase().startsWith("tempero:")) {
+        span.innerHTML = `<span class="destaqueTempero">${alimento}</span>`;
+      } else {
+        span.textContent = alimento;
+      }
+
+      const btn = document.createElement("button");
+      btn.textContent = "↺ Substituir";
+      btn.style.cssText = `
+        background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);
+        color:#10b981;border-radius:6px;padding:2px 8px;font-size:0.7rem;
+        cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s
+      `;
+      btn.onclick = () => abrirModalSubstituicao(alimento, ref.nome, index, ref, aIdx);
+
+      li.appendChild(span);
+      li.appendChild(btn);
+      ul.appendChild(li);
+    });
+  }
+  diaContainer.appendChild(ul);
+});
               }
               ul.appendChild(li);
             });
@@ -1322,6 +1355,305 @@ function baixarLista() {
         div.remove();
     });
 }
+</script>
+
+<script>
+    function abrirModalSubstituicao(alimento, refeicao, diaIdx, refObj, aIdx) {
+    const modalExistente = document.getElementById("modal-substituicao");
+    if (modalExistente) modalExistente.remove();
+
+    const modal = document.createElement("div");
+    modal.id = "modal-substituicao";
+    modal.style.cssText = `
+        position:fixed;inset:0;z-index:9999;
+        display:flex;align-items:center;justify-content:center;
+        background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);
+    `;
+    modal.innerHTML = `
+        <div style="background:linear-gradient(135deg,#0f172a,#1e293b);
+            border:1px solid rgba(16,185,129,0.25);border-radius:24px;
+            padding:2rem;max-width:440px;width:90%;
+            box-shadow:0 25px 70px rgba(0,0,0,0.5)">
+            <h3 style="color:#e2e8f0;font-size:1rem;font-weight:700;margin-bottom:0.5rem">↺ Substituir Alimento</h3>
+            <p style="color:#94a3b8;font-size:0.85rem;margin-bottom:1.2rem">
+                Substituindo: <strong style="color:#10b981">${alimento}</strong>
+            </p>
+            <label style="color:#94a3b8;font-size:0.82rem;display:block;margin-bottom:0.4rem">
+                Motivo da substituição (opcional)
+            </label>
+            <input id="motivo-substituicao" type="text"
+                placeholder="Ex: não gosto, sou alérgico, não tenho em casa..."
+                style="width:100%;padding:0.8rem 1rem;border-radius:10px;
+                border:1px solid rgba(16,185,129,0.3);background:rgba(15,23,42,0.6);
+                color:#e2e8f0;font-size:0.88rem;margin-bottom:1.2rem">
+            <div id="resultado-substituicao" style="display:none;padding:0.8rem 1rem;
+                background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);
+                border-radius:10px;color:#34d399;font-size:0.88rem;margin-bottom:1.2rem">
+            </div>
+            <div style="display:flex;gap:0.8rem">
+                <button onclick="document.getElementById('modal-substituicao').remove()"
+                    style="flex:1;padding:0.8rem;border-radius:10px;
+                    border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);
+                    color:#94a3b8;font-size:0.85rem;font-weight:600;cursor:pointer">
+                    Cancelar
+                </button>
+                <button id="btn-confirmar-substituicao"
+                    style="flex:1;padding:0.8rem;border-radius:10px;
+                    background:linear-gradient(135deg,#059669,#10b981);
+                    border:none;color:#fff;font-size:0.85rem;font-weight:600;cursor:pointer">
+                    Gerar Substituto
+                </button>
+            </div>
+        </div>
+    `;
+        document.body.appendChild(modal);
+
+        // Associa o evento via JS em vez de onclick no HTML
+        document.getElementById("btn-confirmar-substituicao").addEventListener("click", () => {
+            confirmarSubstituicao(alimento, refeicao, diaIdx, refObj, aIdx);
+        });
+
+        modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
+        document.getElementById("motivo-substituicao").focus();
+}
+
+async function confirmarSubstituicao(alimento, refeicao, diaIdx, refObj, aIdx) {
+    const motivo = document.getElementById("motivo-substituicao")?.value.trim();
+    const resultado = document.getElementById("resultado-substituicao");
+    const btn = document.getElementById("btn-confirmar-substituicao");
+
+    btn.textContent = "Gerando...";
+    btn.disabled = true;
+
+    const raw = sessionStorage.getItem("cardapio");
+    const cardapio = raw ? JSON.parse(raw) : {};
+    const perfil = {
+        objetivo: cardapio.objective || cardapio.objetivo || "",
+        alergia: cardapio.alergia || "",
+        dietaAtual: cardapio.dietaAtual || ""
+    };
+
+    try {
+        const res = await fetch("http://localhost:3000/cardapio/substituir-alimento", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ alimento, refeicao, motivo, perfil })
+        });
+
+        const dados = await res.json();
+
+        if (dados.substituto) {
+            resultado.style.display = "block";
+            resultado.innerHTML = `✓ Substituto sugerido: <strong>${dados.substituto}</strong>`;
+
+            btn.textContent = "Aplicar";
+            btn.disabled = false;
+            btn.onclick = () => aplicarSubstituicao(diaIdx, refObj, aIdx, dados.substituto);
+        } else {
+            resultado.style.display = "block";
+            resultado.style.color = "#f87171";
+            resultado.textContent = "Não foi possível gerar substituto. Tente novamente.";
+            btn.textContent = "Gerar Substituto";
+            btn.disabled = false;
+        }
+    } catch (err) {
+        console.error(err);
+        resultado.style.display = "block";
+        resultado.style.color = "#f87171";
+        resultado.textContent = "Erro de conexão. Tente novamente.";
+        btn.textContent = "Gerar Substituto";
+        btn.disabled = false;
+    }
+}
+
+function reconstruirLivro(cardapio) {
+    const containerLivro = document.querySelector(".livroTotal");
+    if (!containerLivro) return;
+
+    const diasSemanaLivro = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"];
+
+    // Remove páginas antigas (exceto a capa p1)
+    const paginasAntigas = containerLivro.querySelectorAll(".pagina:not(#p1)");
+    paginasAntigas.forEach(p => p.remove());
+
+    function gerarHTMLDia(diaObj, nomeDia) {
+        let html = `<h4>${nomeDia}</h4>`;
+        diaObj.refeicoes.forEach(ref => {
+            html += `<p><strong>${ref.nome}</strong> (${ref.horario || "--"}):<br>`;
+            if (Array.isArray(ref.alimentos) && ref.alimentos.length) {
+                ref.alimentos.forEach(alimento => {
+                    if (alimento.toLowerCase().startsWith("tempero:")) {
+                        html += `<span class="destaqueTempero">${alimento}</span><br>`;
+                    } else {
+                        html += `${alimento}<br>`;
+                    }
+                });
+            }
+            html += `</p>`;
+        });
+        return html;
+    }
+
+    function criarNovaPagina(idNum) {
+        const pagina = document.createElement("div");
+        pagina.classList.add("pagina");
+        pagina.id = `p${idNum}`;
+
+        const frente = document.createElement("div");
+        frente.classList.add("frente");
+        frente.innerHTML = `
+            <div class="rets"><div class="retMeio1"></div><div class="retMeio2"></div></div>
+            <div class="sombra"></div>
+            <img src="img/Livro/seta-direita.svg" class="setaDireita" alt="">
+        `;
+
+        const verso = document.createElement("div");
+        verso.classList.add("verso");
+        verso.innerHTML = `
+            <div class="reflexo1"><div class="reflexo"></div></div>
+            <div class="reflexo2"><div class="reflexo"></div></div>
+            <img src="img/Livro/seta-esquerda.svg" class="setaEsquerda" alt="">
+        `;
+
+        pagina.appendChild(frente);
+        pagina.appendChild(verso);
+        containerLivro.appendChild(pagina);
+        return pagina;
+    }
+
+    let diaIndex = 0;
+    let paginaIndex = 2; // começa em p2 pois p1 é a capa
+
+    while (diaIndex < cardapio.refeicoes.length) {
+        const pagina = criarNovaPagina(paginaIndex);
+        const frente = pagina.querySelector(".frente");
+        const verso  = pagina.querySelector(".verso");
+
+        if (diaIndex < cardapio.refeicoes.length && frente) {
+            const dia = cardapio.refeicoes[diaIndex];
+            frente.innerHTML += gerarHTMLDia(dia, diasSemanaLivro[diaIndex] || `Dia ${diaIndex + 1}`);
+            diaIndex++;
+        }
+
+        if (diaIndex < cardapio.refeicoes.length && verso) {
+            const dia = cardapio.refeicoes[diaIndex];
+            verso.innerHTML += gerarHTMLDia(dia, diasSemanaLivro[diaIndex] || `Dia ${diaIndex + 1}`);
+            diaIndex++;
+        }
+
+        paginaIndex++;
+    }
+
+    // Adiciona página final
+    const paginaFinal = criarNovaPagina(paginaIndex);
+    paginaFinal.querySelector(".verso").innerHTML += `
+        <p>"NutriVida"</p>
+        <p>todos os direitos reservados</p>
+        <img src="img/Livro/seta-esquerda.svg" class="setaEsquerda" alt="">
+    `;
+
+    // Reinicia comportamento do livro
+    const todasPaginas = containerLivro.querySelectorAll(".pagina");
+    let reset = todasPaginas.length;
+    todasPaginas.forEach(p => { p.style.zIndex = reset--; });
+    todasPaginas[0].style.transform = "rotateY(-180deg)";
+    todasPaginas.forEach(p => {
+        p.addEventListener("click", function() {
+            const maiorIndex = Math.max(...Array.from(todasPaginas).map(pg => Number(pg.style.zIndex)));
+            if (this.style.transform === "" || this.style.transform === "rotateY(0deg)") {
+                if (Number(this.style.zIndex) < maiorIndex) this.style.zIndex = maiorIndex + 1;
+                this.style.transform = "rotateY(-180deg)";
+                if (this.id === todasPaginas[0].id) {
+                    let r = todasPaginas.length;
+                    todasPaginas.forEach(pg => { pg.style.zIndex = r--; });
+                }
+            } else {
+                if (Number(this.style.zIndex) < maiorIndex) this.style.zIndex = maiorIndex + 1;
+                this.style.transform = "rotateY(0deg)";
+            }
+        });
+    });
+}
+
+function aplicarSubstituicao(diaIdx, refObj, aIdx, substituto) {
+    // Atualiza no sessionStorage
+    const raw = sessionStorage.getItem("cardapio");
+    if (raw) {
+        const cardapio = JSON.parse(raw);
+        const alimentoAntigo = cardapio.refeicoes[diaIdx]?.refeicoes
+            ?.find(r => r.nome === refObj.nome)?.alimentos[aIdx];
+
+        if (cardapio.refeicoes[diaIdx]?.refeicoes) {
+            const ref = cardapio.refeicoes[diaIdx].refeicoes.find(r => r.nome === refObj.nome);
+            if (ref) {
+                ref.alimentos[aIdx] = substituto;
+                sessionStorage.setItem("cardapio", JSON.stringify(cardapio));
+            }
+        }
+    }
+
+    // Fecha o modal
+    document.getElementById("modal-substituicao")?.remove();
+
+    // Recarrega as refeições na tela
+    const secRefeicoes = document.getElementById("refeicoes");
+    if (secRefeicoes) {
+        // Dispara reconstrução da seção
+        const cardapioAtualizado = JSON.parse(sessionStorage.getItem("cardapio"));
+        secRefeicoes.innerHTML = "<h2>Refeições</h2>";
+        const diasDaSemana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
+
+        cardapioAtualizado.refeicoes?.forEach((dia, diaIndex) => {
+            const diaContainer = document.createElement("section");
+            const h3 = document.createElement("h3");
+            h3.textContent = diasDaSemana[diaIndex] || dia.nome || `Dia ${diaIndex + 1}`;
+            diaContainer.appendChild(h3);
+
+            dia.refeicoes?.forEach(ref => {
+                const h4 = document.createElement("h4");
+                h4.textContent = `${ref.nome} (${ref.horario || "--"})`;
+                diaContainer.appendChild(h4);
+
+                const ul = document.createElement("ul");
+                ref.alimentos?.forEach((alimento, aIdx) => {
+                    const li = document.createElement("li");
+                    li.style.cssText = "display:flex;align-items:center;justify-content:space-between;gap:0.5rem";
+
+                    const span = document.createElement("span");
+                    if (alimento.toLowerCase().startsWith("tempero:")) {
+                        span.innerHTML = `<span class="destaqueTempero">${alimento}</span>`;
+                    } else {
+                        span.textContent = alimento;
+                    }
+
+                    const btn = document.createElement("button");
+                    btn.textContent = "↺ Substituir";
+                    btn.style.cssText = `
+                        background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);
+                        color:#10b981;border-radius:6px;padding:2px 8px;font-size:0.7rem;
+                        cursor:pointer;white-space:nowrap;flex-shrink:0;
+                    `;
+                    const diaIdxCapture = diaIndex;
+const refCapture = ref;
+const aIdxCapture = aIdx;
+const alimentoCapture = alimento;
+btn.addEventListener("click", () => {
+    abrirModalSubstituicao(alimentoCapture, refCapture.nome, diaIdxCapture, refCapture, aIdxCapture);
+});
+
+                    li.appendChild(span);
+                    li.appendChild(btn);
+                    ul.appendChild(li);
+                });
+                diaContainer.appendChild(ul);
+            });
+            secRefeicoes.appendChild(diaContainer);
+        });
+        // Reconstrói o livro também
+reconstruirLivro(cardapioAtualizado);
+    }
+}
+
 </script>
 
 </body>

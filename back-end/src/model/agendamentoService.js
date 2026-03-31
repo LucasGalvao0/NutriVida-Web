@@ -219,6 +219,8 @@ async function verificarConsultaUsuario(usuarioId) {
   return rows[0].total > 0;
 }
 
+
+
 module.exports = {
   criarAgendamento,
   listarAgendamentos,

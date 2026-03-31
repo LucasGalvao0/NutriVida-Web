@@ -155,12 +155,55 @@ async getModelWithFallback() {
         return { data: result };
       }
 
+      
+
       throw new Error("Resposta da IA não contém candidatos válidos.");
     } catch (error) {
       console.error("Erro detalhado:", error.message);
       throw new Error("Failed to create nutrition plan.");
     }
   }
+
+  async substituirAlimento({ alimento, refeicao, motivo, perfil }) {
+  try {
+    const model = await this.getModelWithFallback();
+
+    const prompt = `Você é um nutricionista. Substitua o alimento "${alimento}" da refeição "${refeicao}".
+
+Motivo: ${motivo || "não informado"}.
+Perfil:
+- Objetivo: ${perfil.objetivo || "não informado"}
+- Alergia: ${perfil.alergia || "nenhuma"}
+- Dieta: ${perfil.dietaAtual || "nenhuma"}
+
+Retorne SOMENTE um JSON válido:
+{"substituto": "exemplo aqui"}`;
+
+    const response = await model.generateContent(prompt);
+
+    let texto = response.response.candidates[0]?.content.parts[0]?.text || "";
+
+    texto = texto.replace(/```json\n?|```/g, "").trim();
+
+    const start = texto.indexOf("{");
+    const end = texto.lastIndexOf("}");
+
+    if (start === -1 || end === -1) {
+      console.error("Resposta IA:", texto);
+      throw new Error("JSON inválido");
+    }
+
+    texto = texto.substring(start, end + 1);
+
+    const json = JSON.parse(texto);
+
+    return { substituto: json.substituto };
+
+  } catch (error) {
+    console.error("Erro no substituirAlimento:", error.message);
+    throw new Error("Erro ao gerar substituto.");
+  }
+}
 }
 
 module.exports = CreateNutritionService;

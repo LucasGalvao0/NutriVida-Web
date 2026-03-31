@@ -97,5 +97,18 @@ Content-Type: application/json
 ###
 http://localhost:3000/salvarCardapio/usuario/5
 
+###
+POST http://localhost:3000/cardapio/substituir-alimento
+Content-Type: application/json
 
+{
+  "alimento": "carne",
+  "refeicao": "Almoço",
+  "motivo": "não gosto",
+  "perfil": {
+    "objetivo": "emagrecer",
+    "alergia": "",
+    "dietaAtual": "low carb"
+  }
+}
 
