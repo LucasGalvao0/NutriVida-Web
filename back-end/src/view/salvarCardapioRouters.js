@@ -272,4 +272,26 @@ router.get("/usuario/:usuarioId/todos", async (req, res) => {
   }
 });
 
+// PUT atualizar cardápio
+router.put("/cardapio/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { cardapio } = req.body;
+
+    if (!cardapio) {
+      return res.status(400).json({ error: "Cardápio não enviado" });
+    }
+
+    await salvarCardapioService.atualizarCardapio(
+      id,
+      JSON.stringify(cardapio)
+    );
+
+    res.json({ message: "Cardápio atualizado com sucesso" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erro ao atualizar cardápio" });
+  }
+});
+
 module.exports = router;

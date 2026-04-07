@@ -610,6 +610,8 @@
             }
         }
     </style>
+        <script src="tela.js" defer></script>
+    <script src="script.js" defer></script>
 </head>
 <body >
 
@@ -1791,8 +1793,25 @@ document.getElementById('confirmarReservaBtn').addEventListener('click', async (
     
     
 
+
     const agendamentos = await checkRes.json();
-    const agendamentoExistente = agendamentos.find(a => a.usuario_id === usuario.id);
+
+const hoje = new Date();
+hoje.setHours(0,0,0,0);
+
+const agendamentoExistente = agendamentos.find(a => {
+  const dataAgendamento = new Date(a.data);
+  dataAgendamento.setHours(0,0,0,0);
+
+  return a.usuario_id === usuario.id &&
+         dataAgendamento >= hoje &&
+         (a.status === 'pendente' || a.status === 'confirmada');
+});
+
+if (agendamentoExistente) {
+  mostrarMensagem('Você já possui uma reserva ativa. Cancele a atual para fazer outra.', 'erro');
+  return;
+}
 
     if (agendamentoExistente) {
       mostrarMensagem('Você já possui uma reserva ativa. Cancele a atual para fazer outra.', 'erro');

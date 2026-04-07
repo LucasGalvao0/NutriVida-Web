@@ -43,6 +43,8 @@ module.exports = {
       throw error;
     }
   },
+
+  
  
   // ==========================================
   // Busca todos os cardápios de um usuário (mais recentes primeiro)
@@ -67,5 +69,22 @@ module.exports = {
       console.error("Erro ao buscar cardápios por usuário:", error);
       throw error;
     }
+  },
+
+  // ==========================================
+// Atualiza cardápio existente (substituição)
+// ==========================================
+async atualizarCardapio(id, cardapio_texto) {
+  try {
+    await banco.query(
+      "UPDATE cardapio SET cardapio_texto = ? WHERE id = ?",
+      [cardapio_texto, id]
+    );
+
+    return { success: true };
+  } catch (error) {
+    console.error("Erro ao atualizar cardápio:", error);
+    throw error;
   }
+}
 };
