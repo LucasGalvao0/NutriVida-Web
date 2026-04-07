@@ -44,7 +44,7 @@
     }
     
     strong, h4{
-      color: var(--primary);
+      color: var(--primary) !important;
     }
      
     #info-pessoal, #refeicoes > section, #suplementos{ background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
@@ -691,63 +691,56 @@
 
     const diasDaSemana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
 
-    if (cardapio.refeicoes && cardapio.refeicoes[0]?.refeicoes) {
+       if (cardapio.refeicoes && cardapio.refeicoes.length) {
       cardapio.refeicoes.forEach((dia, index) => {
         const diaContainer = document.createElement("section");
+
         const h3 = document.createElement("h3");
         h3.textContent = diasDaSemana[index] || dia.nome || `Dia ${index + 1}`;
         diaContainer.appendChild(h3);
 
-        dia.refeicoes.forEach(ref => {
+        // 🔥 LOOP CORRETO (sem duplicação)
+        dia.refeicoes?.forEach(ref => {
           const h4 = document.createElement("h4");
           h4.textContent = `${ref.nome} (${formatarHorario(ref.horario)})`;
           diaContainer.appendChild(h4);
 
           const ul = document.createElement("ul");
-          if (Array.isArray(ref.alimentos) && ref.alimentos.length) {
-            ref.alimentos.forEach(alimento => {
-              const li = document.createElement("li");
-              if (alimento.toLowerCase().startsWith("tempero:")) {
-                li.innerHTML = `<span class="destaqueTempero">${alimento}</span>`;
-              } else {
-                dia.refeicoes.forEach(ref => {
-  const h4 = document.createElement("h4");
-  h4.textContent = `${ref.nome} (${formatarHorario(ref.horario)})`;
-  diaContainer.appendChild(h4);
 
-  const ul = document.createElement("ul");
-  if (Array.isArray(ref.alimentos) && ref.alimentos.length) {
-    ref.alimentos.forEach((alimento, aIdx) => {
-      const li = document.createElement("li");
-      li.style.cssText = "display:flex;align-items:center;justify-content:space-between;gap:0.5rem";
+          ref.alimentos?.forEach((alimento, aIdx) => {
+            const li = document.createElement("li");
+            li.style.cssText =
+              "display:flex;align-items:center;justify-content:space-between;gap:0.5rem";
 
-      const span = document.createElement("span");
-      if (alimento.toLowerCase().startsWith("tempero:")) {
-        span.innerHTML = `<span class="destaqueTempero">${alimento}</span>`;
-      } else {
-        span.textContent = alimento;
-      }
+            const span = document.createElement("span");
 
-      const btn = document.createElement("button");
-      btn.textContent = "↺ Substituir";
-      btn.style.cssText = `
-        background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);
-        color:#10b981;border-radius:6px;padding:2px 8px;font-size:0.7rem;
-        cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s
-      `;
-      btn.onclick = () => abrirModalSubstituicao(alimento, ref.nome, index, ref, aIdx);
+            if (alimento.toLowerCase().startsWith("tempero:")) {
+              span.innerHTML = `<span class="destaqueTempero">${alimento}</span>`;
+            } else {
+              span.textContent = alimento;
+            }
 
-      li.appendChild(span);
-      li.appendChild(btn);
-      ul.appendChild(li);
-    });
-  }
-  diaContainer.appendChild(ul);
-});
-              }
-              ul.appendChild(li);
-            });
-          }
+            const btn = document.createElement("button");
+            btn.textContent = "↺ Substituir";
+            btn.style.cssText = `
+              background:rgba(16,185,129,0.1);
+              border:1px solid rgba(16,185,129,0.3);
+              color:#10b981;
+              border-radius:6px;
+              padding:2px 8px;
+              font-size:0.7rem;
+              cursor:pointer;
+            `;
+
+            btn.onclick = () => {
+              abrirModalSubstituicao(alimento, ref.nome, index, ref, aIdx);
+            };
+
+            li.appendChild(span);
+            li.appendChild(btn);
+            ul.appendChild(li);
+          });
+
           diaContainer.appendChild(ul);
         });
 
@@ -755,6 +748,8 @@
       });
     }
   }
+
+
 
   // ------ Suplementos ------
 const secSuplementos = document.getElementById("suplementos");
