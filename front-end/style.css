@@ -190,9 +190,23 @@ body.dark-mode .equipe-card,
 body.dark-mode .container-imc,
 body.dark-mode .depo,
 body.dark-mode .CardServicos {
-    background-color: #ffffff; /* Card */
+    background: #ffffff; /* Card */
     border: 1px solid #e2e8f0; /* Borda */
     box-shadow: 0 4px 15px rgba(6, 78, 59, 0.04); /* Sombra leve esmeralda */
+}
+
+body.dark-mode .equipe-nome{
+    color: #1e293b;
+}
+
+body.dark-mode .perfil-container{
+    background: #ffffff;
+}
+
+
+
+body.dark-mode .timeline-card{
+    background: #fff;
 }
 
 /* Card de Planos Normal */
@@ -434,7 +448,38 @@ body.dark-mode .depo a:hover{
 
 body.dark-mode .card-grafico{
     color: var(--dark-texto);
-    background-color: #F1F5F9;
+    background: #fff;
+}
+
+body.dark-mode .card-grafico p{
+    color: #94a3b8;
+}
+
+body.dark-mode .calculadora-form{
+    background: #fff;
+}
+
+body.dark-mode .imc-classificacao, body.dark-mode .table-container{
+    background: #e9e9e9;
+    color: #656565;
+}
+
+body.dark-mode .imc-resultado, body.dark-mode .classificacao-titulo{
+    color: #656565;
+}
+
+body.dark-mode .card-programas{
+    background: #fff ;
+}
+
+body.dark-mode .card-programas p{
+    color: 
+}
+
+
+body.dark-mode .depoimento-card{
+    background: #fff;
+    color: #474e59;
 }
 
 body.dark-mode .servicos{

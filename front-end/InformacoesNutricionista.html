@@ -244,11 +244,10 @@
             display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.3rem;
         }
 
-        .brand-dot {
-            width: 10px; height: 10px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            box-shadow: 0 0 12px var(--primary);
-            animation: pulse-dot 2s infinite;
+        .brand-dot img {
+            height: 2rem;
+            display: flex;
+            align-items: center;
         }
 
         @keyframes pulse-dot {
@@ -962,8 +961,10 @@
     <aside class="sidebar">
         <div class="sidebar-brand">
             <div class="brand-logo">
-                <div class="brand-dot"></div>
-                <span class="brand-name">NutriVida</span>
+                <div class="brand-dot">
+                    <img src="img/logos/logo.png" alt="">
+                </div>
+                <span class="brand-name">Nutrivida</span>
             </div>
             <div class="brand-sub">Área do Nutricionista</div>
         </div>
@@ -1100,7 +1101,7 @@
 
                     <div class="section-div"></div>
 
-                    <div class="card-title-sm"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Próximos 3 dias</div>
+                    <div class="card-title-sm"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Próximas consultas</div>
 
                     <div id="listaProximosDias"></div>
                     
