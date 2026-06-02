@@ -1006,6 +1006,11 @@
                 <span class="nav-badge">5</span>
             </button>
 
+             <button class="nav-btn" onclick="goSection('mensagens', this)">
+                <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Mensagens
+                <span class="nav-badge" id="badge-mensagens" style="display:none">0</span>
+            </button>
+
            
 
             <div class="nav-group-label">Conta</div>
@@ -1555,6 +1560,69 @@
                     <button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="toast('Configurações salvas!')"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Salvar Configurações</button>
                 </div>
             </div>
+        </div>
+
+          <!-- ══ MENSAGENS ══ -->
+        <div id="sec-mensagens" class="section">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">Mensagens</div>
+                    <div class="page-sub" id="msg-sub">Visualize e responda as mensagens dos seus clientes</div>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-ghost" onclick="carregarMensagens(true)">
+                        <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></span>
+                        Atualizar
+                    </button>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem;margin-bottom:1.4rem">
+                    <div class="filter-tabs">
+                        <button class="ftab on" id="msg-tab-nao" onclick="msgAlternarExibicao('naoRespondidas', this)">
+                            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+                            Não Respondidas <span id="msg-count-nao" class="nav-badge" style="display:inline;margin-left:0.3rem;background:var(--red)">0</span>
+                        </button>
+                        <button class="ftab" id="msg-tab-resp" onclick="msgAlternarExibicao('respondidas', this)">
+                            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></span>
+                            Respondidas
+                        </button>
+                        <button class="ftab" id="msg-tab-arq" onclick="msgAlternarExibicao('arquivadas', this)">
+                            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg></span>
+                            Arquivadas
+                        </button>
+                    </div>
+                    <button id="msg-btn-excluir-todas" class="btn btn-danger btn-sm" style="display:none" onclick="msgConfirmarAcao('Tem certeza que deseja EXCLUIR TODAS as mensagens desta visualização?', msgExcluirTodas)">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></span>
+                        Excluir Tudo
+                    </button>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 180px;gap:0.5rem;padding:0.4rem 1rem;margin-bottom:0.4rem">
+                    <span class="th">Remetente</span>
+                    <span class="th" style="text-align:right">Ações</span>
+                </div>
+                <div id="msg-lista"></div>
+
+                <div id="msg-empty" style="display:none;text-align:center;padding:3rem;color:var(--text-muted)">
+                    <div style="margin-bottom:0.8rem;color:var(--primary)"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+                    <div id="msg-empty-text">Nenhuma mensagem aqui</div>
+                </div>
+            </div>
+
+            <div id="msg-confirm-modal" style="display:none;position:fixed;inset:0;z-index:9990;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px)">
+                <div style="background:linear-gradient(135deg,#0f172a,#1e293b);border:1px solid rgba(239,68,68,0.25);border-radius:24px;padding:2rem;max-width:420px;width:90%;animation:surgirModal 0.25s ease">
+                    <h3 style="font-size:1rem;font-weight:700;color:#e2e8f0;margin-bottom:0.5rem">Confirmação</h3>
+                    <p id="msg-confirm-text" style="font-size:0.85rem;color:#94a3b8;margin-bottom:1.5rem"></p>
+                    <div style="display:flex;gap:0.8rem">
+                        <button onclick="msgFecharModal()" style="flex:1;padding:0.75rem;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#94a3b8;font-size:0.85rem;font-weight:600;cursor:pointer">Cancelar</button>
+                        <button id="msg-confirm-btn" style="flex:1;padding:0.75rem;border-radius:12px;border:1px solid rgba(239,68,68,0.3);background:rgba(239,68,68,0.1);color:#f87171;font-size:0.85rem;font-weight:600;cursor:pointer">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="msg-status" style="display:none;position:fixed;bottom:5rem;right:2rem;z-index:9980;padding:0.8rem 1.4rem;border-radius:14px;font-weight:700;font-size:0.85rem;transition:all 0.4s"></div>
         </div>
 
         <!-- ══ PRONTUÁRIO ══ -->
@@ -3673,6 +3741,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await carregarAlertas();
     carregarAgenda();
     carregarResumoMes();
+    carregarMensagens();
 
       const camposPront = [
       "an-nome","an-nasc","an-profissao","an-tel","an-motivo",

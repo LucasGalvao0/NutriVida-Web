@@ -66,10 +66,6 @@
     --text-dim: #94a3b8;
 }
 
-body.dark-mode{
-    color: #0AA76A;
-    background-color: var(--dark-cinza);
-}
 
 body.dark-mode .livroTotal #p2 .frente{
     background-color: var(--dark-cinza);
@@ -125,50 +121,233 @@ body.dark-mode .banner .Texto-sobre .tituloPrincipal-sobre{
     color: var(--dark-texto);
 }
 
-body.dark-mode .banner::after{
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 80%;
-    left: 0;
-    top: 0;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+
+/* Começo para o modo claro CERTO */
+/* Avisar: o site está iniciando no modo CLARO, mudar ele para o modo escuro e tambem alterar os icones na acessibilidade */
+/* ==========================================
+   PALETA EYE-COMFORT (CONFORTO VISUAL)
+   Zero Branco Puro | Tons Opacos e Relaxantes
+   ========================================== */
+
+
+
+body.dark-mode::before {
+    /* Fundo: Verde pastel ultra-suave e revigorante */
+    background: linear-gradient(135deg, #f4fbf7 0%, #e8f5ed 100%);
 }
 
-body.dark-mode .banner::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 40%;
-    left: 0;
-    bottom: 0;
-    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5));
+/* Header leve com efeito glassmorphism suave */
+body.dark-mode header {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #e2e8f0; /* Borda */
 }
 
-body.dark-mode .banner2::before{
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 40%;
-    left: 0;
-    bottom: 55svh;
-    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5));
+/* Cor padrão dos links no modo claro (um grafite escuro em vez de preto puro) */
+body.dark-mode nav li a {
+    color: #1e293b;
+    transition: color 0.2s ease; 
 }
 
-body.dark-mode .banner2::after{
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 40%;
-    left: 0;
-    top: 0;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+body.dark-mode .dropdown p {
+     color: #1e293b;
 }
 
-body.dark-mode .Contatos{
-    background-color: rgb(50, 50, 50);
+body.dark-mode nav li a.paginaAtual, 
+body.dark-mode nav li a:hover {
+    color: #059669 !important; /* Força o uso do Verde Primário da sua paleta */
 }
 
+/* Títulos Principais: Transição do Verde Escuro para o Verde Primário */
+body.dark-mode .titulo-principal {
+    background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Textos de Apoio / Subtítulos: Tom Muted para descanso visual */
+body.dark-mode .depoimentos-subtitle,
+body.dark-mode .timeline-subtitle,
+body.dark-mode .subtitulo,
+body.dark-mode .subtitulo-contatos,
+body.dark-mode .cta-texto,
+body.dark-mode .footer-description,
+body.dark-mode .footer-links a,
+body.dark-mode .contact-item {
+    color: #475569; /* Muted */
+}
+
+/* Estrutura de Cards Padrão: Branco Puro isolado sobre o fundo pastel */
+body.dark-mode .floating-card,
+body.dark-mode .card,
+body.dark-mode .card-programas,
+body.dark-mode .timeline-card,
+body.dark-mode .card-grafico,
+body.dark-mode .depoimento-card,
+body.dark-mode .calculadora-form,
+body.dark-mode .timeline-conteudo,
+body.dark-mode .equipe-card,
+body.dark-mode .container-imc,
+body.dark-mode .depo,
+body.dark-mode .CardServicos {
+    background-color: #ffffff; /* Card */
+    border: 1px solid #e2e8f0; /* Borda */
+    box-shadow: 0 4px 15px rgba(6, 78, 59, 0.04); /* Sombra leve esmeralda */
+}
+
+/* Card de Planos Normal */
+body.dark-mode .card-planos {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #1e293b; /* Texto */
+}
+
+/* Card 2: Destaque do Plano Intermediário ("Mais Popular") */
+body.dark-mode .card2 {
+    background: linear-gradient(135deg, #ffffff 0%, #e6f4ea 100%); /* Light */
+    border: 2px solid #059669; /* Primary */
+}
+
+/* Badges e Destaques Importantes (Ex: LinkTítulo, Mais Popular) */
+body.dark-mode .linkTitulo2 {
+    color: #d97706; /* Accent */
+}
+
+body.dark-mode .card-cima {
+    color: #059669; /* Primary */
+}
+
+body.dark-mode .card-programas .card-cima h5 {
+    border-bottom: 4px solid #059669; /* Primary */
+}
+
+/* Seções Gerais do Site */
+body.dark-mode .programas,
+body.dark-mode .depoimentos,
+body.dark-mode .Calculadora-imc,
+body.dark-mode .CardapioPersonalizado,
+body.dark-mode .textoTcardapio,
+body.dark-mode .servicos,
+body.dark-mode .tServicos {
+    background-color: #f4fbf7; /* Fundo */
+    color: #1e293b; /* Texto */
+}
+
+/* Alternância de cor para quebrar seções longas */
+body.dark-mode .programas-emagrecimento,
+body.dark-mode .equipe-section,
+body.dark-mode .servicos.servicosInvertido {
+    background-color: #e6f4ea; /* Light */
+    color: #1e293b; /* Texto */
+}
+
+/* Correção de títulos que antes sumiam ou ficavam brancos */
+body.dark-mode .programas h2,
+body.dark-mode .programas-emagrecimento h2,
+body.dark-mode .depoimentos h2,
+body.dark-mode .depoimentos-title,
+body.dark-mode .tServicos h1,
+body.dark-mode .pCardapio, 
+body.dark-mode .tituloCardapio,
+body.dark-mode #pediatrica, 
+body.dark-mode #clinica, 
+body.dark-mode #comunitaria,
+body.dark-mode #esportiva, 
+body.dark-mode #obesidade {
+    color: #064e3b !important; /* Dark */
+    -webkit-text-fill-color: initial !important; /* Remove o bug do sumiço */
+}
+
+/* Linha do Tempo (Timeline) */
+body.dark-mode .timeline-card-final {
+    background: linear-gradient(135deg, #ffffff 0%, #fef3c7 100%);
+    border: 1px solid #fde68a;
+}
+
+body.dark-mode .timeline-card h3 {
+    color: #064e3b; /* Dark */
+}
+
+body.dark-mode .timeline-card p {
+    color: #475569; /* Muted */
+}
+
+/* Elementos de Depoimentos */
+body.dark-mode .depoimento-nome,
+body.dark-mode .depoAutor {
+    color: #059669; /* Primary */
+    font-weight: 600;
+}
+
+/* Formulários, Inputs e Filtros (Removido os fundos escuros antigos) */
+body.dark-mode .calculadora label,
+body.dark-mode .linhaFormulario label {
+    color: #1e293b; /* Texto */
+}
+
+body.dark-mode .calculadora input,
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select,
+body.dark-mode .formularioContato form input, 
+body.dark-mode .formularioContato form textarea,
+body.dark-mode .formularioContato form select,
+body.dark-mode .formularioContato form option,
+body.dark-mode .Corporal .cardPeso, 
+body.dark-mode .CardapioPersonalizado form .campo2 input,
+body.dark-mode .CardapioPersonalizado form .campo2 textarea,
+body.dark-mode .CardapioPersonalizado form .campo2 select,
+body.dark-mode .botaoDeOpcao {
+    background-color: #ffffff; /* Card */
+    border: 1px solid #cbd5e1; /* Borda um pouco mais visível para inputs */
+    color: #1e293b; /* Texto */
+}
+
+body.dark-mode .calculadora input:focus,
+body.dark-mode input:focus {
+    border-color: #059669; /* Primary */
+    outline: none;
+}
+
+/* Botões da Calculadora */
+body.dark-mode #calc-btn, 
+body.dark-mode #back-btn {
+    background-color: #059669; /* Primary */
+    color: #ffffff;
+    border: none;
+    transition: background 0.2s;
+}
+
+body.dark-mode #calc-btn:hover, 
+body.dark-mode #back-btn:hover {
+    background-color: #064e3b; /* Dark */
+}
+
+/* Banner de Agendamento e CTAs */
+body.dark-mode .Banner-Agendamento .agendamento h1, 
+body.dark-mode .Banner-Agendamento .agendamento h2,
+body.dark-mode .Banner-Agendamento .agendamento h3,
+body.dark-mode .planos h2,
+body.dark-mode .planos h3 {
+    color: #064e3b; /* Dark */
+}
+
+.cta-titulo {
+    background: linear-gradient(135deg, #064e3b, #059669);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Rodapé */
+body.dark-mode footer {
+    background: linear-gradient(135deg, #e6f4ea 0%, #f4fbf7 100%);
+    border-top: 1px solid #e2e8f0;
+}
+
+body.dark-mode .glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #e2e8f0;
+}
 body.dark-mode .formularioContato form input, body.dark-mode  .formularioContato form textarea,
 body.dark-mode  .formularioContato form select,
 body.dark-mode  .formularioContato form option {
@@ -192,25 +371,6 @@ body.dark-mode .depoimentos {
     color: var(--dark-texto)
 }
 
-body.dark-mode .programas {
-    background-color: #222222;
-    color: var(--dark-texto)
-}
-
-body.dark-mode .card-planos{
-    background-color: var(--dark-cinza);
-    color: var(--dark-texto)
-}
-
-body.dark-mode .programas-emagrecimento{
-    background-color: #222222;
-    color: var(--dark-texto)
-}
-
-body.dark-mode .card-programas{
-    background-color: #2B2B2B ;
-    color: var(--dark-texto);
-}
 
 body.dark-mode .programas h2,
 body.dark-mode .programas-emagrecimento h2,
@@ -272,19 +432,9 @@ body.dark-mode .depo a:hover{
     color: var(--dark-texto);
 }
 
-body.dark-mode .card{
-    color: var(--dark-texto);
-    background-color: var(--dark-cinza);
-    box-shadow: 10px 5px 5px rgba(255, 230, 160, 0.1);
-
-
-
-
-}
-
 body.dark-mode .card-grafico{
     color: var(--dark-texto);
-    background-color: #2B2B2B;
+    background-color: #F1F5F9;
 }
 
 body.dark-mode .servicos{
@@ -1789,7 +1939,7 @@ header {
 }
 
 .card {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%);
+    /* background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%); */
     backdrop-filter: blur(20px);
     border: 1px solid rgba(16, 185, 129, 0.2);
     border-radius: 30px;

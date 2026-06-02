@@ -581,13 +581,12 @@
     });
 </script>
 <script>
- 
 (() => {
-  console.log(" Buscando cardápio no sessionStorage...");
+  console.log("Buscando cardápio no sessionStorage...");
 
   const cardapioRaw = sessionStorage.getItem("cardapio");
   if (!cardapioRaw) {
-    console.warn("⚠️ Nenhum cardápio encontrado no sessionStorage.");
+    console.warn("Nenhum cardápio encontrado no sessionStorage.");
     document.body.innerHTML = "<p>Nenhum cardápio encontrado.</p>";
     return;
   }
@@ -595,11 +594,33 @@
   let cardapio = null;
   try {
     cardapio = JSON.parse(cardapioRaw);
-    console.log(" Cardápio carregado:", cardapio);
+    console.log("Cardápio carregado:", cardapio);
   } catch (error) {
-    console.error(" Erro ao fazer JSON.parse:", error);
+    console.error("Erro ao fazer JSON.parse:", error);
     document.body.innerHTML = "<p>Erro ao carregar o cardápio.</p>";
     return;
+  }
+
+  // ── Normaliza: no fallback os dados pessoais ficam em dadosUsuario ──────────
+  // No cardápio normal ficam na raiz. Unificamos num único objeto "perfil".
+  const isFallback = cardapio.fallback === true;
+  const perfil = isFallback ? (cardapio.dadosUsuario || {}) : cardapio;
+
+  // Banner de aviso quando for fallback
+  if (isFallback) {
+    const banner = document.createElement("div");
+    banner.style.cssText = `
+      background: rgba(234,179,8,0.15);
+      border: 1px solid rgba(234,179,8,0.4);
+      color: #92400e;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      font-weight: 600;
+    `;
+    banner.textContent = "⚠️ Cardápio similar encontrado — a IA estava indisponível no momento. Exibindo o plano mais parecido com o seu perfil.";
+    document.body.prepend(banner);
   }
 
   function getCampo(obj, ...possibilidades) {
@@ -619,56 +640,63 @@
   }
 
   // ------ Preencher Dados Pessoais (spans gerais) ------
+  // Usa "perfil" que já está normalizado
   const campos = [
-    ["nome", "name", "nome"],
-    ["sexo", "gender", "sexo"],
-    ["idade", "age", "idade"],
-    ["altura", "height", "altura"],
-    ["peso", "weight", "peso"],
-    ["objetivo", "objective", "objetivo"],
-    ["imc", "imc"],
-    ["alergia", "alergia", "Alergia"],
-    ["trabalho", "trabalho", "job"],
-    ["esporte", "esporte", "sport"],
-    ["dietaAtual", "dietaAtual", "dieta_atual"],
-    ["rotina", "rotina"],
-    ["tempoPreparo", "tempoPreparo"]
+    ["nome",          "nome",           "name"],
+    ["sexo",          "sexo",           "gender"],
+    ["idade",         "idade",          "age"],
+    ["altura",        "altura",         "height"],
+    ["peso",          "peso",           "weight"],
+    ["objetivo",      "objetivo",       "objective"],
+    ["imc",           "imc"],
+    ["alergia",       "alergia",        "Alergia"],
+    ["trabalho",      "trabalho",       "job"],
+    ["esporte",       "esporte",        "sport"],
+    ["dietaAtual",    "dietaAtual",     "dieta_atual"],
+    ["rotina",        "rotina"],
+    ["tempoPreparo",  "tempoPreparo"]
   ];
 
   campos.forEach(([id, ...keys]) => {
     const el = document.getElementById(id);
-    if (el) el.textContent = getCampo(cardapio, ...keys) || "Não informado";
+    if (el) el.textContent = getCampo(perfil, ...keys) || "Não informado";
   });
 
-  // ------ Preencher Dados Pessoais (card .infoPacienteCard) ------
+  // ------ Preencher card .infoPacienteCard ------
   const camposInfoPaciente = [
-    ["infoNome", "nome", "name"],
-    ["infoSexo", "sexo", "gender"],
-    ["infoIdade", "idade", "age"],
-    ["infoPeso", "peso", "weight"],
-    ["infoAltura", "altura", "height"],
-    ["infoObjetivo", "objetivo", "objective"],
-    ["infoImc", "imc"],
-    ["infoAlergia", "alergia", "Alergia"],
-    ["infoTrabalho", "trabalho", "job"],
-    ["infoEsporte", "esporte", "sport"],
-    ["infoDietaAtual", "dietaAtual", "dieta_atual"],
-    ["infoRotina", "rotina"],
-    ["infoTempoPreparo", "tempoPreparo"],
-    ["infoAlimentosFavoritos", "alimentosFavoritos", "alimentos_favoritos"]
+    ["infoNome",              "nome",              "name"],
+    ["infoSexo",              "sexo",              "gender"],
+    ["infoIdade",             "idade",             "age"],
+    ["infoPeso",              "peso",              "weight"],
+    ["infoAltura",            "altura",            "height"],
+    ["infoObjetivo",          "objetivo",          "objective"],
+    ["infoImc",               "imc"],
+    ["infoAlergia",           "alergia",           "Alergia"],
+    ["infoTrabalho",          "trabalho",          "job"],
+    ["infoEsporte",           "esporte",           "sport"],
+    ["infoDietaAtual",        "dietaAtual",        "dieta_atual"],
+    ["infoRotina",            "rotina"],
+    ["infoTempoPreparo",      "tempoPreparo"],
+    ["infoAlimentosFavoritos","alimentosFavoritos","alimentos_favoritos"]
   ];
 
   camposInfoPaciente.forEach(([id, ...keys]) => {
     const el = document.getElementById(id);
     if (el) {
-      let valor = getCampo(cardapio, ...keys);
+      // alimentosFavoritos pode estar no perfil (fallback) ou na raiz (normal)
+      let valor = getCampo(perfil, ...keys);
+      if (!valor) valor = getCampo(cardapio, ...keys); // fallback extra para raiz
       if (Array.isArray(valor)) valor = valor.join(", ");
       el.textContent = valor || "Não informado";
     }
   });
 
   // ------ Alimentos Favoritos ------
-  const favoritos = getCampo(cardapio, "alimentosFavoritos", "alimentos_favoritos");
+  // Pode estar em cardapio.alimentosFavoritos (normal) ou perfil.alimentosFavoritos (fallback)
+  const favoritos =
+    getCampo(cardapio, "alimentosFavoritos", "alimentos_favoritos") ||
+    getCampo(perfil,   "alimentosFavoritos", "alimentos_favoritos");
+
   const favContainer = document.getElementById("alimentosFavoritos");
   if (favContainer) {
     favContainer.innerHTML = "";
@@ -684,22 +712,23 @@
     }
   }
 
-  // ------ Refeições Tradicionais ------
+  // ------ Refeições ------
+  const refeicoes = cardapio.refeicoes || [];
+
   const secRefeicoes = document.getElementById("refeicoes");
   if (secRefeicoes) {
     secRefeicoes.innerHTML = "<h2>Refeições</h2>";
 
     const diasDaSemana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
 
-       if (cardapio.refeicoes && cardapio.refeicoes.length) {
-      cardapio.refeicoes.forEach((dia, index) => {
+    if (refeicoes.length) {
+      refeicoes.forEach((dia, index) => {
         const diaContainer = document.createElement("section");
 
         const h3 = document.createElement("h3");
         h3.textContent = diasDaSemana[index] || dia.nome || `Dia ${index + 1}`;
         diaContainer.appendChild(h3);
 
-        // 🔥 LOOP CORRETO (sem duplicação)
         dia.refeicoes?.forEach(ref => {
           const h4 = document.createElement("h4");
           h4.textContent = `${ref.nome} (${formatarHorario(ref.horario)})`;
@@ -731,7 +760,6 @@
               font-size:0.7rem;
               cursor:pointer;
             `;
-
             btn.onclick = () => {
               abrirModalSubstituicao(alimento, ref.nome, index, ref, aIdx);
             };
@@ -746,54 +774,75 @@
 
         secRefeicoes.appendChild(diaContainer);
       });
+    } else {
+      secRefeicoes.innerHTML += "<p>Nenhuma refeição encontrada.</p>";
     }
   }
 
-
-
   // ------ Suplementos ------
-const secSuplementos = document.getElementById("suplementos");
-const resumoSuplementos = document.getElementById("resumoSuplementos");
+  const secSuplementos   = document.getElementById("suplementos");
+  const resumoSuplementos = document.getElementById("resumoSuplementos");
 
-if (secSuplementos) secSuplementos.innerHTML = "<h2>Suplementos</h2>";
-if (resumoSuplementos) resumoSuplementos.innerHTML = "<h3>Resumo Suplementos</h3>";
+  if (secSuplementos)   secSuplementos.innerHTML   = "<h2>Suplementos</h2>";
+  if (resumoSuplementos) resumoSuplementos.innerHTML = "<h3>Resumo Suplementos</h3>";
 
-const suplementos = cardapio.suplementos || {};
+  const suplementos = cardapio.suplementos || {};
 
-function criarListaSuplementos(titulo, lista) {
-  if (!Array.isArray(lista) || lista.length === 0) return null;
+  function criarListaSuplementos(titulo, lista) {
+    if (!Array.isArray(lista) || lista.length === 0) return null;
 
-  const section = document.createElement("div");
-  const h4 = document.createElement("h4");
-  h4.textContent = titulo;
-  section.appendChild(h4);
+    const section = document.createElement("div");
+    const h4 = document.createElement("h4");
+    h4.textContent = titulo;
+    section.appendChild(h4);
 
-  const ul = document.createElement("ul");
-  lista.forEach(sup => {
-    const li = document.createElement("li");
-    li.textContent = sup;
-    ul.appendChild(li);
-  });
-  section.appendChild(ul);
-  return section;
-}
+    const ul = document.createElement("ul");
+    lista.forEach(sup => {
+      const li = document.createElement("li");
 
-const listaEsporte = criarListaSuplementos("Antes do treino - Esporte", suplementos.suplementos_antes_treino_esporte);
-const listaAcademia = criarListaSuplementos("Antes do treino - Academia", suplementos.suplementos_antes_treino_academia);
-const listaGerais = criarListaSuplementos("Suplementos Gerais", suplementos.suplementos_gerais);
+      // Suporte a string simples ou objeto {nome, dosagem, horario, observacao}
+      if (typeof sup === "string") {
+        li.textContent = sup;
+      } else {
+        const nome      = sup.nome      || sup.name || "";
+        const dosagem   = sup.dosagem   || sup.dose || "";
+        const horario   = sup.horario   || sup.time || "";
+        const observacao = sup.observacao || sup.obs || "";
+        li.innerHTML = `
+          <strong>${nome}</strong>
+          ${dosagem   ? `<br><small>📏 ${dosagem}</small>`   : ""}
+          ${horario   ? `<br><small>⏰ ${horario}</small>`   : ""}
+          ${observacao ? `<br><small>💬 ${observacao}</small>` : ""}
+        `;
+      }
 
-[listaEsporte, listaAcademia, listaGerais].forEach(lista => {
-  if (lista) {
-    if (secSuplementos) secSuplementos.appendChild(lista.cloneNode(true));
-    if (resumoSuplementos) resumoSuplementos.appendChild(lista.cloneNode(true));
+      ul.appendChild(li);
+    });
+    section.appendChild(ul);
+    return section;
   }
-});
+
+  const listaEsporte  = criarListaSuplementos("Antes do treino - Esporte",  suplementos.suplementos_antes_treino_esporte);
+  const listaAcademia = criarListaSuplementos("Antes do treino - Academia", suplementos.suplementos_antes_treino_academia);
+  const listaGerais   = criarListaSuplementos("Suplementos Gerais",         suplementos.suplementos_gerais);
+
+  [listaEsporte, listaAcademia, listaGerais].forEach(lista => {
+    if (lista) {
+      if (secSuplementos)    secSuplementos.appendChild(lista.cloneNode(true));
+      if (resumoSuplementos) resumoSuplementos.appendChild(lista.cloneNode(true));
+    }
+  });
+
+  if (!listaEsporte && !listaAcademia && !listaGerais) {
+    if (secSuplementos)    secSuplementos.innerHTML   += "<p>Nenhum suplemento recomendado.</p>";
+    if (resumoSuplementos) resumoSuplementos.innerHTML += "<p>Nenhum suplemento recomendado.</p>";
+  }
 
   // ------ Livro (páginas animadas) ------
   const containerLivro = document.querySelector(".livroTotal");
-  if (containerLivro) {
+  if (containerLivro && refeicoes.length) {
     const paginasExistentes = document.querySelectorAll(".pagina");
-    const diasSemanaLivro = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"];
+    const diasSemanaLivro = ["Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado","Domingo"];
     let diaIndex = 0;
     let paginaIndex = 1;
 
@@ -844,20 +893,20 @@ const listaGerais = criarListaSuplementos("Suplementos Gerais", suplementos.supl
       return pagina;
     }
 
-    while (diaIndex < cardapio.refeicoes.length) {
+    while (diaIndex < refeicoes.length) {
       let pagina = paginasExistentes[paginaIndex] || criarNovaPagina(paginaIndex + 1);
       const frente = pagina.querySelector(".frente");
-      const verso = pagina.querySelector(".verso");
+      const verso  = pagina.querySelector(".verso");
 
-      if (diaIndex < cardapio.refeicoes.length && frente) {
-        const dia = cardapio.refeicoes[diaIndex];
+      if (diaIndex < refeicoes.length && frente) {
+        const dia = refeicoes[diaIndex];
         const nomeDia = diasSemanaLivro[diaIndex] || `Dia ${diaIndex + 1}`;
         frente.innerHTML += gerarHTMLDia(dia, nomeDia);
         diaIndex++;
       }
 
-      if (diaIndex < cardapio.refeicoes.length && verso) {
-        const dia = cardapio.refeicoes[diaIndex];
+      if (diaIndex < refeicoes.length && verso) {
+        const dia = refeicoes[diaIndex];
         const nomeDia = diasSemanaLivro[diaIndex] || `Dia ${diaIndex + 1}`;
         verso.innerHTML += gerarHTMLDia(dia, nomeDia);
         diaIndex++;

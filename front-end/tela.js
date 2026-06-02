@@ -43,13 +43,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const headerHTML = `
         <a href="index.html"  style="height: 100%;">
-        <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
+        <img class="logo-header" src="img/logos/Logo texto branco.png" alt="logo-nutrivida">
 </a>
         <section class="direito">
             <nav class="menu">
                 <ul id="menu">
                     <a href="index.html">
-        <img src="img/logos/Logo texto branco.png" alt="logo-nutrivida"  style="height: 4rem;">
+        <img class="logo-header" src="img/logos/Logo texto branco.png" alt="logo-nutrivida" style="height: 4rem;">
 </a>
                     <li><a class="item ${paginaAtual === 'index' ? 'paginaAtual' : ''}" href="index.html" data-translate="1">Início</a></li>    
                     <li class="dropdown">
@@ -104,8 +104,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 <div class="corpo-barra">
                     <div class="card-barra">
                         <button id="alteraCorDark">
-                            <img src="img/icons/icone-lua.svg" alt="simbolo-dark">
                             <img src="img/icons/icone-sol.svg" alt="simbolo-light">
+                            <img src="img/icons/icone-lua.svg" alt="simbolo-dark">
+                            
                         </button>
                         <button id="ativarVlibras">
                             <img src="img/icons/libras.png" alt="ícone do botão do VLibras">
@@ -139,6 +140,18 @@ document.addEventListener("DOMContentLoaded", function() {
     document.body.insertAdjacentHTML('afterbegin', barraAcessibilidadeHTML);
 }
 
+function atualizarLogoHeader() {
+    const logos = document.querySelectorAll('.logo-header');
+
+    const logoSrc = document.body.classList.contains('dark-mode')
+        ? 'img/logos/logo_verde_verde.png'
+        : 'img/logos/Logo texto branco.png';
+
+    logos.forEach(logo => {
+        logo.src = logoSrc;
+    });
+}
+
 function inicializarEventosAcessibilidade() {
     // Modo Dark
     // Modo Dark com persistência
@@ -148,6 +161,8 @@ if (localStorage.getItem('modo-escuro') === 'true') {
 } else {
     document.body.classList.remove('dark-mode');
 }
+
+atualizarLogoHeader();
 
 // Lógica do botão só se ele existir
 const mudaCordDark = document.getElementById('alteraCorDark');
@@ -167,6 +182,7 @@ if (mudaCordDark) {
     mudaCordDark.addEventListener('click', function() {
         const modoEscuroAtivo = document.body.classList.toggle('dark-mode');
         localStorage.setItem('modo-escuro', modoEscuroAtivo);
+        atualizarLogoHeader();
 
         if (modoEscuroAtivo) {
             lightIcon.style.display = 'none';
@@ -308,7 +324,7 @@ if (desligarFuncao) {
     desligarFuncao.addEventListener("click", function() {
         // Remove o modo dark da página atual
         document.body.classList.remove('dark-mode');
-
+        atualizarLogoHeader();
         // Esconde a barra do VLibras (se existir)
         if (vlibrasBarra) vlibrasBarra.style.display = 'none';
 
@@ -477,6 +493,7 @@ document.addEventListener("DOMContentLoaded", verificarAcesso);
 
 // Depois do inserirHeader e inserirBarraAcessibilidade
 inserirHeader();
+atualizarLogoHeader();
 inserirBarraAcessibilidade();
 inicializarEventosAcessibilidade();
 inserirFooter();

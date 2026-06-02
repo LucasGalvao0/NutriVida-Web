@@ -7,16 +7,22 @@ const { enviarEmailResposta } = require('./emailService');
 const GetAll = async (request, response) => {
     try {
         const nutricionistaId = request.query.nutricionista;
+        console.log("nutricionistaId recebido:", nutricionistaId);
+        console.log("tipo:", typeof nutricionistaId);
 
         let query = 'SELECT id, nome, email, mensagem, telefone, remetente, resposta, respondido, arquivado FROM contatos';
         let values = [];
 
         if (nutricionistaId) {
             query += ' WHERE remetente = ?';
-            values.push(nutricionistaId);
+            values.push(nutricionistaId);  // já é string vindo da query
         }
 
+        console.log("query:", query);
+        console.log("values:", values);
+
         const [data] = await banco.query(query, values);
+        console.log("rows retornadas:", data);  // 👈 adiciona isso
         response.status(200).send(data);
     } catch (error) {
         console.error("Erro ao buscar contatos:", error.message);

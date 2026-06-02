@@ -616,6 +616,195 @@
         }).join('');
     }
 
+       //  MÓDULO DE MENSAGENS — NutriVida Dashboard
+        // ================================================================
+
+        let msgTipoAtual = 'naoRespondidas';
+        let msgCache = [];
+        let msgConfirmCallback = null;
+
+        function msgMostrarStatus(texto, tipo = 'sucesso') {
+            const div = document.getElementById('msg-status');
+            if (!div) return;
+            div.textContent = texto;
+            div.style.background = tipo === 'sucesso' ? 'rgba(16,185,129,0.95)' : 'rgba(239,68,68,0.95)';
+            div.style.color = tipo === 'sucesso' ? '#0a1f1a' : '#fff';
+            div.style.display = 'block';
+            div.style.opacity = '1';
+            setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.style.display = 'none', 400); }, 3500);
+        }
+
+        function msgConfirmarAcao(mensagem, callback) {
+            const modal = document.getElementById('msg-confirm-modal');
+            document.getElementById('msg-confirm-text').textContent = mensagem;
+            msgConfirmCallback = callback;
+            document.getElementById('msg-confirm-btn').onclick = () => {
+                msgFecharModal();
+                if (msgConfirmCallback) { msgConfirmCallback(); msgConfirmCallback = null; }
+            };
+            modal.style.display = 'flex';
+        }
+
+        function msgFecharModal() {
+            document.getElementById('msg-confirm-modal').style.display = 'none';
+            msgConfirmCallback = null;
+        }
+
+        function msgToggleDetalhes(id) {
+            const row = document.getElementById('msg-det-' + id);
+            if (!row) return;
+            row.style.display = row.style.display !== 'none' ? 'none' : 'block';
+        }
+
+        function msgAbrirFormResposta(id, email) {
+            const det = document.getElementById('msg-det-' + id);
+            if (!det || det.querySelector('.msg-form-resposta')) return;
+            const form = document.createElement('div');
+            form.className = 'msg-form-resposta';
+            form.style.cssText = 'margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)';
+            form.innerHTML = `
+                <textarea placeholder="Digite sua resposta aqui..." style="width:100%;background:rgba(16,185,129,0.05);border:1px solid var(--border);border-radius:10px;padding:0.65rem 1rem;color:var(--text);font-family:'Roboto Condensed',sans-serif;font-size:0.88rem;outline:none;resize:none;min-height:80px;line-height:1.5" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+                <div style="display:flex;gap:0.6rem;margin-top:0.6rem">
+                    <button class="btn btn-primary btn-sm msg-btn-enviar">► Enviar</button>
+                    <button class="btn btn-ghost btn-sm msg-btn-cancelar">Cancelar</button>
+                </div>`;
+            det.appendChild(form);
+            form.querySelector('.msg-btn-cancelar').onclick = () => form.remove();
+            form.querySelector('.msg-btn-enviar').onclick = async () => {
+                const resposta = form.querySelector('textarea').value.trim();
+                if (!resposta) { msgMostrarStatus('A resposta não pode estar vazia.', 'erro'); return; }
+                try {
+                    const res = await fetch(`http://localhost:3000/contatos/${id}/responder`, {
+                        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ resposta })
+                    });
+                    const resultado = await res.json();
+                    if (!res.ok) throw new Error(resultado.message || 'Erro ao responder.');
+                    msgMostrarStatus('Resposta enviada com sucesso!');
+                    msgCache = msgCache.map(c => c.id === id ? { ...c, respondido: true, resposta } : c);
+                    msgRenderizar();
+                } catch (err) { msgMostrarStatus('Erro: ' + err.message, 'erro'); }
+            };
+        }
+
+        async function msgAlternarArquivado(id, arquivar) {
+            try {
+                const res = await fetch(`http://localhost:3000/contatos/${id}${arquivar ? '/arquivar' : '/desarquivar'}`, { method: 'PUT' });
+                if (!res.ok) throw new Error();
+                msgMostrarStatus(`Mensagem ${arquivar ? 'arquivada' : 'desarquivada'}!`);
+                msgCache = msgCache.map(c => c.id === id ? { ...c, arquivado: arquivar } : c);
+                msgRenderizar();
+            } catch (err) { msgMostrarStatus('Erro ao ' + (arquivar ? 'arquivar' : 'desarquivar') + '.', 'erro'); }
+        }
+
+        async function msgExcluir(id) {
+            try {
+                const res = await fetch(`http://localhost:3000/contatos/${id}`, { method: 'DELETE' });
+                if (!res.ok) throw new Error();
+                msgMostrarStatus('Mensagem excluída!');
+                msgCache = msgCache.filter(c => c.id !== id);
+                msgRenderizar();
+            } catch (err) { msgMostrarStatus('Erro ao excluir.', 'erro'); }
+        }
+
+        async function msgExcluirTodas() {
+            let lista = msgTipoAtual === 'naoRespondidas' ? msgCache.filter(c => !c.respondido && !c.arquivado)
+                : msgTipoAtual === 'respondidas' ? msgCache.filter(c => c.respondido && !c.arquivado)
+                : msgCache.filter(c => c.arquivado);
+            if (!lista.length) { msgMostrarStatus('Nenhuma mensagem para excluir.', 'erro'); return; }
+            try {
+                for (const m of lista) await fetch(`http://localhost:3000/contatos/${m.id}`, { method: 'DELETE' });
+                msgMostrarStatus('Mensagens excluídas!');
+                carregarMensagens();
+            } catch (err) { msgMostrarStatus('Erro ao excluir.', 'erro'); }
+        }
+
+        async function carregarMensagens(forceReload = false) {
+            const usuario = JSON.parse(localStorage.getItem('dadosUsuario'));
+            if (!usuario) return;
+            try {
+                const res = await fetch(`http://localhost:3000/contatos?nutricionista=${encodeURIComponent(usuario.id)}`);
+                msgCache = await res.json();
+                msgRenderizar();
+                if (forceReload) msgMostrarStatus('Mensagens atualizadas!');
+                const naoResp = msgCache.filter(c => !c.respondido && !c.arquivado).length;
+                const badge = document.getElementById('badge-mensagens');
+                if (badge) { badge.textContent = naoResp; badge.style.display = naoResp > 0 ? 'inline' : 'none'; }
+                const countNao = document.getElementById('msg-count-nao');
+                if (countNao) countNao.textContent = naoResp;
+            } catch (err) { console.error('Erro ao carregar mensagens:', err); }
+        }
+
+        function msgRenderizar() {
+            const lista = document.getElementById('msg-lista');
+            const empty = document.getElementById('msg-empty');
+            if (!lista) return;
+            lista.innerHTML = '';
+            const filtrados = msgTipoAtual === 'naoRespondidas' ? msgCache.filter(c => !c.respondido && !c.arquivado)
+                : msgTipoAtual === 'respondidas' ? msgCache.filter(c => c.respondido && !c.arquivado)
+                : msgCache.filter(c => c.arquivado);
+            const sub = document.getElementById('msg-sub');
+            if (sub) {
+                const textos = { naoRespondidas: 'Mensagens aguardando resposta', respondidas: 'Mensagens já respondidas', arquivadas: 'Mensagens arquivadas' };
+                sub.textContent = `${textos[msgTipoAtual]} · ${filtrados.length} mensagem${filtrados.length !== 1 ? 's' : ''}`;
+            }
+            if (empty) empty.style.display = filtrados.length === 0 ? 'block' : 'none';
+            const emptyText = document.getElementById('msg-empty-text');
+            if (emptyText) {
+                const msgs = { naoRespondidas: 'Nenhuma mensagem nova ', respondidas: 'Nenhuma mensagem respondida ainda', arquivadas: 'Nenhuma mensagem arquivada' };
+                emptyText.textContent = msgs[msgTipoAtual];
+            }
+            filtrados.forEach(c => {
+                const item = document.createElement('div');
+                item.style.cssText = 'margin-bottom:0.5rem';
+                item.innerHTML = `
+                    <div class="table-row" style="grid-template-columns:1fr 180px;cursor:default">
+                        <div style="display:flex;align-items:center;gap:0.8rem">
+                            <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.9rem;flex-shrink:0">${(c.nome||'?')[0].toUpperCase()}</div>
+                            <div>
+                                <div style="font-size:0.9rem;font-weight:700">${c.nome||'—'}</div>
+                                <div style="font-size:0.72rem;color:var(--text-dim)">${c.email||''} ${c.telefone ? '· '+c.telefone : ''}</div>
+                            </div>
+                            ${!c.respondido && !c.arquivado ? `<span class="status s-alert" style="margin-left:0.5rem;font-size:0.62rem">Nova</span>` : ''}
+                            ${c.respondido && !c.arquivado ? `<span class="status s-ok" style="margin-left:0.5rem;font-size:0.62rem">Respondida</span>` : ''}
+                            ${c.arquivado ? `<span class="status s-purple" style="margin-left:0.5rem;font-size:0.62rem">Arquivada</span>` : ''}
+                        </div>
+                        <div style="display:flex;gap:0.4rem;justify-content:flex-end;align-items:center">
+                            <button class="btn btn-ghost btn-sm" onclick="msgToggleDetalhes(${c.id})">👁 Ver</button>
+                            ${msgTipoAtual === 'respondidas' ? `<button class="btn btn-ghost btn-sm" onclick="msgConfirmarAcao('Arquivar?', () => msgAlternarArquivado(${c.id}, true))">Arq.</button>` : ''}
+                            ${msgTipoAtual === 'arquivadas' ? `<button class="btn btn-ghost btn-sm" onclick="msgConfirmarAcao('Desarquivar?', () => msgAlternarArquivado(${c.id}, false))">Desarq.</button>` : ''}
+                            <button class="btn btn-danger btn-sm" onclick="msgConfirmarAcao('Excluir?', () => msgExcluir(${c.id}))">🗑</button>
+                        </div>
+                    </div>
+                    <div id="msg-det-${c.id}" style="display:none;background:rgba(16,185,129,0.04);border:1px solid var(--border);border-radius:0 0 12px 12px;margin-top:-0.5rem;padding:1.2rem 1.4rem;font-size:0.88rem">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem 2rem;margin-bottom:0.8rem">
+                            <div><span style="color:var(--text-muted);font-size:0.72rem;text-transform:uppercase">Email</span><div>${c.email||'—'}</div></div>
+                            <div><span style="color:var(--text-muted);font-size:0.72rem;text-transform:uppercase">Telefone</span><div>${c.telefone||'—'}</div></div>
+                        </div>
+                        <div style="background:rgba(0,0,0,0.2);border-radius:10px;padding:0.9rem 1rem;margin-bottom:0.8rem">
+                            <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.4rem">Mensagem</div>
+                            <div style="line-height:1.7">${c.mensagem||'—'}</div>
+                        </div>
+                        ${c.respondido
+                            ? `<div style="background:rgba(16,185,129,0.08);border-left:3px solid var(--primary);border-radius:0 10px 10px 0;padding:0.9rem 1rem"><div style="font-size:0.7rem;color:var(--primary);text-transform:uppercase;margin-bottom:0.4rem">Resposta enviada</div><div>${c.resposta||'—'}</div></div>`
+                            : `<button class="btn btn-primary btn-sm" onclick="msgAbrirFormResposta(${c.id},'${c.email}')">💬 Responder</button>`}
+                    </div>`;
+                lista.appendChild(item);
+            });
+        }
+
+        function msgAlternarExibicao(tipo, btn) {
+            msgTipoAtual = tipo;
+            document.querySelectorAll('#sec-mensagens .ftab').forEach(b => b.classList.remove('on'));
+            if (btn) btn.classList.add('on');
+            const btnExcluir = document.getElementById('msg-btn-excluir-todas');
+            if (btnExcluir) btnExcluir.style.display = tipo === 'naoRespondidas' ? 'none' : 'inline-flex';
+            msgRenderizar();
+        }
+        // ================================================================
+        //  FIM DO MÓDULO DE MENSAGENS
+        // ================================================================
+
     // ── INIT ──
     window.addEventListener('load', () => {
         setTimeout(() => {
